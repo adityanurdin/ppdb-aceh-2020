@@ -1,0 +1,105 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+use App\User;
+use App\Models\Operator;
+use App\Models\Peserta;
+
+use Validator;
+use Str;
+use Illuminate\Support\Facades\Schema;
+use Auth;
+Use Alert;
+
+class AuthController extends Controller
+{
+
+    public function login(Request $request)
+    {
+        $credentials = [
+            'username'  => $request->NIK,
+            'password'  => $request->password
+        ];
+
+        $remember_me = $request->has('remember_me') ? true : false;
+
+        if (Auth::attempt($credentials , $remember_me)) {
+            if(Auth::user()->status_aktif == 'no') {
+                Auth::logout();
+                toast('Status User Tidak Aktif','error');
+                return redirect()->route('dashboard');
+            }
+            toast('Berhasil Login','success');
+            return redirect()->route('dashboard');
+        } else {
+            toast('NIK atau Password Salah !','error');
+            return back();
+        }
+    }
+
+    public function showRegister()
+    {
+        return view('pages.auth.register');
+    }
+
+    public function register(Request $request)
+    {
+        $uuid_peserta = Str::uuid();
+
+        $rule  = [
+            'username' => 'required|integer|unique:users',
+            'email'    => 'required|email|unique:users',
+            'password' => 'required|confirmed|min:6|'
+        ];
+        $messages = [
+            'username.integer' => 'NIK wajib menggunakan angka',
+        ];
+
+        $user = User::create([
+            'uuid'          => Str::uuid(),
+            'uuid_login'    => $uuid_peserta,
+            'username'      => $request->NIK,
+            'email'         => $request->email,
+            'password'      => bcrypt($request->password),
+            'status_aktif'  => 'yes',
+            'role'          => 'Peserta',
+            'img'           => ''
+        ]);
+
+        $peserta = Peserta::create([
+            'uuid'          => $uuid_peserta,
+            'NIK'           => $request->NIK,
+            'email'         => $request->email,
+            'status_aktif'  => 'no'
+        ]);
+
+        if ($user && $peserta) {
+            // return redirect()->route('dashboard');
+            $credentials = [
+                'username'  => $request->NIK,
+                'password'  => $request->password
+            ];
+    
+            if (Auth::attempt($credentials)) {
+                return redirect()->route('dashboard');
+            } else {
+                return back();
+            }
+        } else {
+            return 'gagal';
+        }
+
+
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        toast('Berhasil Keluar','success');
+        return redirect()->route('home');
+    }
+}
