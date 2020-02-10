@@ -125,6 +125,93 @@ class PPDBController extends Controller
         return back();
     }
 
+    public function daftar($id)
+    {
+        $uuid   = Dits::decodeDits($id);
+        // return $uuid;
+        $uuid_peserta = Auth::user()->uuid_login;
+
+        // return $uuid_peserta;
+        $check_pendaftaran = Pendaftaran::whereUuidPeserta($uuid_peserta)
+                                            ->get('uuid_pembukaan');
+                                            // return count($check_pendaftaran);
+            if ( $check_pendaftaran->count() >= 3) {
+                toast('Gagal, Kamu Sudah Mendaftar ke 3 Sekolah','error');
+                return back();
+            }
+        $nomor_pendaftaran = Dits::interval('pendaftarans' , 'nomor_pendaftaran');
+        $input  = array(
+            'uuid'              => Str::uuid(),
+            'uuid_pembukaan'    => $uuid,
+            'uuid_peserta'      => $uuid_peserta,
+            'kode_pendaftaran'  => Dits::generateCode(),
+            'nomor_pendaftaran' => $nomor_pendaftaran,
+            'status_pendaftaran'=> 'Baru',
+            'status_diterima'   => 'Tahap Seleksi',
+            'jalur_diterima'    => '',
+            'url_transfer'      => '',
+            'status_transfer'   => '',
+            'tgl_pendaftaran'   => Carbon::now()
+        );
+
+        $pendaftaran = Pendaftaran::create($input);
+
+        if($pendaftaran)
+        {
+            toast('Berhasil Mendaftarkan Ke Sekolah yang Di Tuju','success');
+            return back();
+        }
+        toast('Gagal Mendaftarkan Ke Sekolah yang Di Tuju','error');
+        return back();
+    }
+
+    public function madrasahTerpilih()
+    {
+        return view('pages.ppdb.madrasah-terpilih');
+    }
+
+    public function madrasahTerpilihData()
+    {
+        $uuid = Auth::user()->uuid_login;
+        $data = Pendaftaran::join('pembukaans' , 'pembukaans.uuid' , '=' , 'pendaftarans.uuid_pembukaan')
+                            ->join('madrasahs' , 'madrasahs.uuid' , '=' , 'pembukaans.uuid_madrasah')
+                            ->whereUuidPeserta($uuid)
+                            ->get();
+
+        return DataTables::of($data)
+                            ->addIndexColumn()
+                            ->addColumn('action' , function($item) {
+                                $btn = '<a href="'.Dits::PdfViewer(asset($item->url_brosur)).'" target="_blank" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf"></i> Brosur</a> <br>';
+                                $btn .= '<a href="" class="btn btn-info btn-sm btn-block" style="margin-top:5px; margin-botton:5px;"><i class="fas fa-eye"></i> Lihat</a>';
+                                $btn .= '<a href="/ppdb/'.Dits::encodeDits($item->uuid_pembukaan).'/hapus" class="btn btn-danger btn-sm btn-block" style="margin-top:5px; margin-botton:5px;"><i class="fas fa-trash"></i> Hapus</a>';
+                                $btn .= '<a href="" class="btn btn-success btn-sm btn-block" style="margin-top:5px; margin-botton:5px;"><i class="fas fa-print"></i> Cetak</a>';
+                                return $btn;
+                            })
+                            ->escapeColumns([])
+                            ->make(true);
+
+    }
+    
+    public function hapus($id)
+    {
+        $uuid_pembukaan = Dits::decodeDits($id);
+        $uuid_peserta  = Auth::user()->uuid_login;
+
+        $pendaftaran    = Pendaftaran::whereUuidPembukaan($uuid_pembukaan)
+                                        ->whereUuidPeserta($uuid_peserta)
+                                        ->first();
+
+        
+        if($pendaftaran)
+        {
+            $pendaftaran->delete();
+            toast('Berhasil Menghapus','success');
+            return back();
+        }
+        toast('Gagal Menghapus','error');
+        return back();
+    }
+
     public function data()
     {
         $data = Pembukaan::with('madrasah' , 'operator')->get();
@@ -142,7 +229,7 @@ class PPDBController extends Controller
     public function dataByID($id)
     {
         $jenjang = Dits::decodeDits($id);
-        $data = Pembukaan::join('madrasahs' , 'madrasahs.uuid' , '=' , 'pembukaans.uuid_madrasah')
+        $data = Madrasah::join('pembukaans' , 'pembukaans.uuid_madrasah' , '=' , 'madrasahs.uuid')
                             ->whereJenjang($jenjang)
                             ->get();
         return DataTables::of($data)
@@ -150,7 +237,7 @@ class PPDBController extends Controller
                             ->addColumn('action' , function($item) {
                                 $btn = '<a href="'.Dits::PdfViewer(asset($item->url_brosur)).'" target="_blank" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf"></i> Brosur</a> ';
                                 $btn .= '<a href="" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Lihat</a> ';
-                                $btn .= '<a href="" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Daftar</a>';
+                                $btn .= '<a href="/ppdb/'.Dits::encodeDits($item->uuid).'/daftar" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Daftar</a>';
                                 return $btn;
                             })
                             ->escapeColumns([])

@@ -42,7 +42,7 @@
 
         @if (Auth::user()->role == 'Peserta')    
             <li class="">
-                <a href="#pilihPPDB" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pilih PPDB</a>
+                <a href="#pilihPPDB" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-users"></i> Pilih PPDB</a>
                 <ul class="collapse list-unstyled" id="pilihPPDB">
                     <li>
                         <a href="{{route('ppdb.list.id' , base64_encode('DITSMI'))}}">MI</a>
@@ -55,6 +55,19 @@
                     </li>
                 </ul>
             </li>
+            @php
+                $uuid_peserta = \Auth::user()->uuid_login;
+                $pendaftaran = \App\Models\Pendaftaran::where('uuid_peserta' , $uuid_peserta)
+                                                        ->first();
+            @endphp
+            @isset($pendaftaran)
+            <li>
+                <a href="{{route('buka-ppdb.madrasah-terpilih')}}"><i class="fas fa-check"></i> Madrasah Terpilih</a>
+            </li>
+            <li>
+                <a href="{{route('buka-ppdb.ujian-cat')}}"><i class="fas fa-tv"></i> Ujian CAT</a>
+            </li>
+            @endisset
         @endif
         @if(Auth::user()->role != 'Peserta')
         <li>

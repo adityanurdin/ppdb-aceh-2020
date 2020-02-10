@@ -48,6 +48,11 @@ Route::get('/home', function () {
         //PPDB
         Route::get('ppdb/{id}' , 'PPDBController@listByID')->name('ppdb.list.id');
         Route::get('ppdb/{id}/data' , 'PPDBController@dataByID')->name('buka-ppdb.dataByID');
+        Route::get('ppdb/{id}/daftar' , 'PPDBController@daftar')->name('buka-ppdb.daftar');
+        Route::get('ppdb/{id}/hapus' , 'PPDBController@hapus')->name('buka-ppdb.hapus');
+        Route::get('ppdb/sub/madrasah-terpilih' , 'PPDBController@madrasahTerpilih')->name('buka-ppdb.madrasah-terpilih');
+        Route::get('ppdb/sub/madrasah-terpilih/data' , 'PPDBController@madrasahTerpilihData')->name('buka-ppdb.madrasah-terpilih.data');
+        Route::get('ppdb/sub/ujian-cat' , 'PPDBController@madrasahTerpilih')->name('buka-ppdb.ujian-cat');
     });
 
     Route::group(['middleware' => 'Admin'], function () {

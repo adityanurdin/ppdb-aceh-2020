@@ -7,6 +7,8 @@ use Carbon\Carbon;
 use Storage;
 use Image;
 use Auth;
+use Str;
+use DB;
 
 use App\Models\Peserta;
 
@@ -110,6 +112,21 @@ class Dits
     {
         $file   = str_replace(base_path().'/public/' , '/' , $pdf);
         return $file;
+    }
+
+    public static function generateCode()
+    {
+        $random = rand(123456 , 999999);
+        $token  = bin2hex(random_bytes(2))."-".bin2hex(random_bytes(2));
+        return strtoupper($token.$random);
+    }
+
+    public static function interval($table , $field , $int = 1 , $prefix = '')
+    {
+        // $id = MsAccident::max('id')+1;
+        $id = DB::table($table)->max($field)+$int;
+        $code = $prefix.$id;
+        return $code;
     }
 
 
