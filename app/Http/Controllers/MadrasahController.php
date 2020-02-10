@@ -36,6 +36,7 @@ class MadrasahController extends Controller
         $input  = $request->all();
         $input['uuid'] = $uuid; 
         $input['status'] = 'Negeri';
+        $input['nama_madrasah'] = strtoupper($request->nama_madrasah);
 
         if ($request->hasFile('logo_madrasah')) {
             $image = Dits::UploadImage($request , 'logo_madrasah' , 'Madrasah');

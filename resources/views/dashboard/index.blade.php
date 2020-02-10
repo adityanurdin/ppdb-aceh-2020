@@ -29,13 +29,13 @@
         @endif
         <div class="card">
             <div class="card-body">
+                <form action="{{route('update.peserta')}}" method="POST" enctype="multipart/form-data">
+                    @csrf
                 <div class="row">
-                    {{-- <form> --}}
                     <div class="col-md-auto">
                     <img src="{{Dits::imageUrl(Dits::DataPeserta()->pas_foto)}}" width="150px" height="200px" class="img-thumbnail">
                     <br>
                     <span class="btn btn-primary btn-file btn-block">
-                        {{-- Upload Foto <input type="file"> --}}
                         Pilih Foto<input type="file" name="pas_foto" autocomplete="off" {{ Dits::DataPeserta()->pas_foto ? '' : 'required' }}>
                     </span>
                         <a href="#" class="btn btn-danger btn-block {{Dits::DataPeserta()->pas_foto ? '' : 'disabled'}}">Hapus Foto</a>
@@ -73,188 +73,187 @@
                         <label for="jk">Jenis Kelamin Siswa<i class="text-danger"><small>*</small></i></label>
                         <select class="form-control" id="jk" name="jkl">
                             <option selected disabled>Pilih Jenis Kelamin</option>
-                            <option value="Laki - laki" {{Dits::DataPeserta()->jkl == 'Laki - laki' ? 'selected' : ''}}>Laki-Laki</option>
-                            <option value="Perempuan" {{Dits::DataPeserta()->jkl == 'Perempuan' ? 'selected' : ''}}>Perempuan</option>
+                            <option value="Laki - laki">Laki-Laki</option>
+                            <option value="Perempuan">Perempuan</option>
                         </select>
                         </div>
                         <div class="form-group">
                         <label for="agama">Agama Siswa<i class="text-danger"><small>*</small></i></label>
-                        <select class="form-control" id="agama" required>
+                        <select class="form-control" id="agama" name="agama" required>
                             <option selected disabled>Pilih Agama</option>
-                            <option>Islam</option>
-                            <option>Kristen Protestan</option>
-                            <option>Katolik</option>
-                            <option>Hindu</option>
-                            <option>Budha</option>
-                            <option>Kong Hu Chu</option>
+                            <option value="Islam">Islam</option>
+                                <option value="Kristen Protestan">Kristen Protestan</option>
+                                <option value="Katolik">Katolik</option>
+                                <option value="Hindu">Hindu</option>
+                                <option value="Buddha">Buddha</option>
+                                <option value="Kong Hu Cu">Kong Hu Cu</option>
                         </select>
                         </div>
                         <div class="form-group">
                         <label for="hobi">Hobi Siswa<i class="text-danger"><small>*</small></i></label>
-                        <select class="form-control" id="hobi" required>
+                        <select class="form-control" id="hobi" name="hobi" required>
                             <option selected disabled>Pilih Hobi</option>
-                            <option>Olahraga</option>
-                            <option>Kesenian</option>
-                            <option>Membaca</option>
-                            <option>Menulis</option>
-                            <option>Jalan-Jalan</option>
-                            <option>Lainnya</option>
+                            <option value="Olahraga">Olahraga</option>
+                                <option value="Kesenian">Kesenian</option>
+                                <option value="Membaca">Membaca</option>
+                                <option value="Menulis">Menulis</option>
+                                <option value="Jalan - jalan">Jalan - jalan</option>
+                                <option value="Lainnya">Lainnya</option>
                         </select>
                         </div>
                         <div class="form-group">
                         <label for="cita">Cita-Cita Siswa<i class="text-danger"><small>*</small></i></label>
-                        <select class="form-control" id="cita" required>
+                        <select class="form-control" id="cita" name="cita2" required>
                             <option selected disabled>Pilih Cita-Cita</option>
-                            <option>PNS</option>
-                            <option>TNI/Polri</option>
-                            <option>Guru/Dosen</option>
-                            <option>Dokter</option>
-                            <option>Politikus</option>
-                            <option>Wiraswasta</option>
-                            <option>Seniman/Artis</option>
-                            <option>Ilmuwan</option>
-                            <option>Agamawan</option>
+                            <option value="Lainnya">Lainnya</option>
+                                <option value="PNS">PNS</option>
+                                <option value="TNI/Polri">TNI/Polri</option>
+                                <option value="Guru/Dosen">Guru/Dosen</option>
+                                <option value="Dokter">Dokter</option>
+                                <option value="Politikus">Politikus</option>
+                                <option value="Wiraswasta">Wiraswasta</option>
+                                <option value="Ilmuan">Ilmuan</option>
+                                <option value="Agamawan">Agamawan</option>
                         </select>
                         </div>
                         <div class="form-group">
                         <label for="anak">Anak Ke-<i class="text-danger"><small>*</small></i></label>
-                        <input type="number" class="form-control" id="anak" placeholder="Contoh : 1" required>
+                        <input type="number" value="{{Dits::DataPeserta()->anak_ke ? Dits::DataPeserta()->anak_ke : ''}}" class="form-control" name="anak_ke" id="anak" placeholder="Contoh : 1" required>
                         </div>
                         <div class="form-group">
                         <label for="jml_sdr">Jumlah Saudara<i class="text-danger"><small>*</small></i></label>
-                        <input type="number" class="form-control" id="jml_sdr" placeholder="Contoh : 2" required>
+                        <input type="number" value="{{Dits::DataPeserta()->jml_saudara ? Dits::DataPeserta()->jml_saudara : ''}}" class="form-control" name="jml_saudara" id="jml_sdr" placeholder="Contoh : 2" required>
                         </div>
                         <div class="form-group">
                         <label for="alamat_rmh">Alamat Rumah<i class="text-danger"><small>*</small></i></label>
-                        <input type="text" class="form-control" id="alamat_rmh" placeholder="Jl. Makam Pahlawan, Rt/Rw. 03/08, No. 7" required>
+                        <input type="text" class="form-control" value="{{Dits::DataPeserta()->alamat_rumah ? Dits::DataPeserta()->alamat_rumah : ''}}" id="alamat_rmh" name="alamat_rumah" placeholder="Jl. Makam Pahlawan, Rt/Rw. 03/08, No. 7" required>
                         </div>
                         <div class="form-group">
                         <label for="sklh_asl">Sekolah Asal<i class="text-danger"><small>*</small></i></label>
-                        <select class="form-control" id="sklh_asl" required>
+                        <select class="form-control" id="sklh_asl" name="sekolah_asal" required>
                             <option selected disabled>Pilih Sekolah Asal</option>
-                            <option>RA</option>
-                            <option>TK</option>
-                            <option>TKLB</option>
-                            <option>PAUD</option>
-                            <option>Langsung Dari Orang Tua</option>
-                            <option>Kelompok Bermain</option>
-                            <option>SD</option>
-                            <option>SD Luar Negeri</option>
-                            <option>MI</option>
-                            <option>Paket A</option>
-                            <option>Paket B</option>
-                            <option>SMP</option>
-                            <option>SMP Luar Negeri</option>
-                            <option>MTs</option>
-                            <option>Pondok Pesantren</option>
-                            <option>Lainnya</option>
+                            <option value="RA">RA</option>
+                            <option value="TK">TK</option>
+                            <option value="TKLB">TKLB</option>
+                            <option value="PAUD">PAUD</option>
+                            <option value="Langsung dari Orang Tua">Langsung dari Orang Tua</option>
+                            <option value="Kelompok Bermain">Kelompok Bermain</option>
+                            <option value="SD">SD</option>
+                            <option value="SD Luar Negeri">SD Luar Negeri</option>
+                            <option value="MI">MI</option>
+                            <option value="Paket A">Paket A</option>
+                            <option value="Paket B">Paket B</option>
+                            <option value="SMP">SMP</option>
+                            <option value="SMP Luar Negeri">SMP Luar Negeri</option>
+                            <option value="MTs">MTs</option>
+                            <option value="Pondok Pesantren">Pondok Pesantren</option>
+                            <option value="Lainnya">Lainnya</option>
                         </select>
                         </div>
                         <div class="form-group">
                         <label for="npsn">NPSN Sekolah Asal<i class="text-danger"><small>*</small></i></label>
                         <small class="text-danger">Jika Tidak Ada Isi Dengan Strip (-)</small>
-                        <input type="number" class="form-control" id="number" placeholder="Contoh : 10212000" required>
+                        <input type="number" class="form-control" value="{{Dits::DataPeserta()->npsn_sekolah_asal ? Dits::DataPeserta()->npsn_sekolah_asal : ''}}" name="npsn_sekolah_asal" id="number" placeholder="Contoh : 10212000" required>
                         </div>
                         <div class="form-group">
                         <label for="nm_sklh_asl">Nama Sekoah Asal<i class="text-danger"><small>*</small></i></label>
                         <small class="text-danger">Jika Tidak Ada Isi Dengan Strip (-)</small>
-                        <input type="text" class="form-control" id="nm_sklh_asl" placeholder="Contoh : SDN Cakrawala" required>
+                        <input type="text" class="form-control" value="{{Dits::DataPeserta()->nama_sekolah_asal ? Dits::DataPeserta()->nama_sekolah_asal : ''}}" name="nama_sekolah_asal" id="nm_sklh_asl" placeholder="Contoh : SDN Cakrawala" required>
                         </div>
                         <div class="form-group">
                         <label for="almt_sklh_asl">Alamat Sekoah Asal<i class="text-danger"><small>*</small></i></label>
                         <small class="text-danger">Jika Tidak Ada Isi Dengan Strip (-)</small>
-                        <input type="text" class="form-control" id="almt_sklh_asl" placeholder="Contoh : Jl. Cakrawala" required>
+                        <input type="text" class="form-control" value="{{Dits::DataPeserta()->alamat_sekolah_asal ? Dits::DataPeserta()->alamat_sekolah_asal : ''}}" id="almt_sklh_asl" name="alamat_sekolah_asal" placeholder="Contoh : Jl. Cakrawala" required>
                         </div>
                         <div class="form-group">
                         <label for="prestasi">Prestasi Siswa</label>
-                        <input type="text" class="form-control" id="prestasi" placeholder="Contoh : Juara 1 Pencak Silat Nasional" required>
+                        <input type="text" class="form-control" value="{{Dits::DataPeserta()->jenis_prestasi ? Dits::DataPeserta()->jenis_prestasi : ''}}" id="prestasi" name="jenis_prestasi" placeholder="Contoh : Juara 1 Pencak Silat Nasional" required>
                         <small class="text-danger">Diisi Jika Memiliki Sertifikat Prestasi, Jika Lebih Dari 1, Pisahkan Dengan Koma (,)</small>
                         </div>
                         <div class="form-group">
                         <label for="stts_yp">Status Yatim Piatu<i class="text-danger"><small>*</small></i></label>
-                        <select class="form-control" id="stts_yp" required>
-                            <option selected>Tidak</option>
-                            <option>Yatim</option>
-                            <option>Piatu</option>
-                            <option>Yatim Piatu</option>
+                        <select class="form-control" name="yatim_piatu" id="stts_yp" required>
+                            <option disabled selected>-Pilih Status Yatim Piatu</option>
+                            <option value="Tidak">Tidak</option>
+                            <option value="Yatim Piatu">Yatim Piatu</option>
+                            <option value="Yatim">Yatim</option>
+                            <option value="Piatu">Piatu</option>
                         </select>
                         </div>
                         <div class="form-group">
                         <label for="kp">Kartu Program</label>
-                        <input type="text" class="form-control" id="kp" placeholder="Contoh : KIP">
+                        <input type="text" class="form-control" value="{{Dits::DataPeserta()->kartu_program ? Dits::DataPeserta()->kartu_program : ''}}" name="kartu_program" id="kp" placeholder="Contoh : KIP">
                         <small class="text-danger">Diisi Jika Memiliki Kartu Program, Jika Lebih Dari 1, Pisahkan Dengan Koma (,)</small>
                         </div>
                         <div class="form-group">
                         <label for="nm_ayah">Nama Ayah<i class="text-danger"><small>*</small></i></label>
-                        <input type="text" class="form-control" id="nm_ayah" placeholder="Nama Ayah" required>
+                        <input type="text" class="form-control" value="{{Dits::DataPeserta()->nama_ayah ? Dits::DataPeserta()->nama_ayah : ''}}" id="nm_ayah" name="nama_ayah" placeholder="Nama Ayah" required>
                         </div>
                         <div class="form-group">
                         <label for="ktp_ayah">No. KTP/NIK Ayah<i class="text-danger"><small>*</small></i></label>
-                        <input type="number" class="form-control" id="ktp_ayah" placeholder="Contoh : 3222206209020000" required>
+                        <input type="number" class="form-control" value="{{Dits::DataPeserta()->nik_ayah ? Dits::DataPeserta()->nik_ayah : ''}}" id="ktp_ayah" name="nik_ayah" placeholder="Contoh : 3222206209020000" required>
                         </div>
                         <div class="form-group">
                         <label for="lhr_ayah">Tempat Lahir Ayah<i class="text-danger"><small>*</small></i></label>
-                        <input type="text" class="form-control" id="lhr_ayah" placeholder="Contoh : Kota Banca Aceh" required>
+                        <input type="text" class="form-control" value="{{Dits::DataPeserta()->tmp_ayah ? Dits::DataPeserta()->tmp_ayah : ''}}" id="lhr_ayah" name="tmp_ayah" placeholder="Contoh : Kota Banca Aceh" required>
                         </div>
                         <div class="form-group">
                         <label for="tgl_ayah">Tanggal Lahir Ayah<i class="text-danger"><small>*</small></i></label>
-                        <input type="date" class="form-control" id="tgl_ayah" required>
+                        <input type="date" class="form-control" value="{{Dits::DataPeserta()->tgl_ayah ? Dits::DataPeserta()->tgl_ayah : ''}}" name="tgl_ayah" id="tgl_ayah" required>
                         </div>
                         <div class="form-group">
                         <label for="pkrj_ayah">Pekerjaan Ayah<i class="text-danger"><small>*</small></i></label>
-                        <select class="form-control" id="stts_yp" required>
+                        <select class="form-control" id="stts_yp" name="pekerjaan_ayah" required>
                             <option selected disabled>Pilih Pekerjaan Ayah</option>
-                            <option>Lainnya</option>
-                            <option>PNS</option>
-                            <option>TNI/Polri</option>
-                            <option>Guru/Dosen</option>
-                            <option>Dokter</option>
-                            <option>Politikus</option>
-                            <option>Wiraswasta</option>
-                            <option>Seniman/Artis</option>
-                            <option>Ilmuwan</option>
-                            <option>Agamawan</option>
+                            <option value="Lainnya">Lainnya</option>
+                            <option value="PNS">PNS</option>
+                            <option value="TNI/Polri">TNI/Polri</option>
+                            <option value="Guru/Dosen">Guru/Dosen</option>
+                            <option value="Dokter">Dokter</option>
+                            <option value="Politikus">Politikus</option>
+                            <option value="Wiraswasta">Wiraswasta</option>
+                            <option value="Ilmuan">Ilmuan</option>
+                            <option value="Agamawan">Agamawan</option>
                         </select>
                         </div>
                         <div class="form-group">
                         <label for="nm_ibu">Nama Ibu<i class="text-danger"><small>*</small></i></label>
-                        <input type="text" class="form-control" id="nm_ibu" placeholder="Nama Ibu" required>
+                        <input type="text" class="form-control" value="{{Dits::DataPeserta()->nama_ibu ? Dits::DataPeserta()->nama_ibu : ''}}" id="nm_ibu" name="nama_ibu" placeholder="Nama Ibu" required>
                         </div>
                         <div class="form-group">
                         <label for="ktp_ibu">No. KTP/NIK Ibu<i class="text-danger"><small>*</small></i></label>
-                        <input type="number" class="form-control" id="ktp_ibu" placeholder="Contoh : 3222206209020000" required>
+                        <input type="number" class="form-control" value="{{Dits::DataPeserta()->nik_ibu ? Dits::DataPeserta()->nik_ibu : ''}}" id="ktp_ibu" name="nik_ibu" placeholder="Contoh : 3222206209020000" required>
                         </div>
                         <div class="form-group">
                         <label for="lhr_ibu">Tempat Lahir Ibu<i class="text-danger"><small>*</small></i></label>
-                        <input type="text" class="form-control" id="lhr_ibu" placeholder="Contoh : Kota Banca Aceh" required>
+                        <input type="text" class="form-control" id="lhr_ibu" value="{{Dits::DataPeserta()->tmp_ibu ? Dits::DataPeserta()->tmp_ibu : ''}}" name="tmp_ibu" placeholder="Contoh : Kota Banca Aceh" required>
                         </div>
                         <div class="form-group">
                         <label for="tgl_ibu">Tanggal Lahir Ibu<i class="text-danger"><small>*</small></i></label>
-                        <input type="date" class="form-control" id="tgl_ibu" required>
+                        <input type="date" class="form-control" id="tgl_ibu" value="{{Dits::DataPeserta()->tgl_ibu ? Dits::DataPeserta()->tgl_ibu : ''}}" name="tgl_ibu" required>
                         </div>
                         <div class="form-group">
                         <label for="pkrj_ibu">Pekerjaan Ibu<i class="text-danger"><small>*</small></i></label>
-                        <select class="form-control" id="pkrj_ibu" required>
+                        <select class="form-control" id="pkrj_ibu" name="pekerjaan_ibu" required>
                             <option selected disabled>Pilih Pekerjaan Ibu</option>
-                            <option>Lainnya</option>
-                            <option>PNS</option>
-                            <option>TNI/Polri</option>
-                            <option>Guru/Dosen</option>
-                            <option>Dokter</option>
-                            <option>Politikus</option>
-                            <option>Wiraswasta</option>
-                            <option>Seniman/Artis</option>
-                            <option>Ilmuwan</option>
-                            <option>Agamawan</option>
+                            <option value="Lainnya">Lainnya</option>
+                            <option value="PNS">PNS</option>
+                            <option value="TNI/Polri">TNI/Polri</option>
+                            <option value="Guru/Dosen">Guru/Dosen</option>
+                            <option value="Dokter">Dokter</option>
+                            <option value="Politikus">Politikus</option>
+                            <option value="Wiraswasta">Wiraswasta</option>
+                            <option value="Ilmuan">Ilmuan</option>
+                            <option value="Agamawan">Agamawan</option>
                         </select>
                         </div>
                         <div class="form-group">
                         <label for="kontak">Kontak Peserta<i class="text-danger"><small>*</small></i></label>
-                        <input type="number" class="form-control" id="kontak" placeholder="Contoh : 08128888xxxx">
+                        <input type="number" class="form-control" value="{{Dits::DataPeserta()->kontak_peserta ? Dits::DataPeserta()->kontak_peserta : ''}}" name="kontak_peserta" id="kontak" placeholder="Contoh : 08128888xxxx">
                         </div>
                         <div class="form-group">
                         <label for="email">Alamat Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="contoh@email.com" disabled>
+                        <input type="email" class="form-control" value="{{Auth::user()->email}}" id="email" placeholder="contoh@email.com" readonly>
                         <small class="text-danger">Tidak Bisa Diedit, Email Akun Login</small>
                         </div>
                         <br>
@@ -263,8 +262,8 @@
                         <button type="submit" class="btn btn-info btn-block">Ubah</button>
                         <br><br>
                     </div>
-                {{-- </form> --}}
                 </div>
+            </form>
             </div>
         </div>
 

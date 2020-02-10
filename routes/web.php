@@ -47,6 +47,7 @@ Route::get('/home', function () {
 
         //PPDB
         Route::get('ppdb/{id}' , 'PPDBController@listByID')->name('ppdb.list.id');
+        Route::get('ppdb/{id}/data' , 'PPDBController@dataByID')->name('buka-ppdb.dataByID');
     });
 
     Route::group(['middleware' => 'Admin'], function () {
@@ -86,6 +87,16 @@ Route::get('/home', function () {
                 Route::get('/operator/{id}/lockUnlock/' , 'MadrasahController@lockUnlock')->name('madrasah.operators.lockUnlock');
             });
 
+        });
+
+        // Buka PPDB
+        Route::group(['prefix' => 'buka-ppdb'], function () {
+            Route::get('/' , 'PPDBController@bukaPPDB')->name('buka-ppdb');
+            Route::get('create' , 'PPDBController@create')->name('buka-ppdb.create');
+            Route::post('store' , 'PPDBController@store')->name('buka-ppdb.store');
+            Route::get('/detail/{id}' , 'PPDBController@detail')->name('buka-ppdb.details');
+            Route::get('/detail/{id}/status' , 'PPDBController@status')->name('buka-ppdb.rubah-status');
+            Route::get('/data' , 'PPDBController@data')->name('buka-ppdb.data');
         });
         
     });

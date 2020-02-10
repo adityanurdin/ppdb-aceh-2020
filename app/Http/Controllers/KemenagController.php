@@ -153,7 +153,7 @@ class KemenagController extends Controller
         return DataTables::of($data)
                         ->addIndexColumn()
                         ->editColumn('action' , function($item) {
-                            if ($item->status_aktif == 'yes') {
+                            if ($item->user['status_aktif'] == 'yes') {
                                 $status = '<a href="/kemenag/'.Dits::encodeDits($item->uuid).'/lockUnlock" class="btn btn-dark btn-sm"><i class="fas fa-lock"></i></a>';
                             } else {
                                 $status = '<a href="/kemenag/'.Dits::encodeDits($item->uuid).'/lockUnlock" class="btn btn-success btn-sm"><i class="fas fa-lock-open"></i></a>';

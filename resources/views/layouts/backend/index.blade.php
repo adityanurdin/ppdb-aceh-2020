@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title')</title>
+    <title>{{ strtoupper(isset(Dits::DataPeserta()->nama)) ? Dits::DataPeserta()->nama : Auth::user()->role }} - SIM PPDB Madrasah Kota Banda Aceh</title>
 
     <!-- Bootstrap CSS -->
     <link href="{{asset('bootstrap/dist/css/bootstrap-custom.css')}}" rel="stylesheet">
@@ -42,6 +42,12 @@
                         {{-- <span>Menu</span> --}}
                     </button>
                     <h3 class="mx-auto">@yield('headers')</></h3>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                          <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                          <li class="breadcrumb-item" aria-current="page">{{  Dits::BreadCrumb()  }}</li>
+                        </ol>
+                      </nav>
                 </div>
             </nav>
             <hr>

@@ -4,7 +4,7 @@
     </div>
 
     <ul class="list-unstyled components">
-        <p>{{Auth::user()->username}}</p>
+        <p>{{ucfirst(Auth::user()->username)}}</p>
         <li class="{{Request::route()->getName() == 'dashboard' ? 'active' : ''}}">
             <a href="{{route('dashboard')}}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
         </li>
@@ -28,7 +28,7 @@
             </li>
         @endif
 
-        @if (Auth::user()->role == 'Operator Kemenag')
+        @if (Auth::user()->role == 'Operator Kemenag' || Auth::user()->role == 'Operator Madrasah')
             <li class="">
                 <a href="#dataWeb" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Web Informasi</a>
                 <ul class="collapse list-unstyled" id="dataWeb">
@@ -58,7 +58,7 @@
         @endif
         @if(Auth::user()->role != 'Peserta')
         <li>
-            <a href="#"><i class="fas fa-users"></i> Buka PPDB</a>
+            <a href="{{route('buka-ppdb')}}"><i class="fas fa-users"></i> Buka PPDB</a>
         </li>
         <li>
             <a href="#arsipPPDB" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-archive"></i> Arsip PPDB</a>
@@ -69,9 +69,11 @@
                 </li>
             </ul>
         </li>
+        @if (Auth::user()->role != 'Operator Madrasah' && Auth::user()->role != 'Peserta')   
         <li class="{{Request::route()->getName() == 'madrasah.index' ? 'active' : ''}}">
             <a href="{{route('madrasah.index')}}"><i class="fas fa-building"></i> Database Madrasah</a>
         </li>
+        @endif
         @endif
         <li>
             <a href="#pengaturan" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-cog"></i> Pengaturan</a>

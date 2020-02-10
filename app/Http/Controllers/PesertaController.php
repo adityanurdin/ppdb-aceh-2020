@@ -100,7 +100,7 @@ class PesertaController extends Controller
 
         $rule   = array(
             'nama'      => 'required',
-            'NIK'       => 'required|integer|unique:pesertas',
+            'NIK'       => 'required|integer',
             'nisn'      => 'required|integer',
             'tmp'       => 'required',
             'tgl'       => 'required',

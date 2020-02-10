@@ -18,7 +18,7 @@ class Admin
     public function handle($request, Closure $next)
     {
         $user = Auth::user();
-        if($user->role == 'Admin System')
+        if($user->role != 'Peserta')
         {   
             return $next($request);
         } else {

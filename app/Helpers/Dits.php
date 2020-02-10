@@ -82,6 +82,35 @@ class Dits
         return $encode;
     }
 
+    public static function BreadCrumb()
+    {
+        $path = \Request::path();
+        
+        if ($path == '/') {
+            $result = '';
+        }else {
+            $result = str_replace('/' , ' / ' , $path);
+        }
+        return ucfirst($result);
+    }
+
+    public static function uploadFile(Request $request , $field , $path)
+    {
+        $file = $request->file($field);
+
+        $path = $path.'/'.date('FY').'/';
+        $full_path = Self::ImageName($path , $file->getClientOriginalExtension());
+
+        $request->file($field)->move($full_path);
+
+        return $full_path;
+    }
+
+    public static function PdfViewer($pdf)
+    {
+        $file   = str_replace(base_path().'/public/' , '/' , $pdf);
+        return $file;
+    }
 
 
 }
