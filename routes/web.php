@@ -100,6 +100,7 @@ Route::get('/home', function () {
             Route::get('create' , 'PPDBController@create')->name('buka-ppdb.create');
             Route::post('store' , 'PPDBController@store')->name('buka-ppdb.store');
             Route::get('/detail/{id}' , 'PPDBController@detail')->name('buka-ppdb.details');
+            Route::get('/detail/{id}/data' , 'PesertaController@dataPesertaPPDB')->name('buka-ppdb.data-peserta');
             Route::get('/detail/{id}/status' , 'PPDBController@status')->name('buka-ppdb.rubah-status');
             Route::get('/data' , 'PPDBController@data')->name('buka-ppdb.data');
         });

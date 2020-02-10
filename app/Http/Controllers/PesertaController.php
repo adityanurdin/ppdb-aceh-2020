@@ -7,12 +7,15 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Models\Operator;
 use App\Models\Peserta;
+use App\Models\Pembukaan;
+use App\Models\Pendaftaran;
 
 use Validator;
 use Str;
 use Auth;
 use Carbon\Carbon;
 use Dits;
+use DataTables;
 
 class PesertaController extends Controller
 {
@@ -150,5 +153,17 @@ class PesertaController extends Controller
         $peserta = Peserta::whereUuid($uid)->first();
         $peserta->update($input);
         return redirect()->route('dashboard');
+    }
+
+    public function dataPesertaPPDB($id)
+    {
+        $uuid_pembukaan = Dits::decodeDits($id);
+        $data    = Pendaftaran::with('peserta')
+                                        ->whereUuidPembukaan($uuid_pembukaan)
+                                        ->get();
+        return DataTables::of($data)
+                            ->addIndexColumn()
+                            ->escapeColumns([])
+                            ->make();
     }
 }

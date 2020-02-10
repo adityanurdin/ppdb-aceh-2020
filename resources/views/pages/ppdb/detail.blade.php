@@ -44,13 +44,11 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Nama Madrasah</th>
-                        <th>Tanggal Pembukaan</th>
-                        <th>Tanggal Penutupan</th>
-                        <th>Tanggal Pengumuman</th>
-                        {{-- <th>Tanggal Pengumuman</th> --}}
-                        <th>Status</th>
-                        <th width="135">Opsi</th>
+                        <th>Kode Pendaftaran</th>
+                        <th>Nama Peserta</th>
+                        <th>Jenis Kelamin</th>
+                        <th>Alamat</th>
+                        {{-- <th width="135">Opsi</th> --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -62,6 +60,7 @@
 @endsection
 
 @push('script')
+<input type="hidden" id="params" value="{{Dits::encodeDits($data->uuid)}}">
 
     <script>
         $(function() {
@@ -77,15 +76,14 @@
             $('#myTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('buka-ppdb.data') }}",
+                ajax: "/buka-ppdb/detail/"+token+"/data",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'madrasah.nama_madrasah', name: 'madrasah.nama_madrasah'},
-                    {data: 'tgl_pembukaan', name: 'tgl_pembukaan'},
-                    {data: 'tgl_penutupan', name: 'tgl_penutupan'},
-                    {data: 'tgl_pengumuman', name: 'tgl_pengumuman'},
-                    {data: 'status_pembukaan', name: 'status_pembukaan'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                    {data: 'kode_pendaftaran', name: 'kode_pendaftaran'},
+                    {data: 'peserta.nama', name: 'peserta.nama'},
+                    {data: 'peserta.jkl', name: 'peserta.jkl'},
+                    {data: 'peserta.alamat_rumah', name: 'peserta.alamat_rumah'},
+                    // {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
 
