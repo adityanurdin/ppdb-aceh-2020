@@ -129,6 +129,15 @@ class Dits
         return $code;
     }
 
+    public static function sendResponse($msg , $data = [] , $code = 200)
+    {
+        return response()->json([
+            'status'    => true,
+            'messages'  => $msg,
+            'data'      => $data
+        ]);
+    }
+
 
 }
 

@@ -13,6 +13,21 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+
+Route::group(['prefix' => 'v1'], function () {
+
+
+    Route::post('auth/login', 'API\AuthController@login');
+    
+    Route::middleware('auth:api')->group( function() {
+        Route::get('/CAT' , 'API\CATController@index')->name('cat.index');
+
+
+        Route::get('auth/logout', 'API\AuthController@logout');
+        Route::get('auth/user', 'API\AuthController@user');
+    });
 });
