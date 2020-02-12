@@ -214,7 +214,15 @@ class PPDBController extends Controller
 
     public function data()
     {
-        $data = Pembukaan::with('madrasah' , 'operator')->get();
+        $uuid_operator = Auth::user()->uuid_login;
+        if (Auth::user()->role == 'Operator Madrasah') {
+            $data = Pembukaan::with('madrasah' , 'operator')
+                                ->where('uuid_operator' , $uuid_operator)
+                                ->get();
+        } else {
+            $data = Pembukaan::with('madrasah' , 'operator')
+                                ->get();
+        }
         
         return DataTables::of($data)
                             ->addIndexColumn()

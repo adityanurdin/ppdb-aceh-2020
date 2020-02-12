@@ -160,10 +160,42 @@ class PesertaController extends Controller
         $uuid_pembukaan = Dits::decodeDits($id);
         $data    = Pendaftaran::with('peserta')
                                         ->whereUuidPembukaan($uuid_pembukaan)
+                                        ->whereStatusPendaftaran('Baru')
                                         ->get();
         return DataTables::of($data)
                             ->addIndexColumn()
+                            ->addColumn('action' , function($item) {
+                                $btn = '<a href="#" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
+                                $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/lolos" class="btn btn-sm btn-info btn-block"><i class="fas fa-check"></i> Lolos Dokumen</a>';
+                                $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
+                                return $btn;
+                            })
                             ->escapeColumns([])
                             ->make();
+    }
+
+    public function updateStatusPendaftaran($id , $status)
+    {
+        $uuid = Dits::decodeDits($id);
+        $pendaftaran = Pendaftaran::whereUuid($uuid)
+                                    ->first();
+        
+        if( $status == 'lolos' ) {
+            $pendaftaran->update([
+                'status_pendaftaran' => 'Lolos Tahap Dokumen'
+            ]);
+        } else if ( $status == 'tidak-lolos' ) {
+            $pendaftaran->update([
+                'status_pendaftaran' => 'Tidak Lolos Tahap Dokumen'
+            ]);
+        }
+
+        if($pendaftaran) {
+            toast('Berhasil Memperbaharui Status Pendaftaran','success');
+            return back();
+        } else {
+            toast('Gagal Memperbaharui Status Pendaftaran','error');
+            return back();
+        }
     }
 }

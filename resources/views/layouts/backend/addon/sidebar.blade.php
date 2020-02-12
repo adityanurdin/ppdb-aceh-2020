@@ -65,7 +65,7 @@
                 <a href="{{route('buka-ppdb.madrasah-terpilih')}}"><i class="fas fa-check"></i> Madrasah Terpilih</a>
             </li>
             <li>
-                <a href="{{route('buka-ppdb.ujian-cat')}}"><i class="fas fa-tv"></i> Ujian CAT</a>
+                <a href="{{route('cat.index')}}"><i class="fas fa-tv"></i> Ujian CAT</a>
             </li>
             @endisset
         @endif

@@ -53,6 +53,11 @@ Route::get('/home', function () {
         Route::get('ppdb/sub/madrasah-terpilih' , 'PPDBController@madrasahTerpilih')->name('buka-ppdb.madrasah-terpilih');
         Route::get('ppdb/sub/madrasah-terpilih/data' , 'PPDBController@madrasahTerpilihData')->name('buka-ppdb.madrasah-terpilih.data');
         Route::get('ppdb/sub/ujian-cat' , 'PPDBController@madrasahTerpilih')->name('buka-ppdb.ujian-cat');
+
+        // CAT
+        Route::group(['prefix' => 'CAT'], function () {
+            Route::get('/' , 'CATController@index')->name('cat.index'); 
+         });
     });
 
     Route::group(['middleware' => 'Admin'], function () {
@@ -100,6 +105,7 @@ Route::get('/home', function () {
             Route::get('create' , 'PPDBController@create')->name('buka-ppdb.create');
             Route::post('store' , 'PPDBController@store')->name('buka-ppdb.store');
             Route::get('/detail/{id}' , 'PPDBController@detail')->name('buka-ppdb.details');
+            Route::get('/detail/{id}/update-status-pendaftaran/{status}' , 'PesertaController@updateStatusPendaftaran')->name('buka-ppdb.update-status-pendaftaran');
             Route::get('/detail/{id}/data' , 'PesertaController@dataPesertaPPDB')->name('buka-ppdb.data-peserta');
             Route::get('/detail/{id}/status' , 'PPDBController@status')->name('buka-ppdb.rubah-status');
             Route::get('/data' , 'PPDBController@data')->name('buka-ppdb.data');

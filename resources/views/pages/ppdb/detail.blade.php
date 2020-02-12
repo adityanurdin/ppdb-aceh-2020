@@ -48,7 +48,7 @@
                         <th>Nama Peserta</th>
                         <th>Jenis Kelamin</th>
                         <th>Alamat</th>
-                        {{-- <th width="135">Opsi</th> --}}
+                        <th width="135">Opsi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,6 +57,120 @@
             </table>
         </div>
     </div>
+
+    <div class="card mt-5">
+        <div class="card-body">
+            
+            <h5 class="text-center">Pengumuman Seleksi</h5>
+
+            <a href="#" class="btn btn-info mt-5 btn-sm"><i class="fas fa-plus"></i> Tambah Pengumuman</a>
+            <a href="#" class="btn btn-info mt-5 btn-sm"><i class="fas fa-upload"></i> Upload Pengumuman</a>
+            <a href="#" class="btn btn-info mt-5 btn-sm"><i class="fas fa-download"></i> Format Pengumuman</a>
+
+            <div class="card mt-2">
+                <div class="card-body">
+                    <h6 class="text-center">Data Peserta Diterima</h6>
+        
+                    <table class="table table-borderless table-hover mt-5" id="myTable2">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Kode Pendaftaran</th>
+                                <th>Nama Peserta</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Alamat</th>
+                                <th width="135">Opsi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="card mt-5">
+                <div class="card-body">
+                    <h6 class="text-center">Data Peserta Ditolak</h6>
+        
+                    <table class="table table-borderless table-hover mt-5" id="myTable3">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Kode Pendaftaran</th>
+                                <th>Nama Peserta</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Alamat</th>
+                                <th width="135">Opsi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mt-5">
+        <div class="card-body">
+            
+            <h5 class="text-center">Daftar Ulang</h5>
+
+            <div class="card mt-2">
+                <div class="card-body">
+                    <h6 class="text-center">Daftar Peserta Sudah Upload Daftar Ulang</h6>
+        
+                <a href="#" class="btn btn-info mt-5 mb-3 btn-sm"><i class="fas fa-file-excel"></i> Export Sudah Transfer</a>
+                    <table class="table table-borderless table-hover mt-5" id="myTable4">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Kode Pendaftaran</th>
+                                <th>Nama Peserta</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Alamat</th>
+                                <th width="135">Opsi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="card mt-5">
+                <div class="card-body">
+                    <h6 class="text-center">Daftar Peserta Belum Upload Daftar Ulang</h6>
+                    
+                <a href="#" class="btn btn-info mt-5 mb-3 btn-sm"><i class="fas fa-file-excel"></i> Export Belum Transfer</a>
+
+        
+                    <table class="table table-borderless table-hover mt-5" id="myTable5">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Kode Pendaftaran</th>
+                                <th>Nama Peserta</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Alamat</th>
+                                <th width="135">Opsi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
+
 @endsection
 
 @push('script')
@@ -83,7 +197,63 @@
                     {data: 'peserta.nama', name: 'peserta.nama'},
                     {data: 'peserta.jkl', name: 'peserta.jkl'},
                     {data: 'peserta.alamat_rumah', name: 'peserta.alamat_rumah'},
-                    // {data: 'action', name: 'action', orderable: false, searchable: false},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ]
+            });
+            
+            $('#myTable2').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "/buka-ppdb/detail/"+token+"/data",
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'kode_pendaftaran', name: 'kode_pendaftaran'},
+                    {data: 'peserta.nama', name: 'peserta.nama'},
+                    {data: 'peserta.jkl', name: 'peserta.jkl'},
+                    {data: 'peserta.alamat_rumah', name: 'peserta.alamat_rumah'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ]
+            });
+            
+            $('#myTable3').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "/buka-ppdb/detail/"+token+"/data",
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'kode_pendaftaran', name: 'kode_pendaftaran'},
+                    {data: 'peserta.nama', name: 'peserta.nama'},
+                    {data: 'peserta.jkl', name: 'peserta.jkl'},
+                    {data: 'peserta.alamat_rumah', name: 'peserta.alamat_rumah'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ]
+            });
+            
+            $('#myTable4').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "/buka-ppdb/detail/"+token+"/data",
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'kode_pendaftaran', name: 'kode_pendaftaran'},
+                    {data: 'peserta.nama', name: 'peserta.nama'},
+                    {data: 'peserta.jkl', name: 'peserta.jkl'},
+                    {data: 'peserta.alamat_rumah', name: 'peserta.alamat_rumah'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ]
+            });
+            
+            $('#myTable5').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "/buka-ppdb/detail/"+token+"/data",
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'kode_pendaftaran', name: 'kode_pendaftaran'},
+                    {data: 'peserta.nama', name: 'peserta.nama'},
+                    {data: 'peserta.jkl', name: 'peserta.jkl'},
+                    {data: 'peserta.alamat_rumah', name: 'peserta.alamat_rumah'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
 
