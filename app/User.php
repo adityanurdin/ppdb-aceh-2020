@@ -47,4 +47,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Models\Operator' , 'uuid_login' , 'uuid');
     }
+    
+    public function peserta()
+    {
+        return $this->belongsTo('App\Models\Peserta' , 'uuid_login' , 'uuid');
+    }
 }

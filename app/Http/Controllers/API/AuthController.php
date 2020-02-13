@@ -25,7 +25,6 @@ class AuthController extends Controller
         $request->validate([
             'username' => 'required|string',
             'password' => 'required|string',
-            // 'remember_me' => 'boolean'
         ]);
         $credentials = request(['username', 'password']);
         if(!Auth::attempt($credentials))
@@ -62,6 +61,10 @@ class AuthController extends Controller
 
     public function user(Request $request)
     {
-        return response()->json($request->user());
+        $uuid   = $request->user()->uuid_login;
+        $user   = User::with('peserta')
+                        ->whereUuidLogin($uuid)
+                        ->first();
+        return \Dits::sendResponse('Success' , $user);
     }
 }

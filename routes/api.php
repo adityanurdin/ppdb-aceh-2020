@@ -27,6 +27,9 @@ Route::group(['prefix' => 'v1'], function () {
         Route::get('/CAT' , 'API\CATController@index')->name('cat.index');
 
 
+        Route::get('data-user/' , function() {
+            return Dits::sendResponse('Success');
+        });
         Route::get('auth/logout', 'API\AuthController@logout');
         Route::get('auth/user', 'API\AuthController@user');
     });

@@ -160,6 +160,31 @@ class PesertaController extends Controller
         $uuid_pembukaan = Dits::decodeDits($id);
         $data    = Pendaftaran::with('peserta')
                                         ->whereUuidPembukaan($uuid_pembukaan)
+                                        // ->whereStatusPendaftaran('Baru')
+                                        ->get();
+        return DataTables::of($data)
+                            ->addIndexColumn()
+                            ->addColumn('action' , function($item) {
+                                $btn = '<a href="#" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
+                                if ($item->status_pendaftaran == 'Lolos Tahap Dokumen') {
+                                    $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
+                                }else if ($item->status_pendaftaran == 'Tidak Lolos Tahap Dokumen') {
+                                    $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/lolos" class="btn btn-sm btn-info btn-block"><i class="fas fa-check"></i> Lolos Dokumen</a>';
+                                } else {
+                                    $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/lolos" class="btn btn-sm btn-info btn-block"><i class="fas fa-check"></i> Lolos Dokumen</a>';
+                                    $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
+                                }
+                                return $btn;
+                            })
+                            ->escapeColumns([])
+                            ->make();
+    }
+    
+    public function dataVerifikasi($id)
+    {
+        $uuid_pembukaan = Dits::decodeDits($id);
+        $data    = Pendaftaran::with('peserta')
+                                        ->whereUuidPembukaan($uuid_pembukaan)
                                         ->whereStatusPendaftaran('Baru')
                                         ->get();
         return DataTables::of($data)
@@ -168,6 +193,42 @@ class PesertaController extends Controller
                                 $btn = '<a href="#" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
                                 $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/lolos" class="btn btn-sm btn-info btn-block"><i class="fas fa-check"></i> Lolos Dokumen</a>';
                                 $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
+                                return $btn;
+                            })
+                            ->escapeColumns([])
+                            ->make();
+    }
+    
+    public function dataDiterima($id)
+    {
+        $uuid_pembukaan = Dits::decodeDits($id);
+        $data    = Pendaftaran::with('peserta')
+                                        ->whereUuidPembukaan($uuid_pembukaan)
+                                        ->whereStatusDiterima('Diterima')
+                                        ->get();
+        return DataTables::of($data)
+                            ->addIndexColumn()
+                            ->addColumn('action' , function($item) {
+                                $btn = '<a href="#" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
+                                $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/pengumuman/'.$item->kode_pendaftaran.'" class="btn btn-sm btn-info btn-block"><i class="fas fa-pencil-alt"></i> Edit Status</a>';
+                                // $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
+                                return $btn;
+                            })
+                            ->escapeColumns([])
+                            ->make();
+    }
+    public function dataDitolak($id)
+    {
+        $uuid_pembukaan = Dits::decodeDits($id);
+        $data    = Pendaftaran::with('peserta')
+                                        ->whereUuidPembukaan($uuid_pembukaan)
+                                        ->whereStatusDiterima('Ditolak')
+                                        ->get();
+        return DataTables::of($data)
+                            ->addIndexColumn()
+                            ->addColumn('action' , function($item) {
+                                $btn = '<a href="#" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
+                                $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/pengumuman/'.$item->kode_pendaftaran.'" class="btn btn-sm btn-info btn-block"><i class="fas fa-pencil-alt"></i> Edit Status</a>';
                                 return $btn;
                             })
                             ->escapeColumns([])

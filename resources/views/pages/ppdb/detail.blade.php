@@ -38,9 +38,16 @@
 
     <div class="card mt-5">
         <div class="card-body">
-            <h6 class="text-center">Data Peserta Pendaftaran</h6>
+            <h6 class="text-center">Verifikasi PPDB Madrasah</h6>
 
-            <table class="table table-borderless table-hover mt-5" id="myTable">
+            <div class="mt-5 mb-3">
+                <h6>Jumlah Pendaftar Belum Terverifikasi : 0</h6>
+                <h6>Jumlah Peserta Lolos Tahap Dokumen : 3</h6>
+                <h6>Jumlah Peserta Tidak Lolos Tahap Dokumen : 0</h6>
+            </div>
+
+
+            <table class="table table-borderless table-hover" id="dataVerifikasi">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -48,6 +55,30 @@
                         <th>Nama Peserta</th>
                         <th>Jenis Kelamin</th>
                         <th>Alamat</th>
+                        <th width="135">Opsi</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+
+    <div class="card mt-5">
+        <div class="card-body">
+            <h6 class="text-center">Data Peserta Pendaftaran</h6>
+
+            <table class="table table-borderless table-hover mt-5" id="dataPendaftaran">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Kode Pendaftaran</th>
+                        <th>Nama Peserta</th>
+                        <th>Alamat</th>
+                        <th>Status Pendaftaran</th>
+                        <th>Status Diterima</th>
                         <th width="135">Opsi</th>
                     </tr>
                 </thead>
@@ -63,22 +94,23 @@
             
             <h5 class="text-center">Pengumuman Seleksi</h5>
 
-            <a href="#" class="btn btn-info mt-5 btn-sm"><i class="fas fa-plus"></i> Tambah Pengumuman</a>
+            <a href="{{route('buka-ppdb.pengumuman' , Dits::encodeDits($data->uuid))}}" class="btn btn-info mt-5 btn-sm"><i class="fas fa-plus"></i> Tambah Pengumuman</a>
             <a href="#" class="btn btn-info mt-5 btn-sm"><i class="fas fa-upload"></i> Upload Pengumuman</a>
-            <a href="#" class="btn btn-info mt-5 btn-sm"><i class="fas fa-download"></i> Format Pengumuman</a>
+            <a href="{{route('download.file' , ['Documents' , 'format_pengumuman.xlsx'])}}" class="btn btn-info mt-5 btn-sm"><i class="fas fa-download"></i> Format Pengumuman</a>
 
             <div class="card mt-2">
                 <div class="card-body">
                     <h6 class="text-center">Data Peserta Diterima</h6>
         
-                    <table class="table table-borderless table-hover mt-5" id="myTable2">
+                    <table class="table table-borderless table-hover mt-5" id="dataDiterima">
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Kode Pendaftaran</th>
                                 <th>Nama Peserta</th>
-                                <th>Jenis Kelamin</th>
                                 <th>Alamat</th>
+                                <th>Status Diterima</th>
+                                <th>Jalur Diterima</th>
                                 <th width="135">Opsi</th>
                             </tr>
                         </thead>
@@ -93,14 +125,15 @@
                 <div class="card-body">
                     <h6 class="text-center">Data Peserta Ditolak</h6>
         
-                    <table class="table table-borderless table-hover mt-5" id="myTable3">
+                    <table class="table table-borderless table-hover mt-5" id="dataDitolak">
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Kode Pendaftaran</th>
                                 <th>Nama Peserta</th>
-                                <th>Jenis Kelamin</th>
                                 <th>Alamat</th>
+                                <th>Status Diterima</th>
+                                <th>Jalur Diterima</th>
                                 <th width="135">Opsi</th>
                             </tr>
                         </thead>
@@ -113,7 +146,7 @@
         </div>
     </div>
     
-    <div class="card mt-5">
+    {{-- <div class="card mt-5">
         <div class="card-body">
             
             <h5 class="text-center">Daftar Ulang</h5>
@@ -166,7 +199,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     
     
 
@@ -187,10 +220,25 @@
 
             var token = $('#params').val();
             
-            $('#myTable').DataTable({
+            $('#dataPendaftaran').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: "/buka-ppdb/detail/"+token+"/data",
+                columns: [
+                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                    {data: 'kode_pendaftaran', name: 'kode_pendaftaran'},
+                    {data: 'peserta.nama', name: 'peserta.nama'},
+                    {data: 'peserta.alamat_rumah', name: 'peserta.alamat_rumah'},
+                    {data: 'status_pendaftaran', name: 'status_pendaftaran'},
+                    {data: 'status_diterima', name: 'status_diterima'},
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                ]
+            });
+            
+            $('#dataVerifikasi').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "/buka-ppdb/detail/"+token+"/dataVerifikasi",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'kode_pendaftaran', name: 'kode_pendaftaran'},
@@ -201,44 +249,32 @@
                 ]
             });
             
-            $('#myTable2').DataTable({
+            $('#dataDiterima').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "/buka-ppdb/detail/"+token+"/data",
+                ajax: "/buka-ppdb/detail/"+token+"/dataDiterima",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'kode_pendaftaran', name: 'kode_pendaftaran'},
                     {data: 'peserta.nama', name: 'peserta.nama'},
-                    {data: 'peserta.jkl', name: 'peserta.jkl'},
                     {data: 'peserta.alamat_rumah', name: 'peserta.alamat_rumah'},
+                    {data: 'status_diterima', name: 'status_diterima'},
+                    {data: 'jalur_diterima', name: 'jalur_diterima'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
             
-            $('#myTable3').DataTable({
+            $('#dataDitolak').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "/buka-ppdb/detail/"+token+"/data",
+                ajax: "/buka-ppdb/detail/"+token+"/dataDitolak",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'kode_pendaftaran', name: 'kode_pendaftaran'},
                     {data: 'peserta.nama', name: 'peserta.nama'},
-                    {data: 'peserta.jkl', name: 'peserta.jkl'},
                     {data: 'peserta.alamat_rumah', name: 'peserta.alamat_rumah'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
-                ]
-            });
-            
-            $('#myTable4').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: "/buka-ppdb/detail/"+token+"/data",
-                columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'kode_pendaftaran', name: 'kode_pendaftaran'},
-                    {data: 'peserta.nama', name: 'peserta.nama'},
-                    {data: 'peserta.jkl', name: 'peserta.jkl'},
-                    {data: 'peserta.alamat_rumah', name: 'peserta.alamat_rumah'},
+                    {data: 'status_diterima', name: 'status_diterima'},
+                    {data: 'jalur_diterima', name: 'jalur_diterima'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });

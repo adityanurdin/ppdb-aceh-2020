@@ -181,10 +181,13 @@ class PPDBController extends Controller
         return DataTables::of($data)
                             ->addIndexColumn()
                             ->addColumn('action' , function($item) {
-                                $btn = '<a href="'.Dits::PdfViewer(asset($item->url_brosur)).'" target="_blank" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf"></i> Brosur</a> <br>';
-                                $btn .= '<a href="" class="btn btn-info btn-sm btn-block" style="margin-top:5px; margin-botton:5px;"><i class="fas fa-eye"></i> Lihat</a>';
-                                $btn .= '<a href="/ppdb/'.Dits::encodeDits($item->uuid_pembukaan).'/hapus" class="btn btn-danger btn-sm btn-block" style="margin-top:5px; margin-botton:5px;"><i class="fas fa-trash"></i> Hapus</a>';
-                                $btn .= '<a href="" class="btn btn-success btn-sm btn-block" style="margin-top:5px; margin-botton:5px;"><i class="fas fa-print"></i> Cetak</a>';
+                                $btn = '<a href="'.Dits::PdfViewer(asset($item->url_brosur)).'" target="_blank" class="btn btn-danger btn-sm btn-block"><i class="fas fa-file-pdf"></i> Brosur</a>';
+                                $btn .= '<a href="" class="btn btn-info btn-sm btn-block" ><i class="fas fa-eye"></i> Lihat</a>';
+                                $btn .= '<a href="/ppdb/'.Dits::encodeDits($item->uuid_pembukaan).'/hapus" class="btn btn-danger btn-sm btn-block"><i class="fas fa-trash"></i> Hapus</a>';
+                                $btn .= '<a href="" class="btn btn-success btn-sm btn-block"><i class="fas fa-print"></i> Cetak</a>';
+                                    if($item->status_diterima == 'Diterima') {
+                                        $btn .= '<a href="#" class="btn btn-dark btn-sm btn-block"><i class="fas fa-coins"></i> Daftar Ulang</a>';
+                                    }
                                 return $btn;
                             })
                             ->escapeColumns([])
@@ -209,6 +212,51 @@ class PPDBController extends Controller
             return back();
         }
         toast('Gagal Menghapus','error');
+        return back();
+    }
+
+    public function pengumuman($id , $kode = '')
+    {
+        $uuid = Dits::decodeDits($id);
+        // return $uuid;
+        $data = Pendaftaran::where('kode_pendaftaran' , $kode)
+                                    ->first();
+        return view('pages.ppdb.pengumuman.create_edit' , compact('id' , 'data'));
+    }
+
+    public function storePengumuman(Request $request , $id)
+    {
+        $uuid = Dits::decodeDits($id);
+        $pendaftaran = Pendaftaran::where('kode_pendaftaran' , $request->kode_pendaftaran)
+                                    ->first();
+        if ($pendaftaran) {
+            $pendaftaran->update([
+                'status_diterima'   => $request->status_diterima,
+                'jalur_diterima'    => $request->jalur_diterima
+            ]);
+            toast('Berhasil Membuat Pengumuman','success');
+            return back();
+        }
+        toast('Gagal Membuat Pengumuman','error');
+        return back();
+    }
+    
+    public function updatePengumuman(Request $request , $id)
+    {
+        $uuid = Dits::decodeDits($id);
+        // return $uuid;
+        $pendaftaran = Pendaftaran::where('kode_pendaftaran' , $request->kode_pendaftaran)
+                                    ->first();
+                                    // return $pendaftaran;
+        if ($pendaftaran) {
+            $pendaftaran->update([
+                'status_diterima'   => $request->status_diterima,
+                'jalur_diterima'    => $request->jalur_diterima
+            ]);
+            toast('Berhasil Membuat Pengumuman','success');
+            return back();
+        }
+        toast('Gagal Membuat Pengumuman','error');
         return back();
     }
 

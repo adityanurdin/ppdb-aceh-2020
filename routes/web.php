@@ -107,9 +107,22 @@ Route::get('/home', function () {
             Route::get('/detail/{id}' , 'PPDBController@detail')->name('buka-ppdb.details');
             Route::get('/detail/{id}/update-status-pendaftaran/{status}' , 'PesertaController@updateStatusPendaftaran')->name('buka-ppdb.update-status-pendaftaran');
             Route::get('/detail/{id}/data' , 'PesertaController@dataPesertaPPDB')->name('buka-ppdb.data-peserta');
+            Route::get('/detail/{id}/dataVerifikasi' , 'PesertaController@dataVerifikasi')->name('buka-ppdb.data-verifikasi');
+            Route::get('/detail/{id}/dataDiterima' , 'PesertaController@dataDiterima')->name('buka-ppdb.data-diterima');
+            Route::get('/detail/{id}/dataDitolak' , 'PesertaController@dataDitolak')->name('buka-ppdb.data-ditolak');
             Route::get('/detail/{id}/status' , 'PPDBController@status')->name('buka-ppdb.rubah-status');
             Route::get('/data' , 'PPDBController@data')->name('buka-ppdb.data');
+
+            Route::get('/detail/{id}/pengumuman/' , 'PPDBController@pengumuman')->name('buka-ppdb.pengumuman');
+            Route::get('/detail/{id}/pengumuman/{kode}' , 'PPDBController@pengumuman')->name('buka-ppdb.pengumuman.edit');
+            Route::post('/detail/{id}/store-pengumuman' , 'PPDBController@storePengumuman')->name('buka-ppdb.store_pengumuman');
+            Route::put('/detail/{id}/update-pengumuman' , 'PPDBController@updatePengumuman')->name('buka-ppdb.update_pengumuman');
         });
+
+        
+        Route::get('download/file/{path}/{file}' , function($path , $file) {
+            return \Storage::disk('public')->download($path.'/'.$file);
+        })->name('download.file');
         
     });
 
