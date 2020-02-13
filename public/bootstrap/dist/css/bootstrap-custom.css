@@ -4,7 +4,7 @@
  * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
-:root {
+ :root {
   --blue: #007bff;
   --indigo: #6610f2;
   --purple: #6f42c1;
@@ -4288,15 +4288,18 @@ input[type="button"].btn-block {
 }
 
 .navbar-dark .navbar-brand:hover, .navbar-dark .navbar-brand:focus {
-  color: #fff;
+  color: #ececec;
 }
 
 .navbar-dark .navbar-nav .nav-link {
-  color: rgba(255, 255, 255, 0.5);
+  color: #fff;
 }
 
 .navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus {
-  color: rgba(255, 255, 255, 0.75);
+  color:#cecece;
+  border-radius: 5px;
+  text-align: center;
+  border-bottom: 5px solid #5BC0EB;
 }
 
 .navbar-dark .navbar-nav .nav-link.disabled {
@@ -4307,7 +4310,10 @@ input[type="button"].btn-block {
 .navbar-dark .navbar-nav .active > .nav-link,
 .navbar-dark .navbar-nav .nav-link.show,
 .navbar-dark .navbar-nav .nav-link.active {
-  color: #fff;
+  color:#cecece;
+  border-radius: 5px;
+  text-align: center;
+  border-bottom: 5px solid #5BC0EB;
 }
 
 .navbar-dark .navbar-toggler {

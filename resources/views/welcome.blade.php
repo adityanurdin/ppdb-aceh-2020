@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="row">
-  <div class="col">
+  <div class="col mt-3">
     {{-- <img src="{{asset('img/logo_1-min.png')}}" class="img-fluid rounded mx-auto d-block" width="300px"> --}}
     <img src="https://simppdbaceh.frandikasepta.com/assets/img/banner.png" class="img-fluid rounded mx-auto d-block">
   </div>

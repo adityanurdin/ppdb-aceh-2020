@@ -18,7 +18,7 @@
   </head>
   <body>
     <!-- navbar -->
-<nav class="navbar navbar-expand-md navbar-light">
+<nav class="navbar navbar-expand-md navbar-dark navsgrad">
     <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item {{Request::route()->getName() == 'home' ? 'active' : ''}}">
