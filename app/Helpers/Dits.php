@@ -10,7 +10,12 @@ use Auth;
 use Str;
 use DB;
 
+use App\User;
+use App\Models\Operator;
 use App\Models\Peserta;
+use App\Models\Madrasah;
+use App\Models\Pembukaan;
+use App\Models\Pendaftaran;
 
 /**
  *  Create By : Muhammad Aditya Nurdin
@@ -121,6 +126,11 @@ class Dits
         return strtoupper($token.$random);
     }
 
+    public static function genKodeSoal($bytes)
+    {
+        return strtoupper(bin2hex(openssl_random_pseudo_bytes($bytes)));
+    }
+
     public static function interval($table , $field , $int = 1 , $prefix = '')
     {
         // $id = MsAccident::max('id')+1;
@@ -138,8 +148,62 @@ class Dits
         ]);
     }
 
-    // public static function 
+    public static function checkJenjang()
+    {
+        $uuid_peserta = Auth::user()->uuid_login;
+        if ($uuid_peserta) {
+            $pendaftaran  = Pendaftaran::where('uuid_peserta' , $uuid_peserta)
+                                            ->first();
+            if ($pendaftaran) {
+                $pembukaan    = Pembukaan::where('uuid' , $pendaftaran->uuid_pembukaan)
+                                            ->first();
+                if($pembukaan) {
+                    $madrasah     = Madrasah::where('uuid' , $pembukaan->uuid_madrasah)
+                                                ->first();
+                    if($madrasah) {
+                        $jenjang      = $madrasah->jenjang;
+                        return $jenjang;
+                    }
+                    return 'no';
+                }
+                return 'no';
+            }
+            return 'no';
+        }
+        return 'no';
+    }
 
+    public static function hitungUmur($nik , $jkl)
+    {
+        if($jkl=="Perempuan"){
+            $ambil_tgl = intval(substr($nik,6,2)-40);
+            $ambil_bln = substr($nik,8,2);
+            $ambil_thn = substr($nik,10,2);
+            $tgl_nik = "20".$ambil_thn."-".$ambil_bln."-".$ambil_tgl;
+            $tgl_nik = date('Y-m-d',strtotime($tgl_nik));
+            return $tgl_nik;
+        }else{
+            $ambil_tgl = substr($nik,6,2);
+            $ambil_bln = substr($nik,8,2);
+            $ambil_thn = substr($nik,10,2);
+            $tgl_nik = "20".$ambil_thn."-".$ambil_bln."-".$ambil_tgl;
+            $tgl_nik = date('Y-m-d',strtotime($tgl_nik));
+            return $tgl_nik;
+        }
+    }
+
+    public static function cekLayak($umur)
+    {
+        if ($umur >= 6 && $umur == 7) { //MI
+            return 'MI';
+        } else if ($umur >= 12 && $umur <= 15) { //MTs
+            return 'MTs';
+        } else if ($umur >= 15 && $umur <= 21) { //MA
+            return 'MA';
+        } else { //error
+            return 'no';
+        }
+    }
 
 }
 

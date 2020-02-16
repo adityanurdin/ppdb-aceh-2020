@@ -24,8 +24,6 @@ class PPDBController extends Controller
 {
     public function listByID($id)
     {
-        // $jenjang = Dits::decodeDits($id);
-
         return view('pages.ppdb.list' , compact('id'));
     }
 
@@ -45,7 +43,7 @@ class PPDBController extends Controller
         $user  = Auth::user();
         $input = $request->all();
         if(!isset($request->uuid_madrasah)) {
-            $operator      = Operator::whereUuidLogin($user->uuid_login)->first();
+            $operator      = Operator::whereUuid($user->uuid_login)->first();
             $uuid_madrasah = $operator->uuid_madrasah;
         } else {
             $uuid_madrasah = Dits::decodeDits($request->uuid_madrasah);
@@ -125,13 +123,38 @@ class PPDBController extends Controller
         return back();
     }
 
-    public function daftar($id)
+    public function daftar($id , $u_madrasah)
     {
         $uuid   = Dits::decodeDits($id);
-        // return $uuid;
+        $peserta = Dits::DataPeserta();
+        if($peserta->status_aktif == 'no') {
+            toast('Gagal Mendaftar, Silahkan isi data diri terlebih dahulu','error');
+            return back();
+        }
+
+        $madrasah = Madrasah::whereUuid($u_madrasah)->first();
+
+        $pembukaan = Pembukaan::where('uuid_madrasah' , $madrasah->uuid)->first();
+        if ($pembukaan->status_pembukaan == 'Ditutup')
+        {
+            toast('Gagal Mendaftar, PPDB pada madrasah ini telah di tutup','error');
+            return back();
+        }
+
         $uuid_peserta = Auth::user()->uuid_login;
 
-        // return $uuid_peserta;
+        $cekUmur = Dits::hitungUmur($peserta->NIK , $peserta->jkl);
+        $dateNow = date('Ymd');
+        $cekUmur = $dateNow - str_replace('-' , '' , $cekUmur);
+        $umur = substr($cekUmur , 0 , 2);
+
+        $cekLayak = Dits::cekLayak($umur);
+
+        if ($cekLayak != $madrasah->jenjang) {
+            toast('Gagal Mendaftar, Silahkan pilih jenjang yang setara dengan umur anda','error');
+            return back();
+        }
+        
         $check_pendaftaran = Pendaftaran::whereUuidPeserta($uuid_peserta)
                                             ->get('uuid_pembukaan');
                                             // return count($check_pendaftaran);
@@ -182,11 +205,11 @@ class PPDBController extends Controller
                             ->addIndexColumn()
                             ->addColumn('action' , function($item) {
                                 $btn = '<a href="'.Dits::PdfViewer(asset($item->url_brosur)).'" target="_blank" class="btn btn-danger btn-sm btn-block"><i class="fas fa-file-pdf"></i> Brosur</a>';
-                                $btn .= '<a href="" class="btn btn-info btn-sm btn-block" ><i class="fas fa-eye"></i> Lihat</a>';
+                                $btn .= '<a href="/ppdb/'.Dits::encodeDits($item->uuid_madrasah).'/'.$item->kode_pendaftaran.'/lihat" class="btn btn-info btn-sm btn-block" ><i class="fas fa-eye"></i> Lihat</a>';
                                 $btn .= '<a href="/ppdb/'.Dits::encodeDits($item->uuid_pembukaan).'/hapus" class="btn btn-danger btn-sm btn-block"><i class="fas fa-trash"></i> Hapus</a>';
                                 $btn .= '<a href="" class="btn btn-success btn-sm btn-block"><i class="fas fa-print"></i> Cetak</a>';
                                     if($item->status_diterima == 'Diterima') {
-                                        $btn .= '<a href="#" class="btn btn-dark btn-sm btn-block"><i class="fas fa-coins"></i> Daftar Ulang</a>';
+                                        $btn .= '<a href="/ppdb/sub/daftar-ulang/'.Dits::encodeDits($item->kode_pendaftaran).'/" class="btn btn-dark btn-sm btn-block"><i class="fas fa-coins"></i> Daftar Ulang</a>';
                                     }
                                 return $btn;
                             })
@@ -287,16 +310,133 @@ class PPDBController extends Controller
         $jenjang = Dits::decodeDits($id);
         $data = Madrasah::join('pembukaans' , 'pembukaans.uuid_madrasah' , '=' , 'madrasahs.uuid')
                             ->whereJenjang($jenjang)
+                            ->where('status_pembukaan' , 'Dibuka')
                             ->get();
         return DataTables::of($data)
                             ->addIndexColumn()
                             ->addColumn('action' , function($item) {
                                 $btn = '<a href="'.Dits::PdfViewer(asset($item->url_brosur)).'" target="_blank" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf"></i> Brosur</a> ';
-                                $btn .= '<a href="" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Lihat</a> ';
-                                $btn .= '<a href="/ppdb/'.Dits::encodeDits($item->uuid).'/daftar" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Daftar</a>';
+                                $btn .= '<a href="/ppdb/'.Dits::encodeDits($item->uuid_madrasah).'/lihat" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Lihat</a> ';
+                                $btn .= '<a href="/ppdb/'.Dits::encodeDits($item->uuid).'/daftar/'.$item->uuid_madrasah.'" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Daftar</a>';
                                 return $btn;
                             })
                             ->escapeColumns([])
                             ->make(true);
     }
+
+    public function show($id , $kode = NULL)
+    {
+        $uuid = Dits::decodeDits($id);
+        $uuid_peserta = Auth::user()->uuid_login;
+        $data = Madrasah::with('pembukaan')
+                            ->whereUuid($uuid)
+                            ->first();
+        $pendaftaran = Pendaftaran::with('pembukaan')
+                                    ->where('kode_pendaftaran' , $kode)
+                                    ->first();
+                                    // return $pendaftaran;
+        return view('pages.ppdb.madrasah.detail' , compact('data' , 'pendaftaran'));
+    }
+
+    public function daftarUlang($kode)
+    {
+        $kode_pendaftaran = Dits::decodeDits($kode);
+        $data = Pendaftaran::where('kode_pendaftaran' , $kode_pendaftaran)
+                                        ->first();
+        return view('pages.ppdb.daftar-ulang' , compact('kode' , 'data'));
+    }
+
+    public function daftarUlangStore(Request $request , $kode)
+    {
+        $kode_pendaftaran = Dits::decodeDits($kode);
+
+        $nik = Dits::DataPeserta()->NIK;
+
+        if($request->hasFile('url_transfer')) {
+
+            $fileName = Carbon::now()->timestamp. '.' . 
+            $request->file('url_transfer')->getClientOriginalExtension();
+            $upload = $request->file('url_transfer')->move(
+                base_path() . '/public/document/peserta/'.$nik.'/bukti_transfer/', $fileName
+            );
+            
+            $pendaftaran = Pendaftaran::where('kode_pendaftaran' , $kode_pendaftaran)
+                                        ->first();
+            if($pendaftaran) {
+                $pendaftaran->update([
+                    'url_transfer' => $upload
+                ]);
+                toast('Berhasil Upload','success');
+                return back();
+            }
+            toast('Gagal Upload','error');
+            return back();
+        }
+
+    }
+
+    public function daftarUlangDelete($kode)
+    {
+        $kode_pendaftaran = Dits::decodeDits($kode);
+        $data = Pendaftaran::where('kode_pendaftaran' , $kode_pendaftaran)
+                                        ->first();
+                                        // return $data->url_transfer;
+        if($data) {
+            unlink($data->url_transfer);
+            $data->update([
+                'url_transfer' => ''
+            ]);
+            toast('Berhasil Hapus File','success');
+            return back();
+        }
+        toast('Gagal Hapus File','error');
+        return back();
+    }
+
+    public function uploadDocument(Request $request , $field)
+    {
+        $nik            = Dits::DataPeserta()->NIK;
+        $uuid_peserta   = Auth::user()->uuid_login;
+        $peserta        = Peserta::whereUuid($uuid_peserta)->first();
+        if($request->hasFile($field)) {
+            $fileName = Carbon::now()->timestamp. '.' . 
+            $request->file($field)->getClientOriginalExtension();
+            $uploadPdf = $request->file($field)->move(
+                base_path() . '/public/document/peserta/'.$nik.'/'.$field.'/', $fileName
+            );
+            $peserta->update([
+                $field => $uploadPdf
+            ]);
+            if ($peserta) {
+                toast('Berhasil Upload File','success');
+                return back();
+            }
+            toast('Gagal Upload File','error');
+            return back();
+        }
+        toast('Gagal, Tipe file tidak valid!','error');
+        return back();
+    }
+
+    public function deleteDocument($field , $nik)
+    {
+        $data = Peserta::where('NIK' , $nik)->first();
+        if ($data) {
+            unlink($data->$field);
+            $data->update([
+                $field => ''
+            ]);
+            if ($data) {
+                toast('Berhasil Hapus File','success');
+                return back();
+            }
+            toast('Gagal Hapus File','error');
+            return back();
+        }
+        toast('Data tidak ada','error');
+        return back();
+    }
+
+
+
 }

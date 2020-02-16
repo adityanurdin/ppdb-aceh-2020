@@ -174,6 +174,21 @@ class PesertaController extends Controller
                                     $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/lolos" class="btn btn-sm btn-info btn-block"><i class="fas fa-check"></i> Lolos Dokumen</a>';
                                     $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
                                 }
+                                if ($item->peserta['rapot_1'] != NULL) {
+                                    $btn .= '<a href="'.Dits::pdfViewer(asset($item->peserta['rapot_1'])).'" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 1</a>';
+                                }
+                                if ($item->peserta['rapot_2'] != NULL) {
+                                    $btn .= '<a href="'.Dits::pdfViewer(asset($item->peserta['rapot_2'])).'" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 2</a>';
+                                }
+                                if ($item->peserta['rapot_3'] != NULL) {
+                                    $btn .= '<a href="'.Dits::pdfViewer(asset($item->peserta['rapot_3'])).'" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 3</a>';
+                                }
+                                if ($item->peserta['akte'] != NULL) {
+                                    $btn .= '<a href="'.Dits::pdfViewer(asset($item->peserta['akte'])).'" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-times"></i> Lihat File</a>';
+                                }
+                                if ($item->peserta['kk'] != NULL) {
+                                    $btn .= '<a href="'.Dits::pdfViewer(asset($item->peserta['kk'])).'" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-times"></i> Lihat File</a>';
+                                }
                                 return $btn;
                             })
                             ->escapeColumns([])
@@ -193,6 +208,21 @@ class PesertaController extends Controller
                                 $btn = '<a href="#" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
                                 $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/lolos" class="btn btn-sm btn-info btn-block"><i class="fas fa-check"></i> Lolos Dokumen</a>';
                                 $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
+                                if ($item->peserta['rapot_1'] != NULL) {
+                                    $btn .= '<a href="'.Dits::pdfViewer(asset($item->peserta['rapot_1'])).'" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 1</a>';
+                                }
+                                if ($item->peserta['rapot_2'] != NULL) {
+                                    $btn .= '<a href="'.Dits::pdfViewer(asset($item->peserta['rapot_2'])).'" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 2</a>';
+                                }
+                                if ($item->peserta['rapot_3'] != NULL) {
+                                    $btn .= '<a href="'.Dits::pdfViewer(asset($item->peserta['rapot_3'])).'" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 3</a>';
+                                }
+                                if ($item->peserta['akte'] != NULL) {
+                                    $btn .= '<a href="'.Dits::pdfViewer(asset($item->peserta['akte'])).'" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-times"></i> Lihat File</a>';
+                                }
+                                if ($item->peserta['kk'] != NULL) {
+                                    $btn .= '<a href="'.Dits::pdfViewer(asset($item->peserta['kk'])).'" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-times"></i> Lihat File</a>';
+                                }
                                 return $btn;
                             })
                             ->escapeColumns([])

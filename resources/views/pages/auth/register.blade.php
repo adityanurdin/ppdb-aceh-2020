@@ -9,11 +9,21 @@
       <img class="img-fluid" src="{{asset('img/logo_1-min.png')}}" width="400px">
     </div>
     <div class="col-md">
+      @if ($errors->any())
+          <div class="alert alert-danger">
+              <ul>
+                  @foreach ($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                  @endforeach
+              </ul>
+          </div>
+      @endif
       <form action="{{route('auth.register')}}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
           <label for="inputNik">NIK</label>
           <input type="number" name="NIK" class="form-control" id="inputNik" placeholder="99321312312312">
+          <small>Pastikan NIK yang di masukan benar dan valid.</small>
         </div>
         <div class="form-group">
           <label for="inputEmail">Email</label>

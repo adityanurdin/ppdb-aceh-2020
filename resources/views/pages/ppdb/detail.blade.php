@@ -31,7 +31,7 @@
                 <a href="{{route('buka-ppdb.rubah-status' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-info"><i class="fas fa-pen-square"></i> Ubah Status</a>
                 <a href="#" class="btn btn-sm btn-warning"><i class="fas fa-pen-square"></i> Edit Pembukaan</a>
                 <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-pen-square"></i> Hapus Pembukaan</a>
-                <a href="#" class="btn btn-sm btn-success"><i class="fas fa-file-excel"></i> Export Data</a>
+                <a href="{{route('export.pendaftaran' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-success"><i class="fas fa-file-excel"></i> Export Data</a>
             </div>
         </div>
     </div>
@@ -95,7 +95,7 @@
             <h5 class="text-center">Pengumuman Seleksi</h5>
 
             <a href="{{route('buka-ppdb.pengumuman' , Dits::encodeDits($data->uuid))}}" class="btn btn-info mt-5 btn-sm"><i class="fas fa-plus"></i> Tambah Pengumuman</a>
-            <a href="#" class="btn btn-info mt-5 btn-sm"><i class="fas fa-upload"></i> Upload Pengumuman</a>
+            <a href="{{route('import.pengumuman.view' , Dits::encodeDits($data->uuid))}}" class="btn btn-info mt-5 btn-sm"><i class="fas fa-upload"></i> Upload Pengumuman</a>
             <a href="{{route('download.file' , ['Documents' , 'format_pengumuman.xlsx'])}}" class="btn btn-info mt-5 btn-sm"><i class="fas fa-download"></i> Format Pengumuman</a>
 
             <div class="card mt-2">

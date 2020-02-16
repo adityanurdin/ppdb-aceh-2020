@@ -6,6 +6,14 @@
 
 @section('css')
     <link href="{{asset('css/gijgo.min.css')}}" rel="stylesheet" type="text/css" />
+    <style>
+        .card-header {
+            text-align: center;
+            background-color: #009DDD;
+            color: whitesmoke;
+            font-weight: 600;
+        }
+    </style>
 @endsection
 
 @section('headers')
@@ -48,13 +56,13 @@
                         </div>
                         <div class="form-group">
                         <label for="inputNik">No. KTP/NIK Siswa<i class="text-danger"><small>*</small></i></label>
-                        <input type="number" class="form-control" name="NIK" value="{{Dits::DataPeserta()->NIK ? Dits::DataPeserta()->NIK : ''}}" id="inputNik" placeholder="123213432132" required>
+                        <input type="number" class="form-control" readonly name="NIK" value="{{Dits::DataPeserta()->NIK ? Dits::DataPeserta()->NIK : ''}}" id="inputNik" placeholder="123213432132" required>
                         <i class="text-danger"><small>Untuk Yang Belum Memiliki KTP, Maka Ambil NIK Anak Dari Kartu Keluarga (KK)</small></i>
                         </div>
                         <div class="form-group">
                         <label for="inputNisn">NISN<i class="text-danger"><small>*</small></i></label>
                         <small class="text-danger">Jika Tidak Ada Isi Dengan Strip (-)</small>
-                        <input type="number" class="form-control" id="inputNisn" name="nisn" value="{{Dits::DataPeserta()->nisn ? Dits::DataPeserta()->nisn : ''}}" placeholder="999413233" required>
+                        <input type="text" class="form-control" id="inputNisn" name="nisn" value="{{Dits::DataPeserta()->nisn ? Dits::DataPeserta()->nisn : ''}}" placeholder="999413233" required>
                         <small class="text-danger">(Untuk Pendaftar Jenjang MTs dan MA)</small>
                         </div>
                     </div>
@@ -153,7 +161,7 @@
                         <div class="form-group">
                         <label for="npsn">NPSN Sekolah Asal<i class="text-danger"><small>*</small></i></label>
                         <small class="text-danger">Jika Tidak Ada Isi Dengan Strip (-)</small>
-                        <input type="number" class="form-control" value="{{Dits::DataPeserta()->npsn_sekolah_asal ? Dits::DataPeserta()->npsn_sekolah_asal : ''}}" name="npsn_sekolah_asal" id="number" placeholder="Contoh : 10212000" required>
+                        <input type="text" class="form-control" value="{{Dits::DataPeserta()->npsn_sekolah_asal ? Dits::DataPeserta()->npsn_sekolah_asal : ''}}" name="npsn_sekolah_asal" id="number" placeholder="Contoh : 10212000" required>
                         </div>
                         <div class="form-group">
                         <label for="nm_sklh_asl">Nama Sekoah Asal<i class="text-danger"><small>*</small></i></label>
@@ -266,6 +274,144 @@
             </form>
             </div>
         </div>
+
+        @php
+            $isUpdate = Dits::checkJenjang();
+        @endphp
+        @if ($isUpdate == 'MI')
+        <div class="card mt-5">
+            <div class="card-header">
+                File Dokumen Pendaftaran
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group" style="margin-top: 5px;">
+                            Fotocopy KK
+                        </div>
+                        <div class="form-group" style="margin-top: 70px;">
+                            Fotocopy Akte
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="file" name="" id="" class="form-control form-control-sm">
+                            <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
+                        </div>
+                        <div class="form-group">
+                            <input type="file" name="" id="" class="form-control form-control-sm">
+                            <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @elseif ($isUpdate == 'MTs')
+        <div class="card mt-5">
+            <div class="card-header">
+                File Dokumen Pendaftaran
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group" style="margin-top: 5px;">
+                            Fotocopy Raport Kelas 5 smt 1
+                        </div>
+                        <div class="form-group" style="margin-top: 70px;">
+                            Fotocopy Raport Kelas 5 smt 2
+                        </div>
+                        <div class="form-group" style="margin-top: 65px;">
+                            Fotocopy Raport Kelas 6 smt 1
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="file" name="" id="" class="form-control form-control-sm">
+                            <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
+                        </div>
+                        <div class="form-group">
+                            <input type="file" name="" id="" class="form-control form-control-sm">
+                            <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
+                        </div>
+                        <div class="form-group">
+                            <input type="file" name="" id="" class="form-control form-control-sm">
+                            <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @elseif($isUpdate == 'MA')
+        <div class="card mt-5">
+            <div class="card-header">
+                File Dokumen Pendaftaran
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group" style="margin-top: 5px;">
+                            Fotocopy Raport Kelas 8 smt 1
+                        </div>
+                        <div class="form-group" style="margin-top: 70px;">
+                            Fotocopy Raport Kelas 8 smt 2
+                        </div>
+                        <div class="form-group" style="margin-top: 65px;">
+                            Fotocopy Raport Kelas 9 smt 1
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        @if (Dits::DataPeserta()->rapot_1 != '')
+                        <div class="form-group">
+                            <input type="text" value="Sudah Terupload" name="rapot_1" id="" class="form-control form-control-sm" disabled>
+                            <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_1))}}" target="_blank" class="btn btn-info btn-sm float-right mt-2 mb-3">Lihat File</a>
+                            <a href="{{route('delete-document' , ['rapot_1' , Dits::DataPeserta()->NIK])}}" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2">Hapus File</a>
+                        </div>
+                        @else
+                        <form action="{{route('upload-document' , 'rapot_1')}}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="form-group">
+                                <input type="file" name="rapot_1" id="" required class="form-control form-control-sm">
+                                <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
+                            </div>
+                        </form>
+                        @endif
+                        @if (Dits::DataPeserta()->rapot_2 != '')
+                        <div class="form-group">
+                            <input type="text" value="Sudah Terupload" name="rapot_2" id="" class="form-control form-control-sm" disabled>
+                            <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_2))}}" target="_blank" class="btn btn-info btn-sm float-right mt-2 mb-3">Lihat File</a>
+                            <a href="{{route('delete-document' , ['rapot_2' , Dits::DataPeserta()->NIK])}}" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2">Hapus File</a>
+                        </div>
+                        @else
+                        <form action="{{route('upload-document' , 'rapot_2')}}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                        <div class="form-group">
+                            <input type="file" name="rapot_2" id="" required class="form-control form-control-sm">
+                            <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
+                        </div>
+                        </form>
+                        @endif
+                        @if (Dits::DataPeserta()->rapot_3 != '')
+                        <div class="form-group">
+                            <input type="text" value="Sudah Terupload" name="rapot_3" id="" class="form-control form-control-sm" disabled>
+                            <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_3))}}" target="_blank" class="btn btn-info btn-sm float-right mt-2 mb-3">Lihat File</a>
+                            <a href="{{route('delete-document' , ['rapot_3' , Dits::DataPeserta()->NIK])}}" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2">Hapus File</a>
+                        </div>
+                        @else
+                        <form action="{{route('upload-document' , 'rapot_3')}}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                        <div class="form-group">
+                            <input type="file" name="rapot_3" id="" required class="form-control form-control-sm">
+                            <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
+                        </div>
+                        </form>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        @else
+
+        @endif
 
     @elseif (Auth::user()->role == 'Admin System')
         <div class="card">

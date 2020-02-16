@@ -11,21 +11,24 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <table class="table table-striped" id="myTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>NSM</th>
-                        <th>Nama Madrasah</th>
-                        <th>Tanggal Pembukaan</th>
-                        <th>Tanggal Penutupan</th>
-                        <th>Tanggal Pengumuman</th>
-                        <th width="250">Opsi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+
+                <table class="table table-striped" id="myTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>NSM</th>
+                            <th>Nama Madrasah</th>
+                            <th>Tanggal Pembukaan</th>
+                            <th>Tanggal Penutupan</th>
+                            <th>Tanggal Pengumuman</th>
+                            <th width="250">Opsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <input type="hidden" id="params" value="{{$id}}">

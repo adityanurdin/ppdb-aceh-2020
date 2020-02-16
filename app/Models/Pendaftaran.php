@@ -14,4 +14,9 @@ class Pendaftaran extends Model
     {
         return $this->belongsTo('App\Models\Peserta', 'uuid_peserta', 'uuid');
     }
+
+    public function pembukaan()
+    {
+        return $this->belongsTo('App\Models\Pembukaan', 'uuid_pembukaan' , 'uuid');
+    }
 }

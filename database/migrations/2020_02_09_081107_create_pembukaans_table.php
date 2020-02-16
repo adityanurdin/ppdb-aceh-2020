@@ -15,7 +15,7 @@ class CreatePembukaansTable extends Migration
     {
         Schema::create('pembukaans', function (Blueprint $table) {
             $table->string('uuid')->primary();
-            $table->string('uuid_madrasah')->unique();
+            $table->string('uuid_madrasah');
             $table->string('uuid_operator');
             $table->date('tgl_pembukaan');
             $table->date('tgl_penutupan');

@@ -82,6 +82,18 @@
                 </li>
             </ul>
         </li>
+        <li>
+            <a href="{{route('bank-soal.index')}}"><i class="fas fa-tv"></i> Bank Soal CAT</a>
+        </li>
+        <li>
+            <a href="#arsipCAT" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-archive"></i> Arsip Soal CAT</a>
+            <ul class="collapse list-unstyled" id="arsipCAT">
+                <li>
+                    <a href="#">2019</a>
+                    <a href="#">2020</a>
+                </li>
+            </ul>
+        </li>
         @if (Auth::user()->role != 'Operator Madrasah' && Auth::user()->role != 'Peserta')   
         <li class="{{Request::route()->getName() == 'madrasah.index' ? 'active' : ''}}">
             <a href="{{route('madrasah.index')}}"><i class="fas fa-building"></i> Database Madrasah</a>
@@ -97,6 +109,11 @@
                 @if (Auth::user()->role == 'Admin System')
                 <li>
                     <a href="#">Hapus Bank Soal</a>
+                </li>
+                @endif
+                @if (Auth::user()->role == 'Operator Madrasah')
+                <li>
+                    <a href="#">Edit Profile Madrasah</a>
                 </li>
                 @endif
             </ul>

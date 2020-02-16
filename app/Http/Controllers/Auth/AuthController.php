@@ -51,13 +51,25 @@ class AuthController extends Controller
         $uuid_peserta = Str::uuid();
 
         $rule  = [
-            'username' => 'required|integer|unique:users',
+            'NIK' => 'required|integer',
             'email'    => 'required|email|unique:users',
             'password' => 'required|confirmed|min:6|'
         ];
         $messages = [
             'username.integer' => 'NIK wajib menggunakan angka',
+            'username.min' => 'NIK wajib 16 angka',
         ];
+
+        $valid = Validator::make($request->all() , $rule);
+
+        if($valid->fails()) {
+            return redirect('/register')->withErrors($valid);
+        }
+
+        if(strlen($request->NIK) < 16) {
+            toast('NIK wajib 16 angka','error');
+            return redirect()->route('auth.register');
+        }
 
         $user = User::create([
             'uuid'          => Str::uuid(),
