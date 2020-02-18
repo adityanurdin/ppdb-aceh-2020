@@ -46,11 +46,11 @@
             <br>
             {{date('d-m-Y')}}
           </li>
-          <li class="list-group-item">
+          {{-- <li class="list-group-item">
             <b>Alokasi Waktu Test</b>
             <br>
             90 Menit
-          </li>
+          </li> --}}
         </ul>
       </div>
       <div class="col">
@@ -60,7 +60,7 @@
         <form action="{{route('cat.store')}}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
-                <input type="text" required name="kode_ujian" class="form-control" placeholder="Kode Ujian">
+                <input type="text" required name="kode_soal" class="form-control" placeholder="Kode Ujian">
                 <button type="submit" class="btn btn-block btn-danger mt-2">MULAI</button>
             </div>
         </form>

@@ -165,7 +165,7 @@ class PesertaController extends Controller
         return DataTables::of($data)
                             ->addIndexColumn()
                             ->addColumn('action' , function($item) {
-                                $btn = '<a href="#" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
+                                $btn = '<a href="'.route('print.data' , [$item->peserta['NIK'] , Dits::encodeDits($item->uuid) ]).'" target="_blank" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
                                 if ($item->status_pendaftaran == 'Lolos Tahap Dokumen') {
                                     $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
                                 }else if ($item->status_pendaftaran == 'Tidak Lolos Tahap Dokumen') {
@@ -286,6 +286,50 @@ class PesertaController extends Controller
             return back();
         } else {
             toast('Gagal Memperbaharui Status Pendaftaran','error');
+            return back();
+        }
+    }
+
+    public function dataDaftarUlang($id)
+    {
+        $uuid = Dits::decodeDits($id);
+        $data = Pendaftaran::with('peserta')
+                            ->where('uuid_pembukaan' , $uuid)->get();
+        return DataTables::of($data)
+                            ->addIndexColumn()
+                            ->addColumn('action' , function($item) {
+                                $btn = '<a href="#" data-toggle="modal" data-target="#opsi-'.$item->uuid.'" class="btn btn-success btn-sm btn-block">Verifikasi Pembayaran</a>';
+                                return $btn;
+                            })
+                            ->addColumn('file_transfer' , function($item) {
+                                $btn = '<a href="'.Dits::pdfViewer(asset($item->url_transfer)).'" target="_blink" class="btn btn-warning btn-sm btn-block">Buka File</a>';
+                                return $btn;
+                            })
+                            ->editColumn('status_transfer' , function($item) {
+                                if($item->status_transfer == '' || $item->status_transfer == NULL) {
+                                    $result = 'Belum Transfer';
+                                } else {
+                                    $result = $item->status_transfer;
+                                }
+                                return $result;
+                            })
+                            ->escapeColumns([])
+                            ->make(true);
+    }
+
+    public function updateDaftarUlang(Request $request, $id)
+    {
+        $uuid = Dits::decodeDits($id);
+        $data = Pendaftaran::where('uuid' , $uuid)->first();
+        if ($data) {
+            $data->update([
+                'status_transfer' => $request->status_transfer
+            ]);
+            if ($data) {
+                toast('Berhasil Memperbaharui Status Transfer','success');
+                return back();
+            }
+            toast('Gagal Memperbaharui Status Transfer','error');
             return back();
         }
     }

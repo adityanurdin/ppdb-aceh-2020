@@ -35,7 +35,7 @@
                             <div class="form-group">
                                 <select class="form-control form-control-sm" required name="uuid_madrasah" id="exampleFormControlSelect1">
                                     <option value="" selected disabled>-Pilih Madrasah</option>
-                                    @foreach ($madrasah as $item)
+                                    @foreach ($madrasah_list as $item)
                                     <option value="{{Dits::encodeDits($item->uuid)}}">{{$item->nama_madrasah}}</option>
                                     @endforeach
                                 </select>

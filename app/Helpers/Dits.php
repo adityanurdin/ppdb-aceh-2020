@@ -205,5 +205,38 @@ class Dits
         }
     }
 
+    public static function getCookieUjian()
+    {
+        $cookie_name = Dits::encodeDits('DitsUjian');
+        $get_cookie = Cookie::get($cookie_name);
+
+        if (!$get_cookie) {
+            toast('Gagal memasuki halaman ujian, Sesi sudah habis','error');
+            return redirect()->route('cat.index');
+        }
+        $cookie_value =  json_decode($get_cookie , true);
+
+        return $cookie_value;
+    }
+
+    public static function selected($data , $value)
+    {
+        if ($data == $value) {
+            $selected = 'selected';
+        } else {
+            $selected = '';
+        }
+
+        return $selected;
+    }
+
+    public static function countTableByWhere($model , $where_1 = '' , $where_1_value = '' , $where_2 = '' , $where_2_value = '' )
+    {
+        $table = $model::where($where_1 , $where_1_value)
+                            ->where($where_2 , $where_2_value)
+                            ->get()->count();
+        return $table;
+    }
+
 }
 

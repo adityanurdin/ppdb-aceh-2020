@@ -15,9 +15,21 @@
                                 </div>
                             </div>
                             <div class="col-md-9">
+                                @if (Auth::user()->role == 'Admin System' || Auth::user()->role == 'Operator Kemenag')
+                                <div class="form-group">
+                                    <select class="form-control" id="exampleFormControlSelect1">
+                                      <option>1</option>
+                                      <option>2</option>
+                                      <option>3</option>
+                                      <option>4</option>
+                                      <option>5</option>
+                                    </select>
+                                  </div>
+                                @else   
                                 <div class="form-group">
                                     <input type="text" name="nama_madrasah" value="{{$data->madrasah['nama_madrasah']}}" {{isset($data->madrasah['nama_madrasah']) ? 'readonly' : ''}} class="form-control">
                                 </div>
+                                @endif
                             </div>
                         </div>
                         <button type="submit" class="btn btn-info btn-sm float-right">Simpan</button>

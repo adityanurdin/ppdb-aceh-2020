@@ -30,7 +30,7 @@
                 <a href="{{Dits::PdfViewer(asset($data->url_brosur))}}" target="_blank" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf"></i> Lihat Brosur</a>
                 <a href="{{route('buka-ppdb.rubah-status' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-info"><i class="fas fa-pen-square"></i> Ubah Status</a>
                 <a href="#" class="btn btn-sm btn-warning"><i class="fas fa-pen-square"></i> Edit Pembukaan</a>
-                <a href="#" class="btn btn-sm btn-danger"><i class="fas fa-pen-square"></i> Hapus Pembukaan</a>
+                <a href="{{route('buka-ppdb.delete' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-danger"><i class="fas fa-pen-square"></i> Hapus Pembukaan</a>
                 <a href="{{route('export.pendaftaran' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-success"><i class="fas fa-file-excel"></i> Export Data</a>
             </div>
         </div>
@@ -41,9 +41,9 @@
             <h6 class="text-center">Verifikasi PPDB Madrasah</h6>
 
             <div class="mt-5 mb-3">
-                <h6>Jumlah Pendaftar Belum Terverifikasi : 0</h6>
-                <h6>Jumlah Peserta Lolos Tahap Dokumen : 3</h6>
-                <h6>Jumlah Peserta Tidak Lolos Tahap Dokumen : 0</h6>
+                <h6>Jumlah Pendaftar Belum Terverifikasi : {{Dits::countTableByWhere('App\Models\Pendaftaran' , 'uuid_pembukaan' , $data->uuid , 'status_pendaftaran' , 'Baru')}}</h6>
+                <h6>Jumlah Peserta Lolos Tahap Dokumen : {{Dits::countTableByWhere('App\Models\Pendaftaran' , 'uuid_pembukaan' , $data->uuid , 'status_pendaftaran' , 'Lolos Tahap Dokumen')}}</h6>
+                <h6>Jumlah Peserta Tidak Lolos Tahap Dokumen : {{Dits::countTableByWhere('App\Models\Pendaftaran' , 'uuid_pembukaan' , $data->uuid , 'status_pendaftaran' , 'Tidak Lolos Tahap Dokumen')}}</h6>
             </div>
 
 
@@ -146,60 +146,29 @@
         </div>
     </div>
     
-    {{-- <div class="card mt-5">
+    <div class="card mt-5">
         <div class="card-body">
-            
-            <h5 class="text-center">Daftar Ulang</h5>
+            <h6 class="text-center">Data Peserta Daftar Ulang</h6>
 
-            <div class="card mt-2">
-                <div class="card-body">
-                    <h6 class="text-center">Daftar Peserta Sudah Upload Daftar Ulang</h6>
-        
-                <a href="#" class="btn btn-info mt-5 mb-3 btn-sm"><i class="fas fa-file-excel"></i> Export Sudah Transfer</a>
-                    <table class="table table-borderless table-hover mt-5" id="myTable4">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Kode Pendaftaran</th>
-                                <th>Nama Peserta</th>
-                                <th>Jenis Kelamin</th>
-                                <th>Alamat</th>
-                                <th width="135">Opsi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-        
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <div class="card mt-5">
-                <div class="card-body">
-                    <h6 class="text-center">Daftar Peserta Belum Upload Daftar Ulang</h6>
-                    
-                <a href="#" class="btn btn-info mt-5 mb-3 btn-sm"><i class="fas fa-file-excel"></i> Export Belum Transfer</a>
+            <table class="table table-striped table-hover mt-5" id="daftar-ulang">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nomor Pendaftaran</th>
+                        <th>Nama Peserta</th>
+                        {{-- <th>Status Diterima</th>
+                        <th>Jalur Diterima</th> --}}
+                        <th>File Transfer</th>
+                        <th>Status Transfer</th>
+                        <th>Opsi</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-        
-                    <table class="table table-borderless table-hover mt-5" id="myTable5">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Kode Pendaftaran</th>
-                                <th>Nama Peserta</th>
-                                <th>Jenis Kelamin</th>
-                                <th>Alamat</th>
-                                <th width="135">Opsi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-        
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                </tbody>
+            </table>
         </div>
-    </div> --}}
+    </div>
     
     
 
@@ -279,16 +248,18 @@
                 ]
             });
             
-            $('#myTable5').DataTable({
+            $('#daftar-ulang').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "/buka-ppdb/detail/"+token+"/data",
+                ajax: "/buka-ppdb/detail/"+token+"/data-daftar-ulang",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'kode_pendaftaran', name: 'kode_pendaftaran'},
                     {data: 'peserta.nama', name: 'peserta.nama'},
-                    {data: 'peserta.jkl', name: 'peserta.jkl'},
-                    {data: 'peserta.alamat_rumah', name: 'peserta.alamat_rumah'},
+                    // {data: 'status_diterima', name: 'status_diterima'},
+                    // {data: 'jalur_diterima', name: 'jalur_diterima'},
+                    {data: 'file_transfer', name: 'file_transfer'},
+                    {data: 'status_transfer', name: 'status_transfer'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });
@@ -297,3 +268,40 @@
         });
     </script>
 @endpush
+
+@section('modal')
+
+@foreach ($pendaftaran as $item)    
+    <!-- Modal -->
+    <div class="modal fade" id="opsi-{{$item->uuid}}" tabindex="-1" role="dialog" aria-labelledby="opsi-{{$item->uuid}}Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="opsi-{{$item->uuid}}Label">{{$item->peserta['nama']}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+        <form action="{{route('buka-ppdb.update.daftar.ulang' , Dits::encodeDits($item->uuid))}}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+            <div class="form-group">
+                <label for="">Status Daftar Ulang</label>
+                <select class="form-control" name="status_transfer" id="exampleFormControlSelect1">
+                    <option selected disabled>-Pilih Status</option>
+                    <option value="Lunas">Lunas</option>
+                    <option value="Pembayaran Kurang">Pembayaran Kurang</option>
+                  </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="sumbit" class="btn btn-primary">Simpan</button>
+        </div>
+        </form>
+    </div>
+    </div>
+    </div>
+@endforeach
+@endsection

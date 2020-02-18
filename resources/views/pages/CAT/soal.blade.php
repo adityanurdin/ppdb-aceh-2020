@@ -49,64 +49,67 @@
         <div class="col-12 col-sm-6 col-md-8">
             <form action="{{route('cat.store.jawaban' , Dits::encodeDits($no))}}" method="POST">
                 @csrf
-                <input type="hidden" value="{{Dits::encodeDits('81D7B1E20D')}}" name="{{Dits::encodeDits('kode_soal')}}" required>
+                <input type="hidden" value="{{Dits::encodeDits($soal->kode_soal)}}" name="{{Dits::encodeDits('kode_soal')}}" required>
             <div class="card ml-auto">
               <div class="card-body">
-                Grafik fungsi y = (m -3) x2 + 4x - 2m merupakan fungsi definit negatif. Batas-batas nilai m yang memenuhi adalah....
+                {!! $soal->soal !!}
+                <br>
+                @if ($soal->gambar != NULL)
+                    <img src="{{Dits::imageUrl($soal->gambar)}}" width="200px" height="280px"  alt="">
+                @endif
                 <br><br>
                 <div class="form-check">
-                  <input class="form-check-input" name="jawaban[]" type="radio" name="exampleRadios" id="exampleRadios1" value="A">
+                  <input class="form-check-input" name="jawaban[]" type="radio" name="exampleRadios" id="exampleRadios1" value="a">
                   <label class="form-check-label" for="exampleRadios1">
-                    A. Default radio
+                    A. {{ $soal->a }}
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" name="jawaban[]" type="radio" name="exampleRadios" id="exampleRadios2" value="B">
+                  <input class="form-check-input" name="jawaban[]" type="radio" name="exampleRadios" id="exampleRadios2" value="b">
                   <label class="form-check-label" for="exampleRadios2">
-                    B. Second default radio
+                    B. {{ $soal->b }}
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" name="jawaban[]" type="radio" name="exampleRadios" id="exampleRadios3" value="C">
+                  <input class="form-check-input" name="jawaban[]" type="radio" name="exampleRadios" id="exampleRadios3" value="c">
                   <label class="form-check-label" for="exampleRadios3">
-                    C. Second default radio
+                    C. {{ $soal->c }}
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" name="jawaban[]" type="radio" name="exampleRadios" id="exampleRadios4" value="D">
+                  <input class="form-check-input" name="jawaban[]" type="radio" name="exampleRadios" id="exampleRadios4" value="d">
                   <label class="form-check-label" for="exampleRadios4">
-                    D. Second default radio
+                    D. {{ $soal->d }}
                   </label>
                 </div>
               </div>
             </div>
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-warning mt-2">Selanjutnya</button>
+                @if ($finish == true)
+                    <input type="hidden" name="finish" value="finish">
+                    <button type="submit" class="btn btn-info mt-2">Selesai</button>
+                @else
+                    <button type="submit" class="btn btn-warning mt-2">Selanjutnya</button>
+                @endif
             </div>
         </form>
         </div>
         <div class="col col-md-3 ml-3 mt-1">
         <hr class="d-lg-none">
             <p>
-              <a class="btn btn-success btn-block" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+              <a class="btn btn-success btn-block disabled" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                 Navigasi Jawaban
               </a>
             </p>
-            <div class="collapse" id="collapseExample">
+            {{-- <div class="collapse" id="collapseExample"> --}}
+            <div>
               <div class="card card-body">
                 <div class="row">
-                    <div class="col">
-                        <button type="button" class="btn btn-outline-success mt-1">1<span class="badge badge-light">A</span></button>
-                    </div>
-                    <div class="col">
-                        <button type="button" class="btn btn-outline-success mt-1">2<span class="badge badge-light">-</span></button>
-                    </div>
-                    <div class="col">
-                        <button type="button" class="btn btn-outline-success mt-1">3<span class="badge badge-light">-</span></button>
-                    </div>
-                    <div class="col">
-                        <button type="button" class="btn btn-outline-success mt-1">4<span class="badge badge-light">-</span></button>
-                    </div>
+                    @foreach ($navigasi as $item)
+                        <div class="col">
+                            <a href="{{route('cat.start' , Dits::encodeDits($item->nomor_soal))}}"  class="btn {{ $no == $item->nomor_soal ? 'btn-success' : 'btn-outline-success' }}  mt-1">{{$item->nomor_soal}}<span class="badge badge-light"></span></a>
+                        </div>
+                    @endforeach
                 </div>
               </div>
             </div>

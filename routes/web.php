@@ -43,6 +43,12 @@ Route::get('/home', function () {
         return view('dashboard.index');
     })->name('dashboard');
 
+    Route::get('/{nik}/cetak-pendaftaran/{id}' , function($nik , $id) {
+        $uuid = \Dits::decodeDits($id);
+        $data = \App\Models\Pendaftaran::with('peserta')->where('uuid' , $uuid)->first();
+        return view('exports.cetak_pendaftaran' , compact('data'));
+    })->name('print.data');
+
     Route::group(['middleware' => 'Peserta'] , function() {
         Route::post('update-peserta' , 'PesertaController@updatePeserta')->name('update.peserta');
 
@@ -118,11 +124,14 @@ Route::get('/home', function () {
             Route::get('create' , 'PPDBController@create')->name('buka-ppdb.create');
             Route::post('store' , 'PPDBController@store')->name('buka-ppdb.store');
             Route::get('/detail/{id}' , 'PPDBController@detail')->name('buka-ppdb.details');
+            Route::get('/delete/{id}' , 'PPDBController@delete')->name('buka-ppdb.delete');
             Route::get('/detail/{id}/update-status-pendaftaran/{status}' , 'PesertaController@updateStatusPendaftaran')->name('buka-ppdb.update-status-pendaftaran');
             Route::get('/detail/{id}/data' , 'PesertaController@dataPesertaPPDB')->name('buka-ppdb.data-peserta');
             Route::get('/detail/{id}/dataVerifikasi' , 'PesertaController@dataVerifikasi')->name('buka-ppdb.data-verifikasi');
             Route::get('/detail/{id}/dataDiterima' , 'PesertaController@dataDiterima')->name('buka-ppdb.data-diterima');
             Route::get('/detail/{id}/dataDitolak' , 'PesertaController@dataDitolak')->name('buka-ppdb.data-ditolak');
+            Route::get('/detail/{id}/data-daftar-ulang' , 'PesertaController@dataDaftarUlang')->name('buka-ppdb.data-daftar-ulang');
+            Route::put('/detail/{id}/update-daftar-ulang' , 'PesertaController@updateDaftarUlang')->name('buka-ppdb.update.daftar.ulang');
             Route::get('/detail/{id}/status' , 'PPDBController@status')->name('buka-ppdb.rubah-status');
             Route::get('/data' , 'PPDBController@data')->name('buka-ppdb.data');
 
@@ -136,7 +145,20 @@ Route::get('/home', function () {
            Route::get('index' , 'CATController@bankSoal')->name('bank-soal.index');
            Route::get('create' , 'CATController@create')->name('bank-soal.create');
            Route::post('store' , 'CATController@storeBank')->name('bank-soal.store');
+           Route::get('crash/{id}' , 'CATController@crashBank')->name('bank-soal.crash');
+           Route::get('status/{id}' , 'CATController@statusBank')->name('bank-soal.status-bank');
+           Route::get('hapus/{id}' , 'CATController@hapusBank')->name('bank-soal.hapus-bank');
+           Route::get('detail/{id}' , 'CATController@detail')->name('bank-soal.detail');
+           Route::get('detail-data/{id}' , 'CATController@detailData')->name('bank-soal.detail-data');
+           Route::get('soal-data/{id}' , 'CATController@soalData')->name('bank-soal.soal-data');
+           Route::get('tulis-soal/{id}' , 'CATController@tulisSoal')->name('bank-soal.tulis-soal');
+           Route::get('edit-soal/{id}' , 'CATController@editSoal')->name('bank-soal.edit-soal');
+           Route::post('store-soal/{id}' , 'CATController@storeSoal')->name('bank-soal.store.soal');
+           Route::put('update-soal/{id}' , 'CATController@updateSoal')->name('bank-soal.update.soal');
+           Route::get('hapus-soal/{id}' , 'CATController@hapusSoal')->name('bank-soal.hapus.soal');
+           Route::get('lihat-soal/{id}' , 'CATController@lihatSoal')->name('bank-soal.lihat.soal');
            Route::get('data' , 'CATController@data')->name('bank-soal.data');
+           Route::post('update-timer/{id}' , 'CATController@updateTimer')->name('bank-soal.update-timer');
         });
 
         

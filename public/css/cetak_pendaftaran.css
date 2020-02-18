@@ -1,0 +1,701 @@
+/*Admin Template Frandika Septa Bulan (FS BULAN)*/
+/*Dibuat Untuk Website Data Pokok Sarpras Madrasah Kementerian Agama*/
+/*Dibuat Pada Bulan Januari Tahun 2019*/
+
+*{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
+html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;}
+
+/*DEFAULT CSS START*/
+body{
+	width: auto;
+	height: auto;
+	padding: auto;
+	margin: auto;
+	color: #000;
+	font-size: 14pt;
+	position: relative;
+	background-color: #fff;
+	background-image: url();
+	background-repeat: repeat;
+	background-attachment: fixed;
+	background-position: top center; 
+    -webkit-background-size:cover;
+    -moz-background-size:cover;
+    -ms-background-size:cover;
+    -o-background-size:cover;
+    background-size:cover;
+}
+body:hover{
+	overflow: auto;
+}
+body::-webkit-scrollbar {
+    width: 15px;
+}
+body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 8px rgba(3,3,3,0.3);
+}
+body::-webkit-scrollbar-thumb {
+  outline: 1px solid rgb(3, 3, 3);
+  border-radius: 10px;
+}
+
+a{
+	-webkit-tap-highlight-color:auto;
+	-moz-tap-highlight-color:auto;
+	-o-tap-highlight-color:auto;
+	-ms-tap-highlight-color:auto;
+	tap-highlight-color:auto;
+	background-color:auto;
+	-webkit-user-select: none;  
+	-moz-user-select: none;    
+	-ms-user-select: none;      
+	user-select: none;
+	color:auto;
+}
+img{
+	margin-bottom:-5px;
+}
+p,h1,h2,h3,h4,h5,h6,label{
+	margin: 2px 0;
+	line-height:1.2em;
+}
+a,a:hover,a:active{
+	text-decoration:none;
+	outline:none;
+	cursor: pointer;
+}
+/*DEFAULT CSS END*/
+
+/*START FONT ME*/
+@font-face {
+    font-family: Lusitana;
+    src: url(../font/Lusitana/Lusitana-Regular.ttf);
+}
+@font-face {
+    font-family: bUbuntu;
+    src: url(../font/ubuntu/Ubuntu/Ubuntu-Bold.ttf);
+}
+@font-face {
+    font-family: Ubuntu;
+    src: url(../font/ubuntu/Ubuntu/Ubuntu-Regular.ttf);
+}
+@font-face {
+    font-family: Merri;
+    src: url(../font/Merriweather/Merriweather-Bold.ttf);
+}
+@font-face {
+    font-family: Pacifico;
+    src: url(../font/Pacifico/Pacifico-Regular.ttf);
+}
+@font-face {
+    font-family: Merriweather;
+    src: url(../font/Merriweather/Merriweather-Regular.ttf);
+}
+@font-face {
+    font-family: ArimaMadurai;
+    src: url(../font/Arima_Madurai/ArimaMadurai-Regular.ttf);
+}
+@font-face {
+    font-family: Titillium_Web;
+    src: url(../font/Titillium_Web/TitilliumWeb-Regular.ttf);
+}
+@font-face {
+    font-family: Indie_Flower;
+    src: url(../font/Indie_Flower/IndieFlower.ttf);
+}
+@font-face {
+    font-family: Baloo_Thambi;
+    src: url(../font/Baloo_Thambi/BalooThambi-Regular.ttf);
+}
+@font-face {
+    font-family: Aref_Ruqaa;
+    src: url(../font/Aref_Ruqaa/ArefRuqaa-Regular.ttf);
+}
+/*Pagging Tags*/
+.frans_pg{width:auto;height:auto;display:block;position:relative;padding:10px 0}
+.frans_pg:after{content:"";display:table;clear:both}
+.frans_pg ul{margin-left:0}
+.frans_pg_bc_rd{display:inline-block;padding:0;margin:0}
+.frans_pg_bc_rd li{display:inline}
+.frans_pg_bc_rd li a{color:#fff;float:left;padding:4px 12px;text-decoration:none;border-radius:6px;margin: 5px !important;}
+.frans_pg_bc_rd li a.active{background-color:#d89b26;color:#000;cursor:default}
+.frans_pg_bc_rd li a:hover:not(.active){background-color:#0a9ffc;border-radius:6px}
+
+/*USER END*/
+
+/*font posisi start*/
+.frans_kiri{
+	text-align: left !important;
+}
+.frans_tengah{
+	text-align: center !important;
+}
+.frans_kanan{
+	text-align: right !important;
+}
+/*font posisi end*/
+
+/*Frans Table Start*/
+.frans_table table{
+	border-collapse:separate;
+	border-spacing:0px;
+	width:100%;
+	display:table;
+	font-weight: normal;
+}
+.frans_table table,td,th{
+	text-align:left;
+	font-size:12pt;
+	line-height:1.2em;
+}
+.frans_table_basic thead tr th{
+	border:none;
+	text-align:center;
+	background-color:#888;
+	color:#000;
+	border-top:3px solid #000;
+	border-bottom:3px solid #000;
+	padding:10px 5px;
+	font-size:14pt;
+}
+.frans_table_basic tbody tr td{
+	border:none;
+	text-align:left;
+	background-color:#fff;
+	color:#000;
+	border-bottom:1px solid #000;
+	padding:8px 10px;
+	font-size:12pt;
+}
+.frans_table_basic tbody tr td:nth-child(even){
+	background-color:#ddd;
+	color:#000;
+}
+/*Frans Table End*/
+
+/*CETAK PESERTA*/
+
+.body_wrapper{
+width: auto;
+height: auto;
+}
+.body_content{
+width: 210mm;
+height: 297mm;
+background: #fff;
+margin: auto;
+padding: 10px;
+border: 1px solid #000;
+}
+.body_wrapper:before,.body_wrapper:after,.frans_kecah:before,.frans_kecah:after{
+	content: "";
+	clear: both;
+	display: table;
+}
+.grid_header{
+	width: auto;
+	height: auto;
+	padding: auto;
+	margin: auto;
+	border: 7px double #000;
+	border-radius: 8px;
+	position: relative;
+	z-index: 0;
+	margin-bottom: 5px;
+}
+.grid_body{
+	width: auto;
+	height: auto;
+	padding: auto;
+	margin: auto;
+	border: 2px double #000;
+	border-radius: 8px;
+	position: relative;
+	z-index: 0;
+	margin-bottom: 5px;
+}
+.grid_header:before,.grid_header:after,.grid_body:before,.grid_body:after{
+	content: "";
+	clear: both;
+	display: table;
+}
+.logo_kemenag{
+	width: 110px;
+	height: auto;
+	text-align: center;
+	padding: 10px;
+	margin: auto;
+	position: absolute;
+	z-index: 2;
+	padding-top: 15px;
+}
+.logo_kemenag img{
+	width: 100%;
+	height: auto;
+}
+.logo_kemenag_2{
+	width: 110px;
+	height: auto;
+	text-align: center;
+	padding: 10px;
+	margin: auto;
+	position: absolute;
+	z-index: 2;
+	right: 0;
+}
+.logo_kemenag_2 img{
+	width: 100%;
+	height: auto;
+}
+.header_kemenag{
+	width: 100%;
+	height: auto;
+	text-align: center;
+	padding: 10px;
+	position: relative;
+	z-index: 1;
+}
+.header_kemenag h1{
+	font-size: 13pt;
+	text-align: center;
+	line-height: 1em;
+	letter-spacing: 10px;
+	color: #000;
+	margin: 1px;
+	text-shadow: 0.5px 0.5px #456;
+	margin-bottom: 10px;
+}
+.header_kemenag h2{
+	font-size: 11pt;
+	text-align: center;
+	line-height: 1em;
+	letter-spacing: 0;
+	color: #000;
+	margin: 1px;
+	text-shadow: 0.5px 0.5px #456;
+	margin-bottom: 5px;
+}
+.header_kemenag h3{
+	font-size: 10pt;
+	text-align: center;
+	line-height: 1em;
+	letter-spacing: 0;
+	color: #333;
+	margin: 1px;
+	margin-top: 10px;
+	text-transform: uppercase;
+	font-weight: bolder;
+}
+.biodata{
+	width: auto;
+	height: auto;
+	padding: 5px 0px;
+	margin: auto;
+	text-align: center;
+}
+.biodata h1{
+	font-size: 13pt;
+	font-family: 'Lusitana',cursive;
+	letter-spacing: 1px;
+	font-weight: normal;
+	line-height: 1.2em;
+	text-decoration: underline;
+	text-decoration-style: solid;
+	text-decoration-color: #000;
+	font-weight: bolder;
+}
+.biodata h2{
+	font-size: 11pt;
+	font-weight: normal;
+	font-family: 'Lusitana',cursive;
+	letter-spacing: 1px;
+	font-weight: bold;
+	line-height: 1.2em;
+}
+.biodata h3{
+	padding: auto;
+	margin: auto;
+	font-size: 10pt;
+	font-weight: normal;
+	font-family: 'Arima_Madurai',cursive;
+	font-weight: bolder;
+	color: #009b4c;
+	text-shadow: 0.5px 0.5px #000;
+	letter-spacing: 1px;
+	line-height: 1.2em;
+}
+.biodata h4{
+	padding: auto;
+	margin: auto;
+	font-size: 9pt;
+	color: #000;
+	font-family: 'Arima_Madurai',cursive;
+	line-height: 1.2em;
+}
+.data_diri{
+	width: auto;
+	height: auto;
+	padding: 10px;
+	margin: auto;
+	text-align: left;
+	padding-top: 0px;
+}
+.data_diri h1{
+	font-size: 13pt;
+	font-family: 'Lusitana',cursive;
+	margin-bottom: 15px;
+	letter-spacing: 1px;
+	font-weight: normal;
+	line-height: 1.2em;
+	text-decoration: underline;
+	text-decoration-color: #000;
+}
+.data_diri i,.biodata i{
+	margin-right: 5px;
+	color: #000;
+	text-shadow: 0.5px 0.5px #000;
+}
+.form_data_diri{
+	width: auto;
+	height: auto;
+	padding: auto;
+	margin: auto;
+	display: block;
+	position: relative;
+}
+.form_data_diri:beofre,.form_data_diri:after{
+	content: "";
+	clear: both;
+	display: table;
+}
+.data_diri_name{
+	width: 230px;
+	height: auto;
+	padding: auto;
+	margin: auto;
+	position: absolute;
+	z-index: 1;
+	font-size: 10pt;
+	color: #000;
+}
+.data_diri_input{
+	width: 100%;
+	height: auto;
+	text-align: left;
+	padding-left:240px;
+	position: relative;
+	z-index: 0;
+	font-weight: bolder;
+}
+.data_diri_input h2{
+	width: auto;
+	padding: 0px 0px 2px 0px;
+	margin: 0;
+	line-height: 1.2em;
+	font-size: 10pt;
+	color: #000;
+	font-weight: bolder;
+	margin-bottom: 5px;
+}
+.data_diri_input h3{
+	width: auto;
+	padding: 0px 0px 2px 8px;
+	margin: 0;
+	line-height: 1.2em;
+	font-size: 10pt;
+	color: #000;
+	font-weight: bolder;
+	margin-bottom: 5px;
+}
+.data_diri_input h2:before{
+	content: ": ";
+}
+.box_ttd{
+	width: 100%;
+	height: auto;
+	padding: 10px;
+	margin: auto;
+	float: left;
+	margin-bottom: 5px;
+}
+.box_ttd:before,.box_ttd:after{
+	content: "";
+	clear: both;
+	display: table;
+}
+.box_ttd_div{
+	width: auto;
+	height: auto;
+	padding: auto;
+	margin: auto;
+	float: right;
+	min-width: 180px;
+}
+.box_ttd_div h1{
+	width: auto;
+	padding: auto;
+	margin: auto;
+	line-height: 1.2em;
+	font-size: 10pt;
+	color: #000;
+	font-weight: bolder;
+	margin-bottom: 60px;
+}
+.box_ttd_div h2{
+	width: auto;
+	padding: 2px 0px;
+	margin: 0px;
+	line-height: 1.2em;
+	font-size: 10pt;
+	color: #000;
+	font-weight: bolder;
+	border-bottom: 1px solid #000;
+	text-align: center;
+	letter-spacing: 0;
+}
+.box_ttd_div h3{
+	width: auto;
+	padding: auto;
+	margin: 0px;
+	line-height: 1.2em;
+	font-size: 10pt;
+	color: #000;
+	font-weight: bolder;
+	letter-spacing: 0;
+}
+.footer_body{
+	width: auto;
+	height: auto;
+	padding: 5px 15px;
+	margin: auto;
+	border: 1px solid #ccc;
+	border-radius: 23px;
+	position: relative;
+}
+._ftb_line{
+	width: 100%;
+	height: auto;
+	padding: auto;
+	margin: auto;
+	float: left;
+	font-size: 8pt;
+	font-family: 'Merriweather',cursive;
+}
+._ftb_1{
+	width: 75%;
+	height: auto;
+	padding: auto;
+	margin: auto;
+	text-align: left;
+	color: #333;
+	float: left;
+}
+._ftb_1 span{
+	color: #009b4c;
+}
+._ftb_2{
+	width: 25%;
+	height: auto;
+	padding: auto;
+	margin: auto;
+	text-align: right;
+	color: #333;
+	float: left;
+}
+.pagebreak { page-break-before: always; }
+
+/*TABEL*/
+.nilai_proposal{
+	width: auto;
+	height: auto;
+	padding: 5px;
+	margin: auto;
+	color: #000;
+}
+.nilai_proposal table{
+	border-collapse:separate;
+	border-spacing:0px;
+	width:100%;
+	display:table;
+	font-weight: normal;
+}
+.nilai_proposal table,td,th{
+	border:1px solid #000;
+	text-align:left;
+	font-size:10pt;
+	line-height:1.2em;
+}
+.nilai_proposal thead tr th{
+	text-align:center;
+	font-size:14pt;
+	padding:4px;
+	line-height: 1.2em;
+	letter-spacing: 1px;
+	color: #000;
+	background:#fff000;
+	font-weight: bold;
+	font-family: 'calibri';
+}
+.nilai_proposal tfoot tr td{
+	text-align:center;
+	font-size:14pt;
+	padding:5px;
+	line-height: 1.1em;
+	letter-spacing: 1px;
+	font-weight: bold;
+	font-family: 'calibri';
+}
+.nilai_proposal tbody tr{
+	text-align:left;
+	background-color:#FFFFFF;
+	color:#000;
+}
+.nilai_proposal tbody td{
+	text-align:left;
+	font-size:12pt;
+	padding:3px;
+	line-height: 1.1em;
+	letter-spacing: 1px;
+	font-weight: normal;
+}
+.nilai_proposal th{
+	text-align:center;
+	padding: 5px 7px;
+	font-size: 12pt;
+	font-weight: normal;
+	letter-spacing: 0em;
+}
+.nilai_proposal h1{
+	width: auto;
+	height: auto;
+	padding: auto;
+	margin: auto;
+	font-size: 12pt;
+	line-height: 1em;
+}
+.nilai_proposal{
+	width: auto;
+	height: auto;
+	padding: auto;
+	margin: auto;
+	font-size: 10pt;
+	line-height: 1em;
+}
+.frans_tengah{
+	text-align: center;
+}
+.grid_ttd{
+	width: auto;
+	height: auto;
+	padding: auto;
+	margin: auto;
+	padding: auto;
+}
+.ttd_{
+	width: 33.3334%;
+	height: auto;
+	padding: 5px;
+	margin: auto;
+	float: left;
+}
+.div_ttd{
+	width: auto;
+	height: auto;
+	padding: 5px;
+	border: 2px dashed #000;
+	border-radius: 4px;
+}
+.ttd_ h1{
+	font-weight: normal;
+	font-size: 12pt;
+	line-height: 0.8em;
+	padding: auto;
+	margin: auto;
+	text-align: center;
+	padding-bottom: 5px;
+	margin-bottom: 10px;
+	border-bottom: 2px solid #000;
+	font-weight: bolder;
+}
+.ttd_ h2{
+	font-weight: normal;
+	font-size: 11pt;
+	line-height: 0.8em;
+	padding: auto;
+	margin: auto;
+	text-align: center;
+	margin-bottom: 70px;
+}
+.ttd_ h2 span{
+	margin-right: 30px;
+}
+.ttd_ h3{
+	font-weight: normal;
+	font-size: 11pt;
+	line-height: 0.8em;
+	padding: auto;
+	margin: auto;
+	text-align: center;
+	border-bottom: 1px solid #000;
+	padding: 5px 0px;
+}
+.ttd_ h4{
+	font-weight: normal;
+	font-size: 11pt;
+	line-height: 0.8em;
+	padding: auto;
+	margin: auto;
+	text-align: left;
+	padding: 5px 0px;
+}
+.grid_keterangan{
+	width: auto;
+	height: auto;
+	padding: 10px 0px;
+	margin: auto;
+	margin-top: 10px;
+}
+.grid_keterangan:before,.grid_keterangan:after{
+	content: "";
+	clear: both;
+	display: table;
+}
+.grid_keterangan h1{
+	font-weight: normal;
+	font-size: 12pt;
+	line-height: 0.8em;
+	padding: auto;
+	margin: auto;
+	text-align: left;
+	font-weight: bolder;
+	padding: 5px 0px;
+	text-decoration: underline;
+}
+.grid_keterangan h2{
+	font-weight: normal;
+	font-size: 11pt;
+	line-height: 1em;
+	padding: auto;
+	margin: auto;
+	text-align: left;
+	font-weight: bolder;
+	padding: 5px 0px;
+	padding-left: 10px;
+}
+.grid_keterangan h2 i{
+	width: 20px;
+}
+.grid_keterangan h3{
+	font-weight: normal;
+	font-size: 10pt;
+	line-height: 1em;
+	padding: auto;
+	margin: auto;
+	text-align: left;
+	font-weight: bolder;
+	padding: 3px 0px;
+	padding-left: 30px;
+}
+.grid_keterangan h3 i{
+	width: 20px;
+}

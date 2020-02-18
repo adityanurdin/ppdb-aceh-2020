@@ -35,7 +35,11 @@ class PPDBController extends Controller
     public function create()
     {
         $madrasah = Madrasah::all();
-        return view('pages.ppdb.create_edit' , compact('madrasah'));
+        $madrasah_list = Madrasah::whereNotIn('uuid',function($query){
+            $query->select('uuid_madrasah')->from('pembukaans')->where('status_pembukaan','Dibuka');
+        })
+        ->get();
+        return view('pages.ppdb.create_edit' , compact('madrasah','madrasah_list'));
     }
 
     public function store(Request $request)
@@ -60,6 +64,18 @@ class PPDBController extends Controller
                                 ->first();
         if($pembukaan != NULL) {
             toast('Gagal, Madrasah Yang Di Pilih Sedang Dibuka','error');
+            return back();
+        }
+
+        $tgl_pembukaan = str_replace('-' , '' , $request->tgl_pembukaan);
+        $tgl_penutupan = str_replace('-' , '' , $request->tgl_penutupan);
+        $tgl_pengumuman = str_replace('-' , '' , $request->tgl_pengumuman);
+
+        if ($tgl_penutupan <= $tgl_pembukaan) {
+            toast('Gagal, Tanggal penutupan tidak boleh kurang dari tanggal pembukaan','error');
+            return back();
+        } else if ( $tgl_pengumuman <= $tgl_penutupan && $tgl_pengumuman <= $tgl_pembukaan) {
+            toast('Gagal, Tanggal pengumuman tidak boleh kurang dari tanggal pembukaan dan tanggal penutupan','error');
             return back();
         }
 
@@ -99,7 +115,22 @@ class PPDBController extends Controller
                             ->whereUuid($uuid)
                             ->first();
                             // return $data->madrasah;
-        return view('pages.ppdb.detail' , compact('data'));
+        $pendaftaran = Pendaftaran::with('peserta')
+                        ->where('uuid_pembukaan' , $uuid)->get();
+
+        return view('pages.ppdb.detail' , compact('data' , 'pendaftaran'));
+    }
+
+    public function delete($id)
+    {
+        $uuid = Dits::decodeDits($id);
+        $data = Pembukaan::where('uuid' , $uuid)
+                            ->first();
+        if ($data) {
+            $data->delete();
+            toast('Berhasil Menghapus PPDB','success');
+            return redirect()->route('buka-ppdb');
+        }
     }
 
     public function status($id)
@@ -436,6 +467,8 @@ class PPDBController extends Controller
         toast('Data tidak ada','error');
         return back();
     }
+
+    
 
 
 
