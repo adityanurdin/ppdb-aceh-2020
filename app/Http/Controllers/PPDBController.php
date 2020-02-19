@@ -108,6 +108,79 @@ class PPDBController extends Controller
         return back();
     }
 
+    public function edit($id)
+    {
+        $uuid = Dits::decodeDits($id);
+        $madrasah = Madrasah::all();
+        $madrasah_list = Madrasah::whereNotIn('uuid',function($query){
+            $query->select('uuid_madrasah')->from('pembukaans')->where('status_pembukaan','Dibuka');
+        })
+        ->get();
+        $data = Pembukaan::where('uuid' , $uuid)->first();
+        return view('pages.ppdb.create_edit' , compact('madrasah','madrasah_list' , 'data'));
+    }
+
+    public function update(Request $request , $id)
+    {
+        $uuid  = Dits::decodeDits($id);
+        $user  = Auth::user();
+        $input = $request->all();
+
+        if(!isset($request->uuid_madrasah)) {
+            $operator      = Operator::whereUuid($user->uuid_login)->first();
+            $uuid_madrasah = $operator->uuid_madrasah;
+        } else {
+            $uuid_madrasah = Dits::decodeDits($request->uuid_madrasah);
+            $operator      = Operator::whereUuidMadrasah($uuid_madrasah)->first();
+            if(is_null($operator)) {
+                toast('Gagal, Madrasah Yang Di Pilih Belum Mempunyai Operator','error');
+                return back();
+            }
+        }
+        $madrasah = Madrasah::whereUuid($uuid_madrasah)
+                            ->first();
+
+        $tgl_pembukaan = str_replace('-' , '' , $request->tgl_pembukaan);
+        $tgl_penutupan = str_replace('-' , '' , $request->tgl_penutupan);
+        $tgl_pengumuman = str_replace('-' , '' , $request->tgl_pengumuman);
+
+        if ($tgl_penutupan <= $tgl_pembukaan) {
+            toast('Gagal, Tanggal penutupan tidak boleh kurang dari tanggal pembukaan','error');
+            return back();
+        } else if ( $tgl_pengumuman <= $tgl_penutupan && $tgl_pengumuman <= $tgl_pembukaan) {
+            toast('Gagal, Tanggal pengumuman tidak boleh kurang dari tanggal pembukaan dan tanggal penutupan','error');
+            return back();
+        }
+
+        $input['uuid_madrasah']     = $uuid_madrasah;
+        $input['uuid_operator']     = $operator->uuid;
+        $input['status_nomor']      = 'yes';
+        $input['tgl_post']          = Carbon::now();
+        $input['url_brosur']        = '';
+        // $input['status_pembukaan']  = 'Dibuka';
+
+        if ($request->hasFile('url_brosur')){
+            $fileName = Carbon::now()->timestamp. '.' . 
+            $request->file('url_brosur')->getClientOriginalExtension();
+            $uploadPdf = $request->file('url_brosur')->move(
+                base_path() . '/public/document/brosur', $fileName
+            );
+            $input['url_brosur']    = $uploadPdf;
+        }
+
+        // return $input;
+        
+        $create     = Pembukaan::where('uuid' , $uuid)->first();
+        $create->update($input);
+
+        if ($create) {
+            toast('Berhasil Memperbaharui PPDB','success');
+            return redirect()->route('buka-ppdb');
+        }
+        toast('Gagal, Memperbaharui PPDB','error');
+        return back();
+    }
+
     public function detail($id)
     {
         $uuid = Dits::decodeDits($id);

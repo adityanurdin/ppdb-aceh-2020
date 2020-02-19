@@ -10,6 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+use Carbon\Carbon;
 
 
 Route::get('/home', function () {
@@ -45,8 +46,10 @@ Route::get('/home', function () {
 
     Route::get('/{nik}/cetak-pendaftaran/{id}' , function($nik , $id) {
         $uuid = \Dits::decodeDits($id);
-        $data = \App\Models\Pendaftaran::with('peserta')->where('uuid' , $uuid)->first();
-        return view('exports.cetak_pendaftaran' , compact('data'));
+        $data = \App\Models\Pendaftaran::with('peserta' , 'pembukaan')->where('uuid' , $uuid)->first();
+        $madrasah = \App\Models\Madrasah::where('uuid' , $data->pembukaan['uuid_madrasah'])->first();
+        $persyaratan = explode(',' , $madrasah->persyaratan);
+        return view('exports.cetak_pendaftaran' , compact('data' , 'madrasah' , 'persyaratan'));
     })->name('print.data');
 
     Route::group(['middleware' => 'Peserta'] , function() {
@@ -123,6 +126,8 @@ Route::get('/home', function () {
             Route::get('/' , 'PPDBController@bukaPPDB')->name('buka-ppdb');
             Route::get('create' , 'PPDBController@create')->name('buka-ppdb.create');
             Route::post('store' , 'PPDBController@store')->name('buka-ppdb.store');
+            Route::get('edit/{id}' , 'PPDBController@edit')->name('buka-ppdb.edit');
+            Route::put('update/{id}' , 'PPDBController@update')->name('buka-ppdb.update');
             Route::get('/detail/{id}' , 'PPDBController@detail')->name('buka-ppdb.details');
             Route::get('/delete/{id}' , 'PPDBController@delete')->name('buka-ppdb.delete');
             Route::get('/detail/{id}/update-status-pendaftaran/{status}' , 'PesertaController@updateStatusPendaftaran')->name('buka-ppdb.update-status-pendaftaran');
@@ -133,6 +138,8 @@ Route::get('/home', function () {
             Route::get('/detail/{id}/data-daftar-ulang' , 'PesertaController@dataDaftarUlang')->name('buka-ppdb.data-daftar-ulang');
             Route::put('/detail/{id}/update-daftar-ulang' , 'PesertaController@updateDaftarUlang')->name('buka-ppdb.update.daftar.ulang');
             Route::get('/detail/{id}/status' , 'PPDBController@status')->name('buka-ppdb.rubah-status');
+            Route::get('/detail/{id}/dokumen-persyaratan' , 'MadrasahController@dokumen')->name('buka-ppdb.dokumen-persyaratan');
+            Route::post('/detail/{id}/dokumen-persyaratan' , 'MadrasahController@dokumenStore')->name('buka-ppdb.dokumen.store');
             Route::get('/data' , 'PPDBController@data')->name('buka-ppdb.data');
 
             Route::get('/detail/{id}/pengumuman/' , 'PPDBController@pengumuman')->name('buka-ppdb.pengumuman');

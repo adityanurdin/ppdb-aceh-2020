@@ -238,5 +238,10 @@ class Dits
         return $table;
     }
 
+    public static function ExpPersyaratan($data){
+        $data = explode(",", $data);
+        return $data;
+    }
+
 }
 

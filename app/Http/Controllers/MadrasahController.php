@@ -8,6 +8,8 @@ use App\User;
 use App\Models\Operator;
 use App\Models\Peserta;
 use App\Models\Madrasah;
+use App\Models\Pembukaan;
+use App\Models\Pendaftaran;
 
 use Validator;
 use Str;
@@ -257,5 +259,31 @@ class MadrasahController extends Controller
                             })
                             ->escapeColumns([])
                             ->make(true);
+    }
+
+    public function dokumen($id)
+    {
+        $uuid = Dits::decodeDits($id);
+        $data = Pembukaan::where('uuid' , $uuid)->first();
+        $madrasah = Madrasah::where('uuid' , $data->uuid_madrasah)->first();
+
+        $persyaratan = explode(',' , $madrasah->persyaratan);
+        return view('pages.database_madrasah.operators.dokumen' , compact('data' , 'persyaratan' , 'madrasah'));
+    }
+
+    public function dokumenStore(Request $request , $id)
+    {
+        $uuid = Dits::decodeDits($id);
+        $data = Madrasah::where('uuid' , $uuid)->first();
+        if ($data) {
+            $data->update([
+                'persyaratan' => $request->persyaratan
+            ]);
+            if ($data) {
+                toast('Berhasil membuat persyaratan','success');
+                return back();
+            }
+        }
+
     }
 }

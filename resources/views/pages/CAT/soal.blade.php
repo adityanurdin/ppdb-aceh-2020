@@ -42,7 +42,7 @@
             <h1 class="px-5">Soal No. <span class="badge badge-primary">{{$no}}</span></h1>
         </div>
         <div class="col d-flex justify-content-end">
-            <h4 class="px-5 text-secondary"><i class="fas fa-hourglass-half"></i> Sisa Waktu <span class="badge badge-warning">00:00:00</span></h4>
+            <h4 class="px-5 text-secondary"><i class="fas fa-hourglass-half"></i> Sisa Waktu <span class="badge badge-warning"><div id="demo"></div></span></h4>
         </div>
     </div>
     <div class="row no-gutters">
@@ -119,10 +119,50 @@
 <br><br><br><br><br><br>
 <footer class="fixed-bottom bg-dark text-light text-center pt-2">Copyright © 2019 | Kemenag Kota Banda Aceh Powered By <a href=""><u>FRANDIKASEPTA.COM</u></a>
 </footer>
+@php
+    $timer_now = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s' , $waktu_mulai)->addMinutes($bank_soal->timer_cat);
+@endphp
+{{-- <input type="hidden" value="{{$bank_soal->timer_cat}}" id="timer_cat"> --}}
+<input type="hidden" value="{{\Carbon\Carbon::now()->toFormattedDateString()}}" id="dateNow">
+<input type="hidden" value="{{$timer_now->hour}}" id="timer_cat_hour">
+<input type="hidden" value="{{$timer_now->minute }}" id="timer_cat_minute">
+<input type="hidden" value="{{$timer_now->second }}" id="timer_cat_second">
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="{{asset('js/jquery.countdown.min.js')}}"></script>
+    <script>
+      var timer_cat_hour = $('#timer_cat_hour').val();
+      var timer_cat_minute = $('#timer_cat_minute').val();
+      var timer_cat_second = $('#timer_cat_second').val();
+      var dateNow = $('#dateNow').val();
+
+      var time = dateNow + " " + timer_cat_hour + ":" + timer_cat_minute + ":" + timer_cat_second
+
+      var countDownDate = new Date(time).getTime();
+
+      var x = setInterval(function() {
+
+        var now = new Date().getTime();
+          
+        var distance = countDownDate - now;
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          
+        document.getElementById("demo").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+          
+        if (distance < 0) {
+          clearInterval(x);
+          
+          document.getElementById("demo").innerHTML = "EXPIRED";
+        }
+      }, 1000);
+
+
+
+    </script>
   </body>
 </html>

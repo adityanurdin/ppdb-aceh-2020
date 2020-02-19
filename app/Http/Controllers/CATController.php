@@ -78,6 +78,11 @@ class CATController extends Controller
         $cookie_value   = json_encode($request->kode_soal);
         Cookie::queue(Cookie::make($cookie_name, $cookie_value, $minutes));
 
+        // Set waktu ujian
+        $nama_cookie    = Dits::encodeDits('DitsWaktu');
+        $isi_cookie     = json_encode($request->start);
+        Cookie::queue(Cookie::make($nama_cookie, $isi_cookie, $minutes));
+
         return redirect()->route('cat.start' , Dits::encodeDits(1));
     }
 
@@ -98,7 +103,11 @@ class CATController extends Controller
         $cookie_value =  json_decode($get_cookie , true);
 
         $count_soal = Soal::where('kode_soal' , $cookie_value)->count();
-        
+
+        $nama_cookie = Dits::encodeDits('DitsWaktu');
+        $dapat_cookie = Cookie::get($nama_cookie);
+        $waktu_mulai = json_decode($dapat_cookie);
+
         // $count_soal = str_replace('' , '"' , $count_soal);
         $no = intval($no);
 
@@ -141,7 +150,7 @@ class CATController extends Controller
                                 // return $jawaban;
                             
 
-        return view('pages.CAT.soal' , compact('no' , 'soal' , 'navigasi' , 'finish' , 'jawaban'));
+        return view('pages.CAT.soal' , compact('no' , 'soal' , 'navigasi' , 'finish' , 'jawaban' , 'bank_soal' , 'waktu_mulai'));
     }
 
     public function storeJawaban(Request $request, $no)

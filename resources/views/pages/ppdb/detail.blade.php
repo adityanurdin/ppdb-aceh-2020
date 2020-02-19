@@ -29,7 +29,8 @@
             <div class="container mt-5 text-center">
                 <a href="{{Dits::PdfViewer(asset($data->url_brosur))}}" target="_blank" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf"></i> Lihat Brosur</a>
                 <a href="{{route('buka-ppdb.rubah-status' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-info"><i class="fas fa-pen-square"></i> Ubah Status</a>
-                <a href="#" class="btn btn-sm btn-warning"><i class="fas fa-pen-square"></i> Edit Pembukaan</a>
+                <a href="{{route('buka-ppdb.edit' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-warning"><i class="fas fa-pen-square"></i> Edit Pembukaan</a>
+                <a href="{{route('buka-ppdb.dokumen-persyaratan' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-dark"><i class="fas fa-link"></i> Dokumen Persyaratan</a>
                 <a href="{{route('buka-ppdb.delete' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-danger"><i class="fas fa-pen-square"></i> Hapus Pembukaan</a>
                 <a href="{{route('export.pendaftaran' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-success"><i class="fas fa-file-excel"></i> Export Data</a>
             </div>

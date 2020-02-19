@@ -32,25 +32,11 @@
             <br>
             {{ $data->email }}
           </li>
-          {{-- <li class="list-group-item">
-            <b>Status Test</b>
-            <br>
-            <span class="text-danger">BELUM DI KERJAKAN</span>
-            <br><br>
-            <b>Sub Test</b>
-            <br>
-            BAHASA SANSEKERTA
-          </li> --}}
           <li class="list-group-item">
             <b>Tanggal Test</b>
             <br>
             {{date('d-m-Y')}}
           </li>
-          {{-- <li class="list-group-item">
-            <b>Alokasi Waktu Test</b>
-            <br>
-            90 Menit
-          </li> --}}
         </ul>
       </div>
       <div class="col">
@@ -61,6 +47,7 @@
             @csrf
             <div class="form-group">
                 <input type="text" required name="kode_soal" class="form-control" placeholder="Kode Ujian">
+                <input type="hidden" value="{{Carbon\Carbon::now()}}" name="start">
                 <button type="submit" class="btn btn-block btn-danger mt-2">MULAI</button>
             </div>
         </form>

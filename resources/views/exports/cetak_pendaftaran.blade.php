@@ -165,8 +165,8 @@
                     <div class="header_kemenag">
                         <h1><b>SIM PPDB MADRASAH</b></h1>
                         <h1><b>KOTA BANDA ACEH</b></h1>
-                        <h2>AAA</h2>
-                        <h3>Tahun Akademik&nbsp; 2020/2019?></h3>
+                        <h2>{{$madrasah->nama_madrasah}}</h2>
+                        <h3>Tahun Akademik&nbsp; {{$data->pembukaan['tahun_akademik']}}</h3>
                     </div>
                 </div>
             
@@ -181,67 +181,67 @@
                                 <tbody>
                                     <tr>
                                         <td width="35%">Kode Pendaftaran</td>
-                                        <td width="65%">: <b style="color:red;font-size:16pt;text-decoration:underline;">123123</b></td>
+                                        <td width="65%">: <b style="color:red;font-size:16pt;text-decoration:underline;">{{$data->kode_pendaftaran}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Tanggal Pendaftaran</td>
-                                        <td>: <b>12-12-2012</b></td>
+                                        <td>: <b>{{Carbon\Carbon::createFromFormat('Y-m-d H:i:s' , $data->tgl_pendaftaran)->toDateString()}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Nama Siswa</td>
-                                        <td>: <b>WOWO</b></td>
+                                        <td>: <b>{{$data->peserta['nama']}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Tempat, Tanggal Lahir</td>
-                                        <td>: <b>Tasik, 12-12-2012</b></td>
+                                        <td>: <b>{{$data->peserta['tmp']}}, {{$data->peserta['tgl']}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Jenis Kelamin</td>
-                                        <td>: <b>LAKI</b></td>
+                                        <td>: <b>{{$data->peserta['jkl']}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Agama</td>
-                                        <td>: <b>ISLAM</b></td>
+                                        <td>: <b>{{$data->peserta['agama']}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Alamat Rumah</td>
-                                        <td>: <b>Jl JL</b></td>
+                                        <td>: <b>{{$data->peserta['alamat_rumah']}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Nama Ayah</td>
-                                        <td>: <b>AWAWA</b></td>
+                                        <td>: <b>{{$data->peserta['nama_ayah']}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>NIK KTP Ayah</td>
-                                        <td>: <b>AWAWA</b></td>
+                                        <td>: <b>{{$data->peserta['nik_ayah']}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Pekerjaan Ayah</td>
-                                        <td>: <b>AWAW</b></td>
+                                        <td>: <b>{{$data->peserta['pekerjaan_ayah']}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Nama Ibu</td>
-                                        <td>: <b>asd</b></td>
+                                        <td>: <b>{{$data->peserta['nama_ibu']}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>NIK KTP Ibu</td>
-                                        <td>: <b>asd</b></td>
+                                        <td>: <b>{{$data->peserta['nik_ibu']}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Pekerjaan Ibu</td>
-                                        <td>: <b>asd</b></td>
+                                        <td>: <b>{{$data->peserta['pekerjaan_ibu']}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Tanggal Registrasi PPDB</td>
-                                        <td>: <b>asd></b></td>
+                                        <td>: <b>{{Carbon\Carbon::createFromFormat('Y-m-d h:i:s' , $data->peserta['tgl_registrasi'])->toDateString()}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Kontak/No.HP</td>
-                                        <td>: <b>asdasd</b></td>
+                                        <td>: <b>{{$data->peserta['kontak_peserta']}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Email</td>
-                                        <td>: <b>asdasd</b></td>
+                                        <td>: <b>{{$data->peserta['email']}}</b></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -254,15 +254,15 @@
                     <div class="ttd_">
                         <div class="div_ttd">
                             <h1>Peserta Didik</h1>
-                            <h2>Kota Banda Aceh,<span></span>123123</h2>
+                            <h2>Kota Banda Aceh,<span></span>{{Carbon\Carbon::now()->format('F Y')}}</h2>
                             <h3>qsdasd</h3>
-                            <h4>NISN. 123123</h4>
+                            <h4>NISN. {{$data->peserta['nisn']}}</h4>
                         </div>
                     </div>
                     <div class="ttd_">
                         <div class="div_ttd">
                             <h1>Mengetahui, Orang Tua/Wali</h1>
-                            <h2>Kota Banda Aceh,<span></span>123123</h2>
+                            <h2>Kota Banda Aceh,<span></span>{{Carbon\Carbon::now()->format('F Y')}}</h2>
                             <h3>&nbsp;</h3>
                             <h4>NIP.</h4>
                         </div>
@@ -270,7 +270,7 @@
                     <div class="ttd_">
                         <div class="div_ttd">
                             <h1>Panitia PPDB Madrasah</h1>
-                            <h2>Kota Banda Aceh,<span></span>123123</h2>
+                            <h2>Kota Banda Aceh,<span></span>{{Carbon\Carbon::now()->format('F Y')}}</h2>
                             <h3>&nbsp;</h3>
                             <h4>NIP.</h4>
                         </div>
@@ -284,7 +284,9 @@
                         <h2><i class="fa fa-chevron-circle-right"></i>Bawa Bukti Pendaftaran Ini Ke Madrasah Yang Dituju/Didaftar.</h2>
                         <h2><i class="fa fa-chevron-circle-right"></i>Tanda Tangan Sebelum Menyerahkan Ke Panitia Pendaftaran.</h2>
                         <h2><i class="fa fa-chevron-circle-right"></i>Bawa Kelengkapan Lainnya Seperti :</h2>
-                        123123
+                        @foreach ($persyaratan as $item)
+                            <h3> <i class="fa fa-chevron-circle-right"></i> {{$item}} </h3>
+                        @endforeach
                     </div>
                     <div class="grid_pasfoto">
                         <h5>PAS FOTO</h5>
@@ -293,7 +295,7 @@
                         <h6>NOMOR PENDAFTARAN</h6>
                         <div class="grid_nomerurut">
 
-                            @if ($data->nomor_pendaftaran)
+                            @if ($data->pembukaan['status_nomor'] == 'yes')
                                 {{ sprintf("%04d",$data->nomor_pendaftaran) }}
                             @else 
                                 &nbsp;
