@@ -24,7 +24,7 @@ Route::get('/home', function () {
  * =====================
  */
 
- Route::group(['middleware' => ['HttpsProtocol']], function () {
+//  Route::group(['middleware' => ['HttpsProtocol']], function () {
 
     
  Route::post('/login' , 'Auth\AuthController@login')->name('auth.login');
@@ -212,4 +212,4 @@ Route::get('/home', function () {
 
   });
     
- });
+//  });
