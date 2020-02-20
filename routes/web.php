@@ -24,6 +24,9 @@ Route::get('/home', function () {
  * =====================
  */
 
+ Route::group(['middleware' => ['HttpsProtocol']], function () {
+
+    
  Route::post('/login' , 'Auth\AuthController@login')->name('auth.login');
  Route::get('/register' , 'Auth\AuthController@showRegister')->name('auth.show.register');
  Route::post('/register' , 'Auth\AuthController@register')->name('auth.register');
@@ -208,3 +211,5 @@ Route::get('/home', function () {
     });
 
   });
+    
+ });
