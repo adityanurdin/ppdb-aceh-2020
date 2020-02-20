@@ -153,12 +153,11 @@ class KemenagController extends Controller
         return DataTables::of($data)
                         ->addIndexColumn()
                         ->editColumn('action' , function($item) {
-                            if ($item->user['status_aktif'] == 'yes') {
+                            if ($item->status_aktif == 'yes') {
                                 $status = '<a href="/kemenag/'.Dits::encodeDits($item->uuid).'/lockUnlock" class="btn btn-dark btn-sm"><i class="fas fa-lock"></i></a>';
                             } else {
                                 $status = '<a href="/kemenag/'.Dits::encodeDits($item->uuid).'/lockUnlock" class="btn btn-success btn-sm"><i class="fas fa-lock-open"></i></a>';
                             }
-
                             $btn = '<a href="/kemenag/'.Dits::encodeDits($item->uuid).'/delete"  onclick="return confirm("Yakin ingin menghapus '.$item->user['username'].'");" class="btn btn-danger btn-sm"><i class="fas fa-eraser"></i></a> ';
                             $btn .= '<a href="/kemenag/'.Dits::encodeDits($item->uuid).'/edit" class="btn btn-warning btn-sm"><i class="fas fa-pen-square"></i></a> ';
                             $btn .= '<a href="#" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a> ';

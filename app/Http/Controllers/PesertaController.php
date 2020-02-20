@@ -298,11 +298,19 @@ class PesertaController extends Controller
         return DataTables::of($data)
                             ->addIndexColumn()
                             ->addColumn('action' , function($item) {
+                                if($item->url_transfer == '' || $item->url_transfer == NULL) {
+                                $btn = '<a href="#" data-toggle="modal" data-target="#opsi-'.$item->uuid.'" class="btn btn-secondary disabled btn-sm btn-block" disabled>Verifikasi Pembayaran</a>';
+                                }else {
                                 $btn = '<a href="#" data-toggle="modal" data-target="#opsi-'.$item->uuid.'" class="btn btn-success btn-sm btn-block">Verifikasi Pembayaran</a>';
+                                }
                                 return $btn;
                             })
                             ->addColumn('file_transfer' , function($item) {
-                                $btn = '<a href="'.Dits::pdfViewer(asset($item->url_transfer)).'" target="_blink" class="btn btn-warning btn-sm btn-block">Buka File</a>';
+                                if($item->url_transfer == '' || $item->url_transfer == NULL) {
+                                    $btn = '<a href="'.Dits::pdfViewer(asset($item->url_transfer)).'" target="_blink" class="btn btn-secondary btn-sm btn-block disabled" disabled>Buka File</a>';
+                                } else {
+                                    $btn = '<a href="'.Dits::pdfViewer(asset($item->url_transfer)).'" target="_blink" class="btn btn-warning btn-sm btn-block">Buka File</a>';
+                                }
                                 return $btn;
                             })
                             ->editColumn('status_transfer' , function($item) {

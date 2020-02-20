@@ -199,11 +199,21 @@ class PPDBController extends Controller
         $uuid = Dits::decodeDits($id);
         $data = Pembukaan::where('uuid' , $uuid)
                             ->first();
+
+        $pendaftaran = Pendaftaran::where('uuid_pembukaan' , $data->uuid)->get();
+
+        if($pendaftaran != NULL) {
+            toast('Gagal Menghapus PPDB','error');
+            return back();
+        }
+
         if ($data) {
             $data->delete();
             toast('Berhasil Menghapus PPDB','success');
             return redirect()->route('buka-ppdb');
-        }
+        } 
+        toast('Gagal Menghapus PPDB','error');
+        return redirect()->route('buka-ppdb');
     }
 
     public function status($id)
@@ -238,6 +248,8 @@ class PPDBController extends Controller
 
         $madrasah = Madrasah::whereUuid($u_madrasah)->first();
 
+        
+
         $pembukaan = Pembukaan::where('uuid_madrasah' , $madrasah->uuid)->first();
         if ($pembukaan->status_pembukaan == 'Ditutup')
         {
@@ -261,11 +273,17 @@ class PPDBController extends Controller
         
         $check_pendaftaran = Pendaftaran::whereUuidPeserta($uuid_peserta)
                                             ->get('uuid_pembukaan');
-                                            // return count($check_pendaftaran);
+        $check_pendaftaran_2 = Pendaftaran::whereUuidPeserta($uuid_peserta)
+                                            ->where('uuid_pembukaan' , $pembukaan->uuid)
+                                            ->get();
             if ( $check_pendaftaran->count() >= 3) {
                 toast('Gagal, Kamu Sudah Mendaftar ke 3 Sekolah','error');
                 return back();
+            }else if ($check_pendaftaran_2->count() >= 1) {
+                toast('Gagal, Kamu Sudah Mendaftar di madrasah ini','error');
+                return back();
             }
+
         $nomor_pendaftaran = Dits::interval('pendaftarans' , 'nomor_pendaftaran');
         $input  = array(
             'uuid'              => Str::uuid(),
@@ -330,7 +348,10 @@ class PPDBController extends Controller
         $pendaftaran    = Pendaftaran::whereUuidPembukaan($uuid_pembukaan)
                                         ->whereUuidPeserta($uuid_peserta)
                                         ->first();
-
+        if($pendaftaran->status_pendaftaran != 'Baru' || $pendaftaran->status_pendaftaran != 'baru') {
+            toast('Gagal Menghapus, Status Pendaftaran kamu bukan "Baru"','error');
+            return back();
+        }
         
         if($pendaftaran)
         {

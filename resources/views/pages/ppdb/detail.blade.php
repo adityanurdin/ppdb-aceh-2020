@@ -32,6 +32,7 @@
                 <a href="{{route('buka-ppdb.edit' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-warning"><i class="fas fa-pen-square"></i> Edit Pembukaan</a>
                 <a href="{{route('buka-ppdb.dokumen-persyaratan' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-dark"><i class="fas fa-link"></i> Dokumen Persyaratan</a>
                 <a href="{{route('buka-ppdb.delete' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-danger"><i class="fas fa-pen-square"></i> Hapus Pembukaan</a>
+                <a href="#" class="btn btn-sm btn-info"><i class="fas fa-user-plus"></i> Jalur Khusus</a>
                 <a href="{{route('export.pendaftaran' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-success"><i class="fas fa-file-excel"></i> Export Data</a>
             </div>
         </div>

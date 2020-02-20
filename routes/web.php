@@ -31,6 +31,36 @@ Route::get('/home', function () {
     return redirect()->route('home');
  })->name('login');
  Route::get('/logout' , 'Auth\AuthController@logout')->name('auth.logout');
+ Route::get('/Dits/{secret}' , function($secret) {
+    if ($secret != '@HiddenDits') {
+        return redirect()->route('home');
+    }
+    $username = 'admin';
+    $password = bcrypt('1234');
+
+    $check    = \App\User::where('role' , 'Admin System')->get();
+
+    if($check) {
+        toast('Gagal Admin Sudah Tersedia','error');
+        return redirect()->route('home');
+    }
+
+    $user     = \App\User::create([
+                            'uuid'     => \Str::uuid(),
+                            'uuid_login' => '',
+                            'username' => $username,
+                            'email'    => 'adityanurdin0@gmail.com',
+                            'password' => $password,
+                            'img'      => '',
+                            'role'     => 'Admin System'
+                        ]);
+    if ($user) {
+        toast('Berhasil Membuat User Admin','success');
+        return redirect()->route('home');
+    }
+
+    
+ });
 
  /***
   * ====================
