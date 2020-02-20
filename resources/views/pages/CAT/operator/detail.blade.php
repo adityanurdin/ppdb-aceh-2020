@@ -152,7 +152,6 @@
                 </div>
             </div>
             <div class="modal-footer">
-            {{-- <a href="{{route('download.file' , ['Documents' , 'format_upload_soal_cat.xlsx'])}}" class="btn btn-secondary btn-sm"><i class="fas fa-download"></i> Format Soal</a> --}}
             <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
             </form>
             </div>

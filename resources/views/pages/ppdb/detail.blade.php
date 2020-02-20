@@ -11,35 +11,40 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <h4 class="text-center">{{$data->madrasah['nama_madrasah']}}</h4>
-            <div class="row mt-5 ml-5">
-                <div class="col-md-4">
-                    <p class="text-dark">Tanggal Pembukaan</p>
-                    <p class="text-dark">Tanggal Penutupan</p>
-                    <p class="text-dark">Tanggal Pengumuman</p>
-                    <p class="text-dark">Status Pembukaan</p>
+
+            {{-- <div class="table-responsive"> --}}
+                <h4 class="text-center">{{$data->madrasah['nama_madrasah']}}</h4>
+                <div class="row mt-5 ml-5">
+                    <div class="col-md-4">
+                        <p class="text-dark">Tanggal Pembukaan</p>
+                        <p class="text-dark">Tanggal Penutupan</p>
+                        <p class="text-dark">Tanggal Pengumuman</p>
+                        <p class="text-dark">Status Pembukaan</p>
+                    </div>
+                    <div class="col-md-8">
+                        <p class="text-dark">: {{$data->tgl_pembukaan}}</p>
+                        <p class="text-dark">: {{$data->tgl_penutupan}}</p>
+                        <p class="text-dark">: {{$data->tgl_pengumuman}}</p>
+                        <p class="text-dark">: {{$data->status_pembukaan}}</p>
+                    </div>
                 </div>
-                <div class="col-md-8">
-                    <p class="text-dark">: {{$data->tgl_pembukaan}}</p>
-                    <p class="text-dark">: {{$data->tgl_penutupan}}</p>
-                    <p class="text-dark">: {{$data->tgl_pengumuman}}</p>
-                    <p class="text-dark">: {{$data->status_pembukaan}}</p>
+                <div class="container mt-5 text-center">
+                    <a href="{{Dits::PdfViewer(asset($data->url_brosur))}}" target="_blank" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf"></i> Lihat Brosur</a>
+                    <a href="{{route('buka-ppdb.rubah-status' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-info"><i class="fas fa-pen-square"></i> Ubah Status</a>
+                    <a href="{{route('buka-ppdb.edit' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-warning"><i class="fas fa-pen-square"></i> Edit Pembukaan</a>
+                    <a href="{{route('buka-ppdb.dokumen-persyaratan' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-dark"><i class="fas fa-link"></i> Dokumen Persyaratan</a>
+                    <a href="{{route('buka-ppdb.delete' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-danger"><i class="fas fa-pen-square"></i> Hapus Pembukaan</a>
+                    <a href="#" data-toggle="modal" data-target="#addPeserta" class="btn btn-sm btn-info"><i class="fas fa-user-plus"></i> Jalur Khusus</a>
+                    <a href="{{route('export.pendaftaran' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-success"><i class="fas fa-file-excel"></i> Export Data</a>
                 </div>
-            </div>
-            <div class="container mt-5 text-center">
-                <a href="{{Dits::PdfViewer(asset($data->url_brosur))}}" target="_blank" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf"></i> Lihat Brosur</a>
-                <a href="{{route('buka-ppdb.rubah-status' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-info"><i class="fas fa-pen-square"></i> Ubah Status</a>
-                <a href="{{route('buka-ppdb.edit' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-warning"><i class="fas fa-pen-square"></i> Edit Pembukaan</a>
-                <a href="{{route('buka-ppdb.dokumen-persyaratan' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-dark"><i class="fas fa-link"></i> Dokumen Persyaratan</a>
-                <a href="{{route('buka-ppdb.delete' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-danger"><i class="fas fa-pen-square"></i> Hapus Pembukaan</a>
-                <a href="#" class="btn btn-sm btn-info"><i class="fas fa-user-plus"></i> Jalur Khusus</a>
-                <a href="{{route('export.pendaftaran' , Dits::encodeDits($data->uuid))}}" class="btn btn-sm btn-success"><i class="fas fa-file-excel"></i> Export Data</a>
-            </div>
+            {{-- </div> --}}
+
         </div>
     </div>
 
     <div class="card mt-5">
         <div class="card-body">
+
             <h6 class="text-center">Verifikasi PPDB Madrasah</h6>
 
             <div class="mt-5 mb-3">
@@ -47,23 +52,26 @@
                 <h6>Jumlah Peserta Lolos Tahap Dokumen : {{Dits::countTableByWhere('App\Models\Pendaftaran' , 'uuid_pembukaan' , $data->uuid , 'status_pendaftaran' , 'Lolos Tahap Dokumen')}}</h6>
                 <h6>Jumlah Peserta Tidak Lolos Tahap Dokumen : {{Dits::countTableByWhere('App\Models\Pendaftaran' , 'uuid_pembukaan' , $data->uuid , 'status_pendaftaran' , 'Tidak Lolos Tahap Dokumen')}}</h6>
             </div>
+            <div class="table-responsive">
+    
+    
+                <table class="table table-borderless table-hover" id="dataVerifikasi">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Kode Pendaftaran</th>
+                            <th>Nama Peserta</th>
+                            <th>Jenis Kelamin</th>
+                            <th>Alamat</th>
+                            <th width="135">Opsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    
+                    </tbody>
+                </table>
+            </div>
 
-
-            <table class="table table-borderless table-hover" id="dataVerifikasi">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Kode Pendaftaran</th>
-                        <th>Nama Peserta</th>
-                        <th>Jenis Kelamin</th>
-                        <th>Alamat</th>
-                        <th width="135">Opsi</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
             
         </div>
     </div>
@@ -72,22 +80,25 @@
         <div class="card-body">
             <h6 class="text-center">Data Peserta Pendaftaran</h6>
 
-            <table class="table table-borderless table-hover mt-5" id="dataPendaftaran">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Kode Pendaftaran</th>
-                        <th>Nama Peserta</th>
-                        <th>Alamat</th>
-                        <th>Status Pendaftaran</th>
-                        <th>Status Diterima</th>
-                        <th width="135">Opsi</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div class="table-responsive">
+                <table class="table table-borderless table-hover mt-5" id="dataPendaftaran">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Kode Pendaftaran</th>
+                            <th>Nama Peserta</th>
+                            <th>Alamat</th>
+                            <th>Status Pendaftaran</th>
+                            <th>Status Diterima</th>
+                            <th width="135">Opsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    
+                    </tbody>
+                </table>
+            </div>
 
-                </tbody>
-            </table>
         </div>
     </div>
 
@@ -103,46 +114,52 @@
             <div class="card mt-2">
                 <div class="card-body">
                     <h6 class="text-center">Data Peserta Diterima</h6>
+
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-hover mt-5" id="dataDiterima">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Kode Pendaftaran</th>
+                                    <th>Nama Peserta</th>
+                                    <th>Alamat</th>
+                                    <th>Status Diterima</th>
+                                    <th>Jalur Diterima</th>
+                                    <th width="135">Opsi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            
+                            </tbody>
+                        </table>
+                    </div>
         
-                    <table class="table table-borderless table-hover mt-5" id="dataDiterima">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Kode Pendaftaran</th>
-                                <th>Nama Peserta</th>
-                                <th>Alamat</th>
-                                <th>Status Diterima</th>
-                                <th>Jalur Diterima</th>
-                                <th width="135">Opsi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-        
-                        </tbody>
-                    </table>
                 </div>
             </div>
             
             <div class="card mt-5">
                 <div class="card-body">
                     <h6 class="text-center">Data Peserta Ditolak</h6>
+
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-hover mt-5" id="dataDitolak">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Kode Pendaftaran</th>
+                                    <th>Nama Peserta</th>
+                                    <th>Alamat</th>
+                                    <th>Status Diterima</th>
+                                    <th>Jalur Diterima</th>
+                                    <th width="135">Opsi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            
+                            </tbody>
+                        </table>
+                    </div>
         
-                    <table class="table table-borderless table-hover mt-5" id="dataDitolak">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Kode Pendaftaran</th>
-                                <th>Nama Peserta</th>
-                                <th>Alamat</th>
-                                <th>Status Diterima</th>
-                                <th>Jalur Diterima</th>
-                                <th width="135">Opsi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-        
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
@@ -152,23 +169,26 @@
         <div class="card-body">
             <h6 class="text-center">Data Peserta Daftar Ulang</h6>
 
-            <table class="table table-striped table-hover mt-5" id="daftar-ulang">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nomor Pendaftaran</th>
-                        <th>Nama Peserta</th>
-                        {{-- <th>Status Diterima</th>
-                        <th>Jalur Diterima</th> --}}
-                        <th>File Transfer</th>
-                        <th>Status Transfer</th>
-                        <th>Opsi</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mt-5" id="daftar-ulang">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nomor Pendaftaran</th>
+                            <th>Nama Peserta</th>
+                            {{-- <th>Status Diterima</th>
+                            <th>Jalur Diterima</th> --}}
+                            <th>File Transfer</th>
+                            <th>Status Transfer</th>
+                            <th>Opsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    
+                    </tbody>
+                </table>
+            </div>
 
-                </tbody>
-            </table>
         </div>
     </div>
     
@@ -176,6 +196,7 @@
 
 
 @endsection
+
 
 @push('script')
 <input type="hidden" id="params" value="{{Dits::encodeDits($data->uuid)}}">
@@ -306,4 +327,28 @@
     </div>
     </div>
 @endforeach
+
+    <!-- Modal -->
+    <div class="modal fade" id="addPeserta" tabindex="-1" role="dialog" aria-labelledby="addPesertaLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addPesertaLabel">Jalur Khusus</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="">Upload</label>
+                    <input type="file" name="upload_soal" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="{{route('download.file' , ['Documents' , 'format_jalur_khusus.xlsx'])}}" class="btn btn-secondary btn-sm"><i class="fas fa-download"></i> Format Jalur Khusus</a>
+                <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+            </div>
+          </div>
+        </div>
+      </div>
 @endsection

@@ -1,6 +1,7 @@
 <nav id="sidebar">
     <div class="sidebar-header">
-        <img src="https://simppdbaceh.frandikasepta.com/assets/img/logo_1-min.png" class="img-thumbnail">
+        <img src="{{asset('/img/logo_1-min.png')}}" class="img-thumbnail">
+        {{-- <img src="https://simppdbaceh.frandikasepta.com/assets/img/logo_1-min.png" width="70%"> --}}
     </div>
 
     <ul class="list-unstyled components">
@@ -104,7 +105,7 @@
             <a href="#pengaturan" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-cog"></i> Pengaturan</a>
             <ul class="collapse list-unstyled" id="pengaturan">
                 <li>
-                    <a href="#">Akun</a>
+                    <a href="{{route('auth.akun')}}">Akun</a>
                 </li>
                 @if (Auth::user()->role == 'Admin System')
                 <li>

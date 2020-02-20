@@ -10,22 +10,24 @@
 @section('content')
 <div class="card">
     <div class="card-body">
-        <table class="table table-striped" id="myTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>NSM</th>
-                    <th>Nama Madrasah</th>
-                    <th>Kode Pendaftaran</th>
-                    <th>Status Pendaftaran</th>
-                    <th>Status Penerimaan</th>
-                    <th>Jalur Penerimaan</th>
-                    <th>Opsi</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-striped" id="myTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>NSM</th>
+                        <th>Nama Madrasah</th>
+                        <th>Kode Pendaftaran</th>
+                        <th>Status Pendaftaran</th>
+                        <th>Status Penerimaan</th>
+                        <th>Jalur Penerimaan</th>
+                        <th>Opsi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 @endsection

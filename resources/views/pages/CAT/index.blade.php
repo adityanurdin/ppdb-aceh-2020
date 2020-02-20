@@ -13,6 +13,7 @@
 
 @section('content')
 <div class="container mt-3">
+  <div class="table-responsive">
     <div class="row">
       <div class="col-12 col-sm-6 col-md-8">
         <ul class="list-group">
@@ -53,5 +54,6 @@
         </form>
       </div>
     </div>
+  </div>
   </div>
 @endsection

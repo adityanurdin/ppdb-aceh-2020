@@ -15,23 +15,27 @@
     <div class="card">
         <div class="card-body">
             <a href="{{route('buka-ppdb.create')}}" class="btn btn-info float-right mb-5"><i class="fas fa-plus"></i> Buka PPDB</a>
-            <table class="table table-borderless table-hover" id="myTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nama Madrasah</th>
-                        <th>Tanggal Pembukaan</th>
-                        <th>Tanggal Penutupan</th>
-                        <th>Tanggal Pengumuman</th>
-                        {{-- <th>Tanggal Pengumuman</th> --}}
-                        <th>Status</th>
-                        <th width="135">Opsi</th>
-                    </tr>
-                </thead>
-                <tbody>
+            
+            <div class="table-responsive">
+                <table class="table table-borderless table-hover" id="myTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama Madrasah</th>
+                            <th>Tanggal Pembukaan</th>
+                            <th>Tanggal Penutupan</th>
+                            <th>Tanggal Pengumuman</th>
+                            {{-- <th>Tanggal Pengumuman</th> --}}
+                            <th>Status</th>
+                            <th width="135">Opsi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    
+                    </tbody>
+                </table>
+            </div>
 
-                </tbody>
-            </table>
         </div>
     </div>
 @endsection

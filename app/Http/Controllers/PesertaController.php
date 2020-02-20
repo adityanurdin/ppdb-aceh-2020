@@ -205,7 +205,7 @@ class PesertaController extends Controller
         return DataTables::of($data)
                             ->addIndexColumn()
                             ->addColumn('action' , function($item) {
-                                $btn = '<a href="#" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
+                                $btn = '<a href="'.route('print.data' , [$item->peserta['NIK'] , Dits::encodeDits($item->uuid) ]).'" target="_blank" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
                                 $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/lolos" class="btn btn-sm btn-info btn-block"><i class="fas fa-check"></i> Lolos Dokumen</a>';
                                 $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
                                 if ($item->peserta['rapot_1'] != NULL) {
@@ -239,7 +239,7 @@ class PesertaController extends Controller
         return DataTables::of($data)
                             ->addIndexColumn()
                             ->addColumn('action' , function($item) {
-                                $btn = '<a href="#" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
+                                $btn = '<a href="'.route('print.data' , [$item->peserta['NIK'] , Dits::encodeDits($item->uuid) ]).'" target="_blank" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
                                 $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/pengumuman/'.$item->kode_pendaftaran.'" class="btn btn-sm btn-info btn-block"><i class="fas fa-pencil-alt"></i> Edit Status</a>';
                                 // $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
                                 return $btn;
@@ -257,7 +257,7 @@ class PesertaController extends Controller
         return DataTables::of($data)
                             ->addIndexColumn()
                             ->addColumn('action' , function($item) {
-                                $btn = '<a href="#" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
+                                $btn = '<a href="'.route('print.data' , [$item->peserta['NIK'] , Dits::encodeDits($item->uuid) ]).'" target="_blank" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
                                 $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/pengumuman/'.$item->kode_pendaftaran.'" class="btn btn-sm btn-info btn-block"><i class="fas fa-pencil-alt"></i> Edit Status</a>';
                                 return $btn;
                             })

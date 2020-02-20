@@ -85,6 +85,8 @@ Route::get('/home', function () {
         return view('exports.cetak_pendaftaran' , compact('data' , 'madrasah' , 'persyaratan'));
     })->name('print.data');
 
+    Route::get('akun' , 'Auth\AuthController@akun')->name('auth.akun');
+
     Route::group(['middleware' => 'Peserta'] , function() {
         Route::post('update-peserta' , 'PesertaController@updatePeserta')->name('update.peserta');
 

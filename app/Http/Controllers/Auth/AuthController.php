@@ -108,6 +108,12 @@ class AuthController extends Controller
 
     }
 
+    public function akun()
+    {
+        $user = Auth::user();
+        return view('pages.auth.akun' , compact('user'));
+    }
+
     public function logout()
     {
         Auth::logout();

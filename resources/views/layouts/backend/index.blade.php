@@ -7,12 +7,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <link rel="icon" 
+      type="image/png" 
+      href="{{asset('img/favicon/favicon-96x96.png')}}">
+
     <title>{{ strtoupper(isset(Dits::DataPeserta()->nama)) ? Dits::DataPeserta()->nama : Auth::user()->role }} - SIM PPDB Madrasah Kota Banda Aceh</title>
 
     <!-- Bootstrap CSS -->
-    <link href="{{asset('bootstrap/dist/css/bootstrap-custom.css')}}" rel="stylesheet">
+    <link href="{{asset('bootstrap/dist/css/bootstrap-custom-new.css')}}" rel="stylesheet">
     <!-- Our Custom CSS -->
-    <link href="{{asset('bootstrap/dist/css/style.css')}}" rel="stylesheet">
+    <link href="{{asset('bootstrap/dist/css/style-new.css')}}" rel="stylesheet">
     <!-- Scrollbar Custom CSS -->
     <link rel="stylesheet" href="{{asset('css/jquery.mCustomScrollbar.min.css')}}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
@@ -37,7 +41,7 @@
             <!-- Top -->
             <nav class="navbar navbar-expand-lg">
                 <div class="container">
-                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <button type="button" id="sidebarCollapse" class="btn btn-success">
                         <i class="fas fa-align-left"></i>
                         {{-- <span>Menu</span> --}}
                     </button>

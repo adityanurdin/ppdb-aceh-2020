@@ -9,7 +9,8 @@
             font-weight: 600;
         }
         .image {
-            width: 75%;
+            width: 225px;
+            height: 225px;
         }
         .text {
             color: black;
@@ -27,123 +28,133 @@
             Data Madrasah
         </div>
         <div class="card-body">
-            <div class="row ml-5">
-                <div class="col-md-4">
-                    <img src="{{Dits::imageUrl($data->logo_madrasah)}}" class="image" alt="">
+            <div class="row">
+                <div class="col col-auto mx-auto">
+                  <img src="{{Dits::imageUrl($data->logo_madrasah)}}" class="image rounded">
                 </div>
-                <div class="col-md-8 mt-4">
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label for="">Nama Madrasah </label>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Akreditasi </label>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Email </label>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Kontak </label>
-                                </div>
-                            </div>
-                            <div class="col-sm-8">
-                                <div class="form-group">
-                                    : {{$data->nama_madrasah}}
-                                </div>
-                                <div class="form-group mt-4">
-                                    : {{$data->akreditasi}}
-                                </div>
-                                <div class="form-group mt-4">
-                                    : {{$data->email_madrasah}}
-                                </div>
-                                <div class="form-group mt-4">
-                                    : {{$data->kontak_madrasah}}
-                                </div>
-                            </div>
+                <div class="col mt-1">
+                  <div class="card shadow">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <p><strong>{{$data->nama_madrasah}}</strong></p>
+                              <table>
+                                <tr>
+                                  <td><strong>Jenjang</strong></td>
+                                  <td>:</td>
+                                  <td>{{$data->jenjang}}</td>
+                                </tr>
+                                <tr>
+                                  <td><strong>Status</strong></td>
+                                  <td>:</td>
+                                  <td>{{$data->status}}</td>
+                                </tr>
+                                <tr>
+                                  <td><strong>Kecamatan</strong></td>
+                                  <td>:</td>
+                                  <td>{{$data->kecamatan}}</td>
+                                </tr>
+                                <tr>
+                                  <td><strong>Akreditasi</strong></td>
+                                  <td>:</td>
+                                  <td>{{$data->akreditasi}}</td>
+                                </tr>
+                              </table>
                         </div>
                     </div>
+                  </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3 ml-5 mt-3">
-                    <div class="form-group">
-                        Kode Satker
+              </div>
+                <div class="row mt-3">
+                  <div class="col">
+                    <div class="card shadow">
+                      <div class="card-body">
+                          <div class="table-responsive">
+                              <table class="table">
+                                <tr>
+                                  <td><strong>Kode Satker</strong></td>
+                                  <td>:</td>
+                                  <td>{{$data->kode_satker}}</td>
+                                </tr>
+                                <tr>
+                                  <td><strong>NSM</strong></td>
+                                  <td>:</td>
+                                  <td>{{$data->nsm}}</td>
+                                </tr>
+                                <tr>
+                                  <td><strong>NPSN</strong></td>
+                                  <td>:</td>
+                                  <td>{{$data->npsn}}</td>
+                                </tr>
+                              </table>
+                          </div>
+                      </div>
                     </div>
-                    <div class="form-group">
-                        NSM
-                    </div>
-                    <div class="form-group">
-                        NPSN
-                    </div>
-                    <div class="form-group">
-                        Status
-                    </div>
-                    <div class="form-group">
-                        Jenjang
-                    </div>
-                    <div class="form-group">
-                        Alamat
-                    </div>
-                    <div class="form-group">
-                        Kelurahan/Desa
-                    </div>
-                    <div class="form-group">
-                        Kecamatan
-                    </div>
-                    <div class="form-group">
-                        Kabupaten
-                    </div>
-                    <div class="form-group">
-                        Provinsi
-                    </div>
-                    <div class="form-group">
-                        Brosur
-                    </div>
-                    <div class="form-group">
-                        Preview Madrasah
-                    </div>
+                  </div>
                 </div>
-                <div class="col-md-8 mt-3">
-                    <div class="form-group">
-                        : {{$data->kode_satker}}
+                <div class="row mt-3">
+                  <div class="col">
+                    <div class="card shadow">
+                      <div class="card-body">
+                          <div class="table-responsive">
+                              <table class="table">
+                                <tr>
+                                  <td><strong>Alamat</strong></td>
+                                  <td>:</td>
+                                  <td>{{$data->alamat}}</td>
+                                </tr>
+                                <tr>
+                                  <td><strong>Kelurahan</strong></td>
+                                  <td>:</td>
+                                  <td>{{$data->kelurahan}}</td>
+                                </tr>
+                                <tr>
+                                  <td><strong>Kabupaten</strong></td>
+                                  <td>:</td>
+                                  <td>{{$data->kabupaten}}</td>
+                                </tr>
+                                <tr>
+                                  <td><strong>Provinsi</strong></td>
+                                  <td>:</td>
+                                  <td>{{$data->provinsi}}</td>
+                                </tr>
+                              </table>
+                          </div>
+                      </div>
                     </div>
-                    <div class="form-group">
-                        : {{$data->nsm}}
-                    </div>
-                    <div class="form-group">
-                        : {{$data->npsn}}
-                    </div>
-                    <div class="form-group">
-                        : {{$data->status}}
-                    </div>
-                    <div class="form-group">
-                        : {{$data->jenjang}}
-                    </div>
-                    <div class="form-group">
-                        : {{$data->alamat}}
-                    </div>
-                    <div class="form-group">
-                        : {{$data->kelurahan}}
-                    </div>
-                    <div class="form-group">
-                        : {{$data->kecamatan}}
-                    </div>
-                    <div class="form-group">
-                        : {{$data->kabupaten}}
-                    </div>
-                    <div class="form-group">
-                        : {{$data->provinsi}}
-                    </div>
-                    <div class="form-group">
-                        : <a href="{{Dits::PdfViewer(asset($data->pembukaan['url_brosur']))}}" class="link" target="_blank">Lihat Brosur</a>
-                    </div>
-                    <div class="form-group">
-                        : {{ $data->preview }}
-                    </div>
+                  </div>
                 </div>
-            </div>
+                <div class="row mt-3">
+                  <div class="col">
+                    <div class="card shadow">
+                      <div class="card-body">
+                          <div class="table-responsive">
+                              <table class="table">
+                                <tr>
+                                  <td><strong>Alamat Email</strong></td>
+                                  <td>:</td>
+                                  <td>{{$data->email_madrasah}}</td>
+                                </tr>
+                                <tr>
+                                  <td><strong>Kontak/Tlp</strong></td>
+                                  <td>:</td>
+                                  <td>{{$data->kontak_madrasah}}</td>
+                                </tr>
+                                <tr>
+                                  <td><strong>Brosur</strong></td>
+                                  <td>:</td>
+                                  <td><a href="{{Dits::PdfViewer(asset($data->pembukaan['url_brosur']))}}" target="_blank" class="btn btn-block btn-info"><i class="fas fa-file-image"></i> Brosur</a></td>
+                                </tr>
+                                <tr>
+                                  <td><strong>Preview Madrasah</strong></td>
+                                  <td>:</td>
+                                  <td>{{ $data->preview }}</td>
+                                </tr>
+                              </table>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
         </div>
     </div>
     @isset($pendaftaran)
@@ -152,75 +163,65 @@
                 Data Pendaftaran
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            Kode Pendaftaran
-                        </div>
-                        <div class="form-group">
-                            Tanggal Pembukaan
-                        </div>
-                        <div class="form-group">
-                            Tanggal Penutupan
-                        </div>
-                        <div class="form-group">
-                            Tanggal Pengumuman
-                        </div>
-                        <div class="form-group">
-                            Tanggal Pendaftaran
-                        </div>
-                        <div class="form-group">
-                            Status Pendaftaran
-                        </div>
-                        <div class="form-group">
-                            Status Penerimaan
-                        </div>
-                        <div class="form-group">
-                            Jalur Penerimaan
-                        </div>
-                        <div class="form-group">
-                            Bukti Transfer Daftar Ulang
-                        </div>
-                        <div class="form-group">
-                            Status Bukti Transfer
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="form-group text-danger">
-                            : {{$pendaftaran->kode_pendaftaran}}
-                        </div>
-                        <div class="form-group">
-                            : {{ \Carbon\Carbon::createFromFormat('Y-m-d', $pendaftaran->pembukaan['tgl_pembukaan'])->toFormattedDateString() }}
-                        </div>
-                        <div class="form-group">
-                            : {{ \Carbon\Carbon::createFromFormat('Y-m-d', $pendaftaran->pembukaan['tgl_penutupan'])->toFormattedDateString() }}
-                        </div>
-                        <div class="form-group">
-                            : {{ \Carbon\Carbon::createFromFormat('Y-m-d', $pendaftaran->pembukaan['tgl_pengumuman'])->toFormattedDateString() }}
-                        </div>
-                        <div class="form-group">
-                            : {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $pendaftaran->tgl_pendaftaran)->toFormattedDateString() }}
-                        </div>
-                        <div class="form-group">
-                            : {{$pendaftaran->status_pendaftaran}}
-                        </div>
-                        <div class="form-group">
-                            : {{$pendaftaran->status_diterima}}
-                        </div>
-                        <div class="form-group">
-                            : {{$pendaftaran->jalur_diterima}}
-                        </div>
-                        <div class="form-group">
-                            @if ($pendaftaran->url_transfer == '')
-                            : -
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <td>Kode Pendaftaran</td>
+                            <td>:</td>
+                            <td class="text-danger">{{$pendaftaran->kode_pendaftaran}}</td>
+                        </tr>
+                        <tr>
+                            <td>Tanggal Pembukaan</td>
+                            <td>:</td>
+                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $pendaftaran->pembukaan['tgl_pembukaan'])->toFormattedDateString() }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tanggal Penutupan</td>
+                            <td>:</td>
+                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $pendaftaran->pembukaan['tgl_penutupan'])->toFormattedDateString() }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tanggal Pengumuman</td>
+                            <td>:</td>
+                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $pendaftaran->pembukaan['tgl_pengumuman'])->toFormattedDateString() }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tanggal Pendaftaran</td>
+                            <td>:</td>
+                            <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $pendaftaran->tgl_pendaftaran)->toFormattedDateString() }}</td>
+                        </tr>
+                        <tr>
+                            <td>Status Pendaftaran</td>
+                            <td>:</td>
+                            <td>{{$pendaftaran->status_pendaftaran}}</td>
+                        </tr>
+                        <tr>
+                            <td>Status Penerimaan</td>
+                            <td>:</td>
+                            <td>{{$pendaftaran->status_diterima}}</td>
+                        </tr>
+                        <tr>
+                            <td>Jalur Penerimaan</td>
+                            <td>:</td>
+                            <td>{{$pendaftaran->jalur_diterima}}</td>
+                        </tr>
+                        <tr>
+                            <td>Bukti Transfer Daftar Ulang</td>
+                            <td>:</td>
+                            <td>
+                                @if ($pendaftaran->url_transfer == '')
+                            -
                             @else 
-                            : <a href="{{Dits::PdfViewer(asset($pendaftaran->url_transfer))}}" class="link" target="_blank">Lihat Bukti Transfer</a>
+                            <a href="{{Dits::PdfViewer(asset($pendaftaran->url_transfer))}}" class="link" target="_blank">Lihat Bukti Transfer</a>
                             @endif
-                        </div>
-                        <div class="form-group">
-                            : {{$pendaftaran->status_transfer}}
-                        </div>
-                    </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Status Bukti Transfer</td>
+                            <td>:</td>
+                            <td>{{$pendaftaran->status_transfer}}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
