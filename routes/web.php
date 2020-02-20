@@ -40,10 +40,10 @@ Route::get('/home', function () {
 
     $check    = \App\User::where('role' , 'Admin System')->get();
 
-    if($check >= 1) {
-        toast('Gagal Admin Sudah Tersedia','error');
-        return redirect()->route('home');
-    }
+    // if($check >= 1) {
+    //     toast('Gagal Admin Sudah Tersedia','error');
+    //     return redirect()->route('home');
+    // }
 
     $user     = \App\User::create([
                             'uuid'     => \Str::uuid(),
