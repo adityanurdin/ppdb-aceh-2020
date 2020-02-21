@@ -255,7 +255,8 @@ class CATController extends Controller
          $data          = Operator::with('madrasah')
                                     ->where('uuid' , $uuid_operator)
                                     ->first();
-         return view('pages.CAT.operator.create_edit' , compact('data'));
+        $madrasah       = Madrasah::all();
+         return view('pages.CAT.operator.create_edit' , compact('data' , 'madrasah'));
      }
 
      public function storeBank(Request $request)

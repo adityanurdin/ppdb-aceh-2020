@@ -17,12 +17,11 @@
                             <div class="col-md-9">
                                 @if (Auth::user()->role == 'Admin System' || Auth::user()->role == 'Operator Kemenag')
                                 <div class="form-group">
-                                    <select class="form-control" id="exampleFormControlSelect1">
-                                      <option>1</option>
-                                      <option>2</option>
-                                      <option>3</option>
-                                      <option>4</option>
-                                      <option>5</option>
+                                    <select class="form-control" name="nama_madrasah" id="exampleFormControlSelect1">
+                                      <option disabled selected>-Pilih Madrasah</option>
+                                      @foreach ($madrasah as $item)
+                                        <option value="{{$item->nama_madrasah}}">{{$item->nama_madrasah}}</option>
+                                      @endforeach
                                     </select>
                                   </div>
                                 @else   
