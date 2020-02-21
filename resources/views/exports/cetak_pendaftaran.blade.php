@@ -233,7 +233,7 @@
                                     </tr>
                                     <tr>
                                         <td>Tanggal Registrasi PPDB</td>
-                                        <td>: <b>{{Carbon\Carbon::createFromFormat('Y-m-d h:i:s' , $data->peserta['tgl_registrasi'])->toDateString()}}</b></td>
+                                        <td>: <b>{{Carbon\Carbon::createFromFormat('Y-m-d H:i:s' , $data->peserta['tgl_registrasi'])->toDateString()}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Kontak/No.HP</td>

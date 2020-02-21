@@ -57,6 +57,12 @@ class CATController extends Controller
         $jawaban   = Jawaban::where('kode_soal' , $request->kode_soal)
                                 ->where('kode_pendaftaran' , $pendaftaran->kode_pendaftaran)
                                 ->get();
+
+        if ($pendaftaran->status_pendaftaran != 'Lolos Tahap Dokumen') {
+            toast('Gagal memasuki halaman ujian, Status Pendaftaran kamu '.$pendaftaran->status_pendaftaran ,'error');
+            return redirect()->route('cat.index');
+        }
+
         if($bank_soal->status_bank_soal == 'Tidak Aktif') {
             toast('Gagal memasuki halaman ujian, Status soal tidak aktif','error');
             return redirect()->route('cat.index');

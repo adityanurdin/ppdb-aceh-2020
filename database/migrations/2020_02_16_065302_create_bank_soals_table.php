@@ -15,7 +15,7 @@ class CreateBankSoalsTable extends Migration
     {
         Schema::create('bank_soals', function (Blueprint $table) {
             $table->string('uuid')->primary();
-            $table->string('uuid_madrsah');
+            $table->string('uuid_madrasah');
             $table->string('uuid_operator');
             $table->string('kode_soal');
             $table->string('status_bank_soal');

@@ -19,7 +19,7 @@ class CreateSoalsTable extends Migration
             $table->string('kode_soal')->nullable();
             $table->string('jenis_soal')->nullable();
             $table->integer('nomor_soal')->nullable();
-            $table->string('soal')->nullable();
+            $table->text('soal')->nullable();
             $table->string('gambar')->nullable();
             $table->string('a')->nullable();
             $table->string('b')->nullable();
