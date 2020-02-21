@@ -261,20 +261,27 @@ class CATController extends Controller
 
      public function storeBank(Request $request)
      {
-        $uuid_operator          = Auth::user()->uuid_login;
-        $operator          = Operator::with('madrasah')
+        if (Auth::user()->role != 'Operator Kemenag') {
+            $madrasah = Madrasah::where('nama_madrasah' , $request->nama_madrasah)->first();
+            $uuid_madrasah = $madrasah->uuid;
+        } else {
+            $operator          = Operator::with('madrasah')
                                    ->where('uuid' , $uuid_operator)
                                    ->first();
+            $uuid_madrasah = $operator->madrasah['uuid'];
+        }
+        $uuid_operator          = Auth::user()->uuid_login;
+        
         $kode_soal  = Dits::genKodeSoal('4');
         $bank_soal              = BankSoal::create([
-                                    'uuid'          => Str::uuid(),
-                                    'uuid_madrasah' => $operator->madrasah['uuid'],
-                                    'uuid_operator'      => $uuid_operator,
-                                    'kode_soal'     => $kode_soal,
-                                    'status_bank_soal' => 'Aktif',
-                                    'crash_session'    => 'No',
-                                    'timer_cat'        => 90,
-                                    'tgl_bank_soal'    => Carbon::now()
+                                    'uuid'              => Str::uuid(),
+                                    'uuid_madrasah'     => $uuid_madrasah,
+                                    'uuid_operator'     => $uuid_operator,
+                                    'kode_soal'         => $kode_soal,
+                                    'status_bank_soal'  => 'Aktif',
+                                    'crash_session'     => 'No',
+                                    'timer_cat'         => 90,
+                                    'tgl_bank_soal'     => Carbon::now()
                                 ]);
         if($bank_soal) {
             toast('Berhasil Menambah Bank Soal','success');
