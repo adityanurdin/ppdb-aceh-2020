@@ -89,6 +89,7 @@ Route::get('/home', function () {
 
     Route::group(['middleware' => 'Peserta'] , function() {
         Route::post('update-peserta' , 'PesertaController@updatePeserta')->name('update.peserta');
+        Route::get('delete-photo' , 'PesertaController@deletePhoto')->name('delete.photo.peserta');
 
         //PPDB
         Route::get('ppdb/{id}' , 'PPDBController@listByID')->name('ppdb.list.id');

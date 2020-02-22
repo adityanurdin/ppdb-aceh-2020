@@ -16,6 +16,7 @@ use Auth;
 use Carbon\Carbon;
 use Dits;
 use DataTables;
+use Illuminate\Validation\Rule;
 
 class PesertaController extends Controller
 {
@@ -104,7 +105,7 @@ class PesertaController extends Controller
         $rule   = array(
             'nama'      => 'required',
             'NIK'       => 'required|integer',
-            'nisn'      => 'required|integer',
+            'nisn'      => 'required',
             'tmp'       => 'required',
             'tgl'       => 'required',
             'jkl'       => 'required|',
@@ -115,7 +116,7 @@ class PesertaController extends Controller
             'jml_saudara' => 'required',
             'alamat_rumah' => 'required',
             'sekolah_asal' => 'required',
-            'npsn_sekolah_asal' => 'required|integer',
+            'npsn_sekolah_asal' => 'required',
             'nama_sekolah_asal' => 'required',
             'alamat_sekolah_asal' => 'required',
             'yatim_piatu' => 'required',
@@ -129,19 +130,20 @@ class PesertaController extends Controller
             'tmp_ibu'  => 'required',
             'tgl_ibu'  => 'required',
             'pekerjaan_ibu'  => 'required',
-            'kontak_peserta' => 'required|integer',
-            'pas_foto' => 'required|image|mimes:jpeg,jpg,png|max:300'
-
+            'kontak_peserta' => 'required',
+            'pas_foto' => Rule::requiredIf(Dits::DataPeserta()->pas_foto == NULL).'|image|mimes:jpeg,jpg,png|max:300'
         );
 
         $valid = Validator::make($request->all() , $rule);
 
         if($valid->fails()) {
-            return $valid->errors();
+            return back()->withErrors($valid->errors());
         }
 
-        $image = Dits::UploadImage($request , 'pas_foto' , 'pas_foto');
-        $input['pas_foto']          = $image;
+        if($request->pas_foto) {
+            $image = Dits::UploadImage($request , 'pas_foto' , 'pas_foto');
+            $input['pas_foto']          = $image;
+        }
         $input['status_aktif']      = 'yes';
         $input['tgl_registrasi']    = Carbon::now();
         $input['nama']              = strtoupper($request->nama);
@@ -151,8 +153,28 @@ class PesertaController extends Controller
         $input['tgl_ibu']   =  Dits::ReplaceDate($request->tgl_ibu);
 
         $peserta = Peserta::whereUuid($uid)->first();
+        if($peserta->status_aktif == 'yes') {
+            if($request->NIK != Auth::user()->username) {
+                toast('NIK tidak bisa di perbaharui !!','error');
+                return back();
+            }
+        }
         $peserta->update($input);
+        toast('Berhasil memperbaharui data peserta','success');
         return redirect()->route('dashboard');
+    }
+
+    public function deletePhoto()
+    {
+        $uuid_peserta = Auth::user()->uuid_login;
+        $peserta      = Peserta::where('uuid' , $uuid_peserta)->first();
+        if($peserta) {
+            $peserta->update([
+                'pas_foto' => NULL
+            ]);
+            toast('Berhasil Menghapus Pas Foto','success');
+            return back();
+        }
     }
 
     public function dataPesertaPPDB($id)

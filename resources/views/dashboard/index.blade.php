@@ -35,6 +35,15 @@
                 JIKA DIKETAHUI PEMALSUAN DATA SAAT DAFTAR ULANG (DITERIMA), MAKA AKAN DI DISKUALIFIKASI
             </div>
         @endif
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <div class="card">
             <div class="card-body">
                 <form action="{{route('update.peserta')}}" method="POST" enctype="multipart/form-data">
@@ -46,7 +55,7 @@
                     <span class="btn btn-primary btn-file btn-block">
                         Pilih Foto<input type="file" name="pas_foto" autocomplete="off" {{ Dits::DataPeserta()->pas_foto ? '' : 'required' }}>
                     </span>
-                        <a href="#" class="btn btn-danger btn-block {{Dits::DataPeserta()->pas_foto ? '' : 'disabled'}}">Hapus Foto</a>
+                        <a href="{{route('delete.photo.peserta')}}" class="btn btn-danger btn-block {{Dits::DataPeserta()->pas_foto ? '' : 'disabled'}}">Hapus Foto</a>
                     </div>
                     <div class="col-sm align-self-center">
                     <hr class="d-lg-none">
@@ -81,7 +90,7 @@
                         <label for="jk">Jenis Kelamin Siswa<i class="text-danger"><small>*</small></i></label>
                         <select class="form-control" id="jk" name="jkl">
                             <option selected disabled>Pilih Jenis Kelamin</option>
-                            <option value="Laki - laki">Laki-Laki</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->jkl , 'Laki - laki')}} value="Laki - laki">Laki-Laki</option>
                             <option value="Perempuan">Perempuan</option>
                         </select>
                         </div>
@@ -89,39 +98,39 @@
                         <label for="agama">Agama Siswa<i class="text-danger"><small>*</small></i></label>
                         <select class="form-control" id="agama" name="agama" required>
                             <option selected disabled>Pilih Agama</option>
-                            <option value="Islam">Islam</option>
-                                <option value="Kristen Protestan">Kristen Protestan</option>
-                                <option value="Katolik">Katolik</option>
-                                <option value="Hindu">Hindu</option>
-                                <option value="Buddha">Buddha</option>
-                                <option value="Kong Hu Cu">Kong Hu Cu</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->agama , 'Islam')}} value="Islam">Islam</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->agama , 'Kristen Protestan')}} value="Kristen Protestan">Kristen Protestan</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->agama , 'Katolik')}} value="Katolik">Katolik</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->agama , 'Hindu')}} value="Hindu">Hindu</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->agama , 'Buddha')}} value="Buddha">Buddha</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->agama , 'Kong Hu Cu')}} value="Kong Hu Cu">Kong Hu Cu</option>
                         </select>
                         </div>
                         <div class="form-group">
                         <label for="hobi">Hobi Siswa<i class="text-danger"><small>*</small></i></label>
                         <select class="form-control" id="hobi" name="hobi" required>
                             <option selected disabled>Pilih Hobi</option>
-                            <option value="Olahraga">Olahraga</option>
-                                <option value="Kesenian">Kesenian</option>
-                                <option value="Membaca">Membaca</option>
-                                <option value="Menulis">Menulis</option>
-                                <option value="Jalan - jalan">Jalan - jalan</option>
-                                <option value="Lainnya">Lainnya</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->hobi , 'Olahraga')}} value="Olahraga">Olahraga</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->hobi , 'Kesenian')}} value="Kesenian">Kesenian</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->hobi , 'Membaca')}} value="Membaca">Membaca</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->hobi , 'Menulis')}} value="Menulis">Menulis</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->hobi , 'Jalan - jalan')}} value="Jalan - jalan">Jalan - jalan</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->hobi , 'Lainnya')}} value="Lainnya">Lainnya</option>
                         </select>
                         </div>
                         <div class="form-group">
                         <label for="cita">Cita-Cita Siswa<i class="text-danger"><small>*</small></i></label>
                         <select class="form-control" id="cita" name="cita2" required>
                             <option selected disabled>Pilih Cita-Cita</option>
-                            <option value="Lainnya">Lainnya</option>
-                                <option value="PNS">PNS</option>
-                                <option value="TNI/Polri">TNI/Polri</option>
-                                <option value="Guru/Dosen">Guru/Dosen</option>
-                                <option value="Dokter">Dokter</option>
-                                <option value="Politikus">Politikus</option>
-                                <option value="Wiraswasta">Wiraswasta</option>
-                                <option value="Ilmuan">Ilmuan</option>
-                                <option value="Agamawan">Agamawan</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->cita2 , 'Lainnya')}} value="Lainnya">Lainnya</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->cita2 , 'PNS')}} value="PNS">PNS</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->cita2 , 'TNI/Polri')}} value="TNI/Polri">TNI/Polri</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->cita2 , 'Guru/Dosen')}} value="Guru/Dosen">Guru/Dosen</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->cita2 , 'Dokter')}} value="Dokter">Dokter</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->cita2 , 'Politikus')}} value="Politikus">Politikus</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->cita2 , 'Wiraswasta')}} value="Wiraswasta">Wiraswasta</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->cita2 , 'Ilmuan')}} value="Ilmuan">Ilmuan</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->cita2 , 'Agamawan')}} value="Agamawan">Agamawan</option>
                         </select>
                         </div>
                         <div class="form-group">
@@ -140,22 +149,22 @@
                         <label for="sklh_asl">Sekolah Asal<i class="text-danger"><small>*</small></i></label>
                         <select class="form-control" id="sklh_asl" name="sekolah_asal" required>
                             <option selected disabled>Pilih Sekolah Asal</option>
-                            <option value="RA">RA</option>
-                            <option value="TK">TK</option>
-                            <option value="TKLB">TKLB</option>
-                            <option value="PAUD">PAUD</option>
-                            <option value="Langsung dari Orang Tua">Langsung dari Orang Tua</option>
-                            <option value="Kelompok Bermain">Kelompok Bermain</option>
-                            <option value="SD">SD</option>
-                            <option value="SD Luar Negeri">SD Luar Negeri</option>
-                            <option value="MI">MI</option>
-                            <option value="Paket A">Paket A</option>
-                            <option value="Paket B">Paket B</option>
-                            <option value="SMP">SMP</option>
-                            <option value="SMP Luar Negeri">SMP Luar Negeri</option>
-                            <option value="MTs">MTs</option>
-                            <option value="Pondok Pesantren">Pondok Pesantren</option>
-                            <option value="Lainnya">Lainnya</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->sekolah_asal , 'RA')}} value="RA">RA</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->sekolah_asal , 'TK')}} value="TK">TK</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->sekolah_asal , 'TKLB')}} value="TKLB">TKLB</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->sekolah_asal , 'PAUD')}} value="PAUD">PAUD</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->sekolah_asal , 'Langsung dari Orang Tua')}} value="Langsung dari Orang Tua">Langsung dari Orang Tua</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->sekolah_asal , 'Kelompok Bermain')}} value="Kelompok Bermain">Kelompok Bermain</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->sekolah_asal , 'SD')}} value="SD">SD</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->sekolah_asal , 'SD Luar Negeri')}} value="SD Luar Negeri">SD Luar Negeri</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->sekolah_asal , 'MI')}} value="MI">MI</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->sekolah_asal , 'Paket A')}} value="Paket A">Paket A</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->sekolah_asal , 'Paket B')}} value="Paket B">Paket B</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->sekolah_asal , 'SMP')}} value="SMP">SMP</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->sekolah_asal , 'SMP Luar Negeri')}} value="SMP Luar Negeri">SMP Luar Negeri</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->sekolah_asal , 'MTs')}} value="MTs">MTs</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->sekolah_asal , 'Pondok Pesantren')}} value="Pondok Pesantren">Pondok Pesantren</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->sekolah_asal , 'Lainnya')}} value="Lainnya">Lainnya</option>
                         </select>
                         </div>
                         <div class="form-group">
@@ -182,10 +191,10 @@
                         <label for="stts_yp">Status Yatim Piatu<i class="text-danger"><small>*</small></i></label>
                         <select class="form-control" name="yatim_piatu" id="stts_yp" required>
                             <option disabled selected>-Pilih Status Yatim Piatu</option>
-                            <option value="Tidak">Tidak</option>
-                            <option value="Yatim Piatu">Yatim Piatu</option>
-                            <option value="Yatim">Yatim</option>
-                            <option value="Piatu">Piatu</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->yatim_piatu , 'Tidak')}} value="Tidak">Tidak</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->yatim_piatu , 'Yatim Piatu')}} value="Yatim Piatu">Yatim Piatu</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->yatim_piatu , 'Yatim')}} value="Yatim">Yatim</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->yatim_piatu , 'Piatu')}} value="Piatu">Piatu</option>
                         </select>
                         </div>
                         <div class="form-group">
@@ -213,15 +222,15 @@
                         <label for="pkrj_ayah">Pekerjaan Ayah<i class="text-danger"><small>*</small></i></label>
                         <select class="form-control" id="stts_yp" name="pekerjaan_ayah" required>
                             <option selected disabled>Pilih Pekerjaan Ayah</option>
-                            <option value="Lainnya">Lainnya</option>
-                            <option value="PNS">PNS</option>
-                            <option value="TNI/Polri">TNI/Polri</option>
-                            <option value="Guru/Dosen">Guru/Dosen</option>
-                            <option value="Dokter">Dokter</option>
-                            <option value="Politikus">Politikus</option>
-                            <option value="Wiraswasta">Wiraswasta</option>
-                            <option value="Ilmuan">Ilmuan</option>
-                            <option value="Agamawan">Agamawan</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Lainnya')}} value="Lainnya">Lainnya</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'PNS')}} value="PNS">PNS</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'TNI/Polri')}} value="TNI/Polri">TNI/Polri</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Guru/Dosen')}} value="Guru/Dosen">Guru/Dosen</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Dokter')}} value="Dokter">Dokter</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Politikus')}} value="Politikus">Politikus</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Wiraswasta')}} value="Wiraswasta">Wiraswasta</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Ilmuan')}} value="Ilmuan">Ilmuan</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Agamawan')}} value="Agamawan">Agamawan</option>
                         </select>
                         </div>
                         <div class="form-group">
@@ -244,15 +253,15 @@
                         <label for="pkrj_ibu">Pekerjaan Ibu<i class="text-danger"><small>*</small></i></label>
                         <select class="form-control" id="pkrj_ibu" name="pekerjaan_ibu" required>
                             <option selected disabled>Pilih Pekerjaan Ibu</option>
-                            <option value="Lainnya">Lainnya</option>
-                            <option value="PNS">PNS</option>
-                            <option value="TNI/Polri">TNI/Polri</option>
-                            <option value="Guru/Dosen">Guru/Dosen</option>
-                            <option value="Dokter">Dokter</option>
-                            <option value="Politikus">Politikus</option>
-                            <option value="Wiraswasta">Wiraswasta</option>
-                            <option value="Ilmuan">Ilmuan</option>
-                            <option value="Agamawan">Agamawan</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Lainnya')}} value="Lainnya">Lainnya</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'PNS')}} value="PNS">PNS</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'TNI/Polri')}} value="TNI/Polri">TNI/Polri</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Guru/Dosen')}} value="Guru/Dosen">Guru/Dosen</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Dokter')}} value="Dokter">Dokter</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Politikus')}} value="Politikus">Politikus</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Wiraswasta')}} value="Wiraswasta">Wiraswasta</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Ilmuan')}} value="Ilmuan">Ilmuan</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Agamawan')}} value="Agamawan">Agamawan</option>
                         </select>
                         </div>
                         <div class="form-group">
