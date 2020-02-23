@@ -26,8 +26,25 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $video = Video::first();
-        $publisher = User::with('operator')->where('username' , $video->kode_user)->first();
-        return view('welcome' , compact('video' , 'publisher'));
+        $video = Video::where('status_video' , 'Publish')->orderBy('created_at' , 'Desc')->first();
+        if(isset($video)) {
+            $publisher = User::with('operator')->where('username' , $video->kode_user)->orderBy('created_at' , 'Desc')->first();
+        }
+
+        $artikel = Artikel::where('status_artikel' , 'Publish')->orderBy('created_at' , 'Desc')->limit(2)->get();
+        
+        return view('welcome' , compact('video' , 'publisher' , 'artikel'));
     }
+
+    public function videos()
+    {
+
+        $video = Video::where('status_video' , 'Publish')->orderBy('created_at' , 'Desc')->get();
+        foreach ($video as $item) {
+            $publisher = User::with('operator')->where('username' , $item->kode_user)->orderBy('created_at' , 'Desc')->get();
+        }
+        return view('home.videos', compact('video' , 'publisher'));
+    }
+
+    
 }

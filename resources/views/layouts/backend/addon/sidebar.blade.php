@@ -35,7 +35,7 @@
                 <ul class="collapse list-unstyled" id="dataWeb">
                     <li>
                         <a href="{{route('video.list')}}">Video</a>
-                        <a href="#">Artikel</a>
+                        <a href="{{route('artikel.list')}}">Artikel</a>
                     </li>
                 </ul>
             </li>

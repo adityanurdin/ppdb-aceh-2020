@@ -6,8 +6,11 @@
     <div class="col-md-8">
     <div class="card">
         <div class="card-body">
-                    <form action="{{route('video.store')}}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ isset($slug) ? route('video.update' , $data->uuid) : route('video.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        @isset($slug)
+                            @method('PUT')
+                        @endisset
                         <div class="form-group">
                             <label for="">Judul Video</label>
                             <input type="text" value="{{isset($slug) ? $data->judul_video : ''}}" name="judul_video" id="" placeholder="Judul Video.." class="form-control">

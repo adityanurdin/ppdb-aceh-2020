@@ -28,11 +28,11 @@
             <li class="nav-item {{Request::route()->getName() == 'home' ? 'active' : ''}}">
                 <a class="nav-link" href="{{route('home')}}">Home</a>
             </li>
-            <li class="nav-item {{Request::route()->getName() == 'video' ? 'active' : ''}}">
-                <a class="nav-link" href="#">Video</a>
+            <li class="nav-item {{Request::route()->getName() == 'home.videos' ? 'active' : ''}}">
+                <a class="nav-link" href="{{route('home.videos')}}">Video</a>
             </li>
             <li class="nav-item {{Request::route()->getName() == 'artikel' ? 'active' : ''}}">
-                <a class="nav-link" href="#">Artikel</a>
+                <a class="nav-link" href="{{route('home.artikel')}}">Artikel</a>
             </li>
         </ul>
     </div>

@@ -14,8 +14,10 @@ use Carbon\Carbon;
 
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/video/slug' , 'ArtikelController@videoSlug')->name('home.video.slug');
-
+Route::get('/video/{slug}' , 'ArtikelController@videoSlug')->name('home.video.slug');
+Route::get('/videos' , 'HomeController@videos')->name('home.videos');
+Route::get('/artikel' , 'HomeController@artikel')->name('home.artikel');
+Route::get('/artikel/{slug}' , 'ArtikelController@artikelSlug')->name('home.artikel.slug');
 
 /**
  * =====================
@@ -156,11 +158,20 @@ Route::get('/video/slug' , 'ArtikelController@videoSlug')->name('home.video.slug
             });
 
         Route::group(['prefix' => 'web-informasi'], function () {
+            // Video
            Route::get('video' , 'ArtikelController@videoList')->name('video.list');
            Route::get('video/create' , 'ArtikelController@create')->name('video.create');
            Route::post('video/store' , 'ArtikelController@store')->name('video.store');
+           Route::put('video/update/{uuid}' , 'ArtikelController@update')->name('video.update');
+           Route::get('video/change-status/{uuid}' , 'ArtikelController@changeStatus')->name('video.change-status');
            Route::get('video/data' , 'ArtikelController@videoData')->name('video.data');
            Route::get('video/detail/{slug}' , 'ArtikelController@videoBySlug')->name('video.slug');
+
+            // Artikel
+           Route::get('artikel' , 'ArtikelController@ArtikelList')->name('artikel.list');
+           Route::get('artikel/create' , 'ArtikelController@ArtikelCreate')->name('artikel.create');
+           Route::post('artikel/store' , 'ArtikelController@Artikelstore')->name('artikel.store');
+           Route::get('artikel/data' , 'ArtikelController@artikelData')->name('artikel.data');
         });
 
         });

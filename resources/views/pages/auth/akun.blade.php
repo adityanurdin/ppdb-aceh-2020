@@ -10,7 +10,7 @@
                         @if ($user->role != 'Peserta')
                         <div class="form-group">
                             <label for="">Username</label>
-                            <input type="text" name="username" value="{{$user->username}}" id="" class="form-control">
+                            <input type="text" name="username" readonly value="{{$user->username}}" id="" class="form-control">
                         </div>
                         @endif
                         <div class="form-group">
