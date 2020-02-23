@@ -66,6 +66,15 @@ class MadrasahController extends Controller
         return view('pages.database_madrasah.create_edit' , compact('data'));
     }
 
+    public function editMadrasah()
+    {
+        $uuid = Auth::user()->uuid_login;
+        $operator = Operator::where('uuid' , $uuid)->first();
+        $data = Madrasah::whereUuid($operator->uuid_madrasah)->first();
+        // return $data;
+        return view('pages.database_madrasah.create_edit' , compact('data'));
+    }
+
     public function operators_edit($id)
     {
         $uuid = Dits::decodeDits($id);
@@ -85,13 +94,12 @@ class MadrasahController extends Controller
         // return $input;
         $madrasah   = Madrasah::whereUuid($uuid)->first();
         $madrasah->update($input);
-        // return $madrasah;
         if ($madrasah) {
             toast('Berhasil Memperbaharui Data','success');
-            return redirect()->route('madrasah.index');
+            return back();
         } else {
             toast('Gagal Memperbaharui Data','error');
-            return redirect()->route('madrasah.index');
+            return back();
         }   
     }
 

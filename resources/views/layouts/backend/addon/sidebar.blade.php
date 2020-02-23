@@ -34,7 +34,7 @@
                 <a href="#dataWeb" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Web Informasi</a>
                 <ul class="collapse list-unstyled" id="dataWeb">
                     <li>
-                        <a href="#">Video</a>
+                        <a href="{{route('video.list')}}">Video</a>
                         <a href="#">Artikel</a>
                     </li>
                 </ul>
@@ -114,7 +114,7 @@
                 @endif
                 @if (Auth::user()->role == 'Operator Madrasah')
                 <li>
-                    <a href="#">Edit Profile Madrasah</a>
+                    <a href="{{route('madrasah.self.edit')}}">Edit Profile Madrasah</a>
                 </li>
                 @endif
             </ul>

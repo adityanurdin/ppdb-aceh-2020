@@ -13,9 +13,8 @@
 use Carbon\Carbon;
 
 
-Route::get('/home', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/video/slug' , 'ArtikelController@videoSlug')->name('home.video.slug');
 
 
 /**
@@ -144,6 +143,7 @@ Route::get('/home', function () {
                 Route::get('/{id}/edit' , 'MadrasahController@edit')->name('madrasah.edit');
                 Route::put('/{id}/update' , 'MadrasahController@update')->name('madrasah.update');
                 Route::get('/data' , 'MadrasahController@data')->name('madrasah.data');
+                Route::get('/edit/data' , 'MadrasahController@editMadrasah')->name('madrasah.self.edit');
                 
                 // Operator Madrasah
                 Route::get('/operators/{id}' , 'MadrasahController@operators')->name('madrasah.operators');
@@ -154,6 +154,14 @@ Route::get('/home', function () {
                 Route::put('/operator/{id}/update/' , 'MadrasahController@operators_update')->name('madrasah.operators.update');
                 Route::get('/operator/{id}/lockUnlock/' , 'MadrasahController@lockUnlock')->name('madrasah.operators.lockUnlock');
             });
+
+        Route::group(['prefix' => 'web-informasi'], function () {
+           Route::get('video' , 'ArtikelController@videoList')->name('video.list');
+           Route::get('video/create' , 'ArtikelController@create')->name('video.create');
+           Route::post('video/store' , 'ArtikelController@store')->name('video.store');
+           Route::get('video/data' , 'ArtikelController@videoData')->name('video.data');
+           Route::get('video/detail/{slug}' , 'ArtikelController@videoBySlug')->name('video.slug');
+        });
 
         });
 

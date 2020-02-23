@@ -14,15 +14,15 @@
     <div class="bd-callout bd-callout-blue">
       <p class="mb-0"><i class="fas fa-play-circle"></i> Video</p>
     </div>
-    <a href="">
+    <a href="{{route('home.video.slug' , $video->slug_video)}}">
       <div class="card mb-3">
-        <img class="card-img-top" src="{{asset('img/no-img.jpg')}}" alt="Card image cap">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ $video->url_video }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-          <small class="text-muted"><i class="fas fa-user-edit"></i> Author</small>
+          <h5 class="card-title">{{$video->judul_video}}</h5>
+          <p class="card-text">{{substr($video->deskripsi_video , 0 ,45)  }} .. Read More</p>
+          <small class="text-muted"><i class="fas fa-user-edit"></i> {{$publisher->operator['nama_operator']}}</small>
           <br>
-          <small class="text-muted"><i class="fas fa-clock"></i> Last updated 3 mins ago</small>
+          <small class="text-muted"><i class="fas fa-clock"></i>{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $video->created_at)->toFormattedDateString() }}</small>
         </div>
       </div>
     </a>

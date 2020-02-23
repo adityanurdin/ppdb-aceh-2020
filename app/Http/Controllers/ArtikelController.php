@@ -1,0 +1,98 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+use App\User;
+use App\Models\Operator;
+use App\Models\Peserta;
+use App\Models\Madrasah;
+use App\Models\Pembukaan;
+use App\Models\Pendaftaran;
+use App\Models\Artikel;
+use App\Models\Video;
+
+use Validator;
+use Str;
+use Auth;
+use Carbon\Carbon;
+use Dits;
+use DataTables;
+use Alert;
+use Hash;
+
+class ArtikelController extends Controller
+{
+    public function videoList()
+    {
+        return view('pages.artikel.video.index');
+    }
+
+    public function videoBySlug($slug)
+    {
+        $data = Video::where('slug_video' , $slug)->first();
+        return view('pages.artikel.video.create_edit' , compact('slug' , 'data'));
+    }
+
+    public function create()
+    {
+        return view('pages.artikel.video.create_edit');
+    }
+
+    public function store(Request $request)
+    {
+        $uuid_operator = Auth::user()->uuid_login;
+        $kode_video = Dits::genKodeSoal(4);
+        $operator  = User::where('uuid_login' , $uuid_operator)->first();
+        $kode_operator = $operator->username;
+
+        $slug = Str::slug($request->judul_video , '-');
+
+        $input = $request->all();
+        if($request->hasFile($request->thumbnail_video)) {
+            $input['thumbnail_video'] = Dits::UploadImage($request , 'thumbnail_video' , 'thumbnail_video');
+        }
+        $input['uuid']          = Str::uuid();
+        $input['status_video']  = 'Publish';
+        $input['slug_video']    = $slug;
+        $input['kode_user']     = $kode_operator;
+        $input['kode_video']    = $kode_video;
+
+        $create = Video::create($input);
+        if ($create) {
+            toast('Berhasil menambah video','success');
+            return redirect()->route('video.list');
+        }
+        toast('Gagal menambah video','error');
+        return back();
+    }
+
+    public function videoData()
+    {
+        $user = Auth::user();
+        if($user->role == 'Admin System') {
+            $data = Video::all();
+        } else {
+            $data = Video::where('kode_user' , $user->username)->get();
+        }
+
+        return DataTables::of($data)
+                            ->addIndexColumn()
+                            ->editColumn('judul_video' , function($item) {
+                                $link = '<a href="'.route('video.slug' , $item->slug_video).'"><u>'.substr($item->judul_video , 0 , 45).' ...</u></a>';
+                                return $link;
+                            })
+                            ->addColumn('publisher' , function($item) {
+                                $publisher = User::with('operator')->where('username' , $item->kode_user)->first();
+                                return $publisher->operator['nama_operator'];
+                            })
+                            ->addColumn('action' , function($item) {
+                                $btn = '<a href="" class="btn btn-dark btn-sm"><i class="fas fa-power-off"></i></a> ';
+                                $btn .= '<a href="" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>';
+                                return $btn;
+                            })
+                            ->escapeColumns([])
+                            ->make();
+    }
+}
