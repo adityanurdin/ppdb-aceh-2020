@@ -166,12 +166,17 @@ Route::get('/artikel/{slug}' , 'ArtikelController@artikelSlug')->name('home.arti
            Route::get('video/change-status/{uuid}' , 'ArtikelController@changeStatus')->name('video.change-status');
            Route::get('video/data' , 'ArtikelController@videoData')->name('video.data');
            Route::get('video/detail/{slug}' , 'ArtikelController@videoBySlug')->name('video.slug');
+           Route::get('video/delete/{uuid}' , 'ArtikelController@deleteVideo')->name('video.delete');
 
             // Artikel
            Route::get('artikel' , 'ArtikelController@ArtikelList')->name('artikel.list');
            Route::get('artikel/create' , 'ArtikelController@ArtikelCreate')->name('artikel.create');
            Route::post('artikel/store' , 'ArtikelController@Artikelstore')->name('artikel.store');
+           Route::put('artikel/update/{uuid}' , 'ArtikelController@updateArtikel')->name('artikel.update');
+           Route::get('artikel/change-status/{uuid}' , 'ArtikelController@changeStatusArtikel')->name('artikel.change-status');
            Route::get('artikel/data' , 'ArtikelController@artikelData')->name('artikel.data');
+           Route::get('artikel/detail/{slug}' , 'ArtikelController@artikelBySlug')->name('artikel.slug');
+           Route::get('artikel/delete/{uuid}' , 'ArtikelController@deleteArtikel')->name('artikel.delete');
         });
 
         });

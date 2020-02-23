@@ -133,7 +133,7 @@ class ArtikelController extends Controller
                             })
                             ->addColumn('action' , function($item) {
                                 $btn = '<a href="'.route('video.change-status' , $item->uuid).'" class="btn btn-dark btn-sm"><i class="fas fa-power-off"></i></a> ';
-                                $btn .= '<a href="" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>';
+                                $btn .= '<a href="'.route('video.delete' , $item->uuid).'" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>';
                                 return $btn;
                             })
                             ->escapeColumns([])
@@ -143,6 +143,12 @@ class ArtikelController extends Controller
     public function artikelList()
     {
         return view('pages.artikel.index');
+    }
+
+    public function artikelBySlug($slug)
+    {
+        $data = Artikel::where('slug_artikel' , $slug)->first();
+        return view('pages.artikel.create_edit' , compact('slug' , 'data'));
     }
 
     public function artikelSlug($slug)
@@ -185,6 +191,39 @@ class ArtikelController extends Controller
         }
     }
 
+    public function changeStatusArtikel($uuid)
+    {
+        $artikel = Artikel::whereUuid($uuid)->first();
+        if ($artikel->status_artikel == 'Publish') {
+            $status = 'Draft';
+        } else {
+            $status = 'Publish';
+        }
+        if($artikel) {
+            $artikel->update([
+                'status_artikel' => $status
+            ]);
+            toast('Berhasil memperbaharui artikel','success');
+            return redirect()->route('artikel.list');
+        }
+    }
+
+    public function updateArtikel(Request $request , $uuid)
+    {
+        $input = $request->all();
+
+        if($request->hasFile('thumbnail_artikel')) {
+            $input['thumbnail_artikel'] = Dits::UploadImage($request , 'thumbnail_artikel' , 'thumbnail_artikel');
+        }
+
+        $artikel = Artikel::whereUuid($uuid)->first();
+        if ($artikel) {
+            $artikel->update($input);
+            toast('Berhasil memperbaharui artikel','success');
+            return redirect()->route('artikel.list');
+        }
+    }
+
     public function artikelData()
     {
         $user = Auth::user();
@@ -197,7 +236,7 @@ class ArtikelController extends Controller
         return DataTables::of($data)
                             ->addIndexColumn()
                             ->editColumn('judul_artikel' , function($item) {
-                                $link = '<a href="'.route('video.slug' , $item->slug_artikel).'"><u>'.substr($item->judul_artikel , 0 , 45).' ...</u></a>';
+                                $link = '<a href="'.route('artikel.slug' , $item->slug_artikel).'"><u>'.substr($item->judul_artikel , 0 , 45).' ...</u></a>';
                                 return $link;
                             })
                             ->addColumn('publisher' , function($item) {
@@ -205,11 +244,31 @@ class ArtikelController extends Controller
                                 return $publisher->operator['nama_operator'];
                             })
                             ->addColumn('action' , function($item) {
-                                $btn = '<a href="'.route('video.change-status' , $item->uuid).'" class="btn btn-dark btn-sm"><i class="fas fa-power-off"></i></a> ';
-                                $btn .= '<a href="" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>';
+                                $btn = '<a href="'.route('artikel.change-status' , $item->uuid).'" class="btn btn-dark btn-sm"><i class="fas fa-power-off"></i></a> ';
+                                $btn .= '<a href="'.route('artikel.delete' , $item->uuid).'" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>';
                                 return $btn;
                             })
                             ->escapeColumns([])
                             ->make();
+    }
+    
+    public function deleteArtikel($uuid)
+    {
+        $data = Artikel::whereUuid($uuid)->first();
+        if($data) {
+            $data->delete();
+            toast('Berhasil menghapus artikel','success');
+            return redirect()->route('artikel.list');
+        }
+    }
+    
+    public function deleteVideo($uuid)
+    {
+        $data = Video::whereUuid($uuid)->first();
+        if($data) {
+            $data->delete();
+            toast('Berhasil menghapus video','success');
+            return redirect()->route('video.list');
+        }
     }
 }

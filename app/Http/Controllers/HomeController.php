@@ -46,5 +46,14 @@ class HomeController extends Controller
         return view('home.videos', compact('video' , 'publisher'));
     }
 
+    public function artikel()
+    {
+        $artikel = Artikel::where('status_artikel' , 'Publish')->orderBy('created_at' , 'Desc')->get();
+        foreach ($artikel as $item) {
+            $publisher = User::with('operator')->where('username' , $item->kode_user)->orderBy('created_at' , 'Desc')->get();
+        }
+        return view('home.artikels', compact('artikel' , 'publisher'));
+    }
+
     
 }

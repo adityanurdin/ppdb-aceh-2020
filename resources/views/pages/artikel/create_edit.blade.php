@@ -11,11 +11,14 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{route('artikel.store')}}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ isset($slug) ? route('artikel.update' , $data->uuid) : route('artikel.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        @isset($slug)
+                            @method('PUT')
+                        @endisset
                         <div class="form-group">
                             <label for="">Judul Artikel</label>
-                            <input type="text" name="judul_artikel" id="" class="form-control" placeholder="">
+                            <input type="text" value="{{isset($slug) ? $data->judul_artikel : ''}}" name="judul_artikel" id="" class="form-control" placeholder="">
                         </div>
                         <div class="form-group">
                             <label for="">Thumbnail Artikel</label>
@@ -23,12 +26,12 @@
                         </div>
                         <div class="form-group">
                             <label for="">Deskripsi Artikel</label>
-                            <textarea name="deskripsi_artikel" id="" cols="30" rows="10" class="form-control"></textarea>
+                            <textarea name="deskripsi_artikel" id="" cols="30" rows="10" class="form-control">{{isset($slug) ? $data->deskripsi_artikel : ''}}</textarea>
                             <small>Pisahkan Dengan Tanda Koma (,)</small>
                         </div>
                         <div class="form-group">
                             <label for="">Tulis Artikel</label>
-                            <textarea id="summernote" name="isi_artikel"></textarea>
+                            <textarea id="summernote" name="isi_artikel">{{isset($slug) ? $data->isi_artikel : ''}}</textarea>
                         </div>
                         <button type="submit" class="btn btn-sm btn-info float-right">Publish</button>
                     </form>
