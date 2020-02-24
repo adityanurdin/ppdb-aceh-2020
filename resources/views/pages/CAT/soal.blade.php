@@ -59,25 +59,25 @@
                 @endif
                 <br><br>
                 <div class="form-check">
-                  <input class="form-check-input" name="jawaban[]" type="radio" name="exampleRadios" id="exampleRadios1" value="a">
+                  <input class="form-check-input" required name="jawaban[]" type="radio" name="exampleRadios" id="exampleRadios1" value="a">
                   <label class="form-check-label" for="exampleRadios1">
                     A. {{ $soal->a }}
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" name="jawaban[]" type="radio" name="exampleRadios" id="exampleRadios2" value="b">
+                  <input class="form-check-input" required name="jawaban[]" type="radio" name="exampleRadios" id="exampleRadios2" value="b">
                   <label class="form-check-label" for="exampleRadios2">
                     B. {{ $soal->b }}
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" name="jawaban[]" type="radio" name="exampleRadios" id="exampleRadios3" value="c">
+                  <input class="form-check-input" required name="jawaban[]" type="radio" name="exampleRadios" id="exampleRadios3" value="c">
                   <label class="form-check-label" for="exampleRadios3">
                     C. {{ $soal->c }}
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" name="jawaban[]" type="radio" name="exampleRadios" id="exampleRadios4" value="d">
+                  <input class="form-check-input" required name="jawaban[]" type="radio" name="exampleRadios" id="exampleRadios4" value="d">
                   <label class="form-check-label" for="exampleRadios4">
                     D. {{ $soal->d }}
                   </label>

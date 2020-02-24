@@ -80,7 +80,9 @@ Route::get('/artikel/{slug}' , 'ArtikelController@artikelSlug')->name('home.arti
 
     Route::get('/{nik}/cetak-pendaftaran/{id}' , function($nik , $id) {
         $uuid = \Dits::decodeDits($id);
-        $data = \App\Models\Pendaftaran::with('peserta' , 'pembukaan')->where('uuid' , $uuid)->first();
+        $data = \App\Models\Pendaftaran::with('peserta' , 'pembukaan')->where('uuid' , $uuid)
+                                                                        ->orWhere('kode_pendaftaran' , $uuid)
+                                                                        ->first();
         $madrasah = \App\Models\Madrasah::where('uuid' , $data->pembukaan['uuid_madrasah'])->first();
         $persyaratan = explode(',' , $madrasah->persyaratan);
         return view('exports.cetak_pendaftaran' , compact('data' , 'madrasah' , 'persyaratan'));
