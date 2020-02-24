@@ -6,7 +6,8 @@
     <div class="col-md-8">
     <div class="card">
         <div class="card-body">
-                    <form action="#">
+                    <form action="{{route('auth.akun.update')}}" method="POST">
+                        @csrf
                         @if ($user->role != 'Peserta')
                         <div class="form-group">
                             <label for="">Username</label>

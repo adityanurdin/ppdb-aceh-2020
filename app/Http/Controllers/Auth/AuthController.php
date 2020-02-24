@@ -114,6 +114,22 @@ class AuthController extends Controller
         return view('pages.auth.akun' , compact('user'));
     }
 
+    public function updateAkun(Request $request)
+    {
+        $auth = Auth::user();
+
+        $user = User::whereUuid($auth->uuid)->first();
+        if(password_verify($request->password , $user->password)) {
+            $user->update([
+                'password' => bcrypt($request->password_baru)
+            ]);
+            toast('Berhasil Memperbaharui akun','success');
+            return redirect()->route('dashboard');
+        }
+        toast('Gagal Memperbaharui akun, password salah','error');
+        return back();
+    }
+
     public function logout()
     {
         Auth::logout();

@@ -87,6 +87,7 @@ Route::get('/artikel/{slug}' , 'ArtikelController@artikelSlug')->name('home.arti
     })->name('print.data');
 
     Route::get('akun' , 'Auth\AuthController@akun')->name('auth.akun');
+    Route::post('akun/update' , 'Auth\AuthController@updateAkun')->name('auth.akun.update');
 
     Route::group(['middleware' => 'Peserta'] , function() {
         Route::post('update-peserta' , 'PesertaController@updatePeserta')->name('update.peserta');
