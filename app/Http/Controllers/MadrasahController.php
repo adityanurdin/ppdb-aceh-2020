@@ -35,7 +35,7 @@ class MadrasahController extends Controller
     public function store(Request $request)
     {
         $uuid   = Str::uuid();
-        $input  = $request->all();
+        $input  = $request->except(['files']);
         $input['uuid'] = $uuid; 
         $input['status'] = 'Negeri';
         $input['nama_madrasah'] = strtoupper($request->nama_madrasah);

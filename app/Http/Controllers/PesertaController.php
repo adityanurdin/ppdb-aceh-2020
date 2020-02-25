@@ -131,7 +131,7 @@ class PesertaController extends Controller
             'tgl_ibu'  => 'required',
             'pekerjaan_ibu'  => 'required',
             'kontak_peserta' => 'required',
-            'pas_foto' => Rule::requiredIf(Dits::DataPeserta()->pas_foto == NULL).'|image|mimes:jpeg,jpg,png'
+            'pas_foto' => Rule::requiredIf(Dits::DataPeserta()->pas_foto == NULL).'|image|mimes:jpeg,jpg,png|max:300'
         );
 
         $valid = Validator::make($request->all() , $rule);

@@ -20,8 +20,8 @@
                         <a href="#dataWeb" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Data Web</a>
                         <ul class="collapse list-unstyled" id="dataWeb">
                             <li>
-                                <a href="#">Video</a>
-                                <a href="#">Artikel</a>
+                                <a href="{{route('video.list')}}">Video</a>
+                                <a href="{{route('artikel.list')}}">Artikel</a>
                             </li>
                         </ul>
                     </li>
