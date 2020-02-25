@@ -40,6 +40,15 @@ class MadrasahController extends Controller
         $input['status'] = 'Negeri';
         $input['nama_madrasah'] = strtoupper($request->nama_madrasah);
 
+        $valid = Validator::make($request->all() , [
+            'logo_madrasah' => 'image|mimes:jpeg,jpg,png|max:300'
+        ]);
+
+        if($valid->fails()) {
+            toast('Gagal menambah soal, Logo madrasah tidak sesuai','error');
+            return back();
+        }
+
         if ($request->hasFile('logo_madrasah')) {
             $image = Dits::UploadImage($request , 'logo_madrasah' , 'Madrasah');
         } else {

@@ -375,6 +375,15 @@ class CATController extends Controller
          $uuid_operator = Auth::user()->uuid_login;
          $kode_soal     = $id;
 
+         $valid = Validator::make($request->all() , [
+            'gambar' => 'image|mimes:jpeg,jpg,png|max:300'
+        ]);
+
+        if($valid->fails()) {
+            toast('Gagal menambah soal, Gambar tidak sesuai','error');
+            return back();
+        }
+
          if($request->hasFile('gambar'))
          {
              $gambar = Dits::uploadImage($request , 'gambar' , 'Soal/'.$kode_soal);
@@ -507,6 +516,17 @@ class CATController extends Controller
          $soal = Soal::whereUuid($uuid)
                         ->first();
         $kode_soal = $soal->kode_soal;
+
+        $valid = Validator::make($request->all() , [
+            'gambar' => 'image|mimes:jpeg,jpg,png|max:300'
+        ]);
+
+        if($valid->fails()) {
+            toast('Gagal menambah soal, Gambar tidak sesuai','error');
+            return back();
+        }
+
+        
 
         if($request->hasFile('gambar')) {
             $gambar = Dits::uploadImage($request , 'gambar' , 'Soal/'.$kode_soal);

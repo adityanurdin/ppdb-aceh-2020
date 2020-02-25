@@ -79,6 +79,15 @@ class PPDBController extends Controller
             return back();
         }
 
+        $valid = Validator::make($request->all() , [
+            'url_brosur' => 'file|mimes:pdf|max:300'
+        ]);
+
+        if($valid->fails()) {
+            toast('Gagal, File brosur tidak sesuai','error');
+            return back();
+        }
+
         $input['uuid']              = Str::uuid();
         $input['uuid_madrasah']     = $uuid_madrasah;
         $input['uuid_operator']     = $operator->uuid;

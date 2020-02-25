@@ -56,6 +56,15 @@ class ArtikelController extends Controller
         $operator  = User::where('uuid_login' , $uuid_operator)->first();
         $kode_operator = $operator->username;
 
+        $valid = Validator::make($request->all() , [
+            'thumbnail_video' => 'image|mimes:jpeg,jpg,png|max:300'
+        ]);
+
+        if($valid->fails()) {
+            toast('Gagal menambah video, Thumbnail video tidak sesuai','error');
+            return back();
+        }
+
         $slug = Str::slug($request->judul_video , '-');
 
         $input = $request->all();
@@ -170,6 +179,15 @@ class ArtikelController extends Controller
         $operator  = User::where('uuid_login' , $uuid_operator)->first();
         $kode_operator = $operator->username;
         $input = $request->except(['files']);
+
+        $valid = Validator::make($request->all() , [
+            'thumbnail_artikel' => 'image|mimes:jpeg,jpg,png|max:300'
+        ]);
+
+        if($valid->fails()) {
+            toast('Gagal menambah video, Thumbnail artikel tidak sesuai','error');
+            return back();
+        }
 
         $slug = Str::slug($request->judul_artikel , '-');
 
