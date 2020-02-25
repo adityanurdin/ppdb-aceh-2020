@@ -17,7 +17,9 @@
     @if (isset($video))    
     <a href="{{route('home.video.slug' , $video->slug_video)}}">
       <div class="card mb-3">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ $video->url_video }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="table-responsive">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ $video->url_video }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
         <div class="card-body">
           <h5 class="card-title">{{$video->judul_video}}</h5>
           <p class="card-text">{{substr($video->deskripsi_video , 0 ,45)  }} .. Read More</p>

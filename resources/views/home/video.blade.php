@@ -4,7 +4,9 @@
 <div class="bd-callout bd-callout-blue">
     <p class="mb-0"><i class="fas fa-play-circle"></i> [Now Playing]  {{$data->judul_video}}</p>
   </div>
-  <iframe width="1110" height="512" src="https://www.youtube.com/embed/{{ $data->url_video }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <div class="table-responsive">
+      <iframe width="1110" height="512" src="https://www.youtube.com/embed/{{ $data->url_video }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
 <div class="card">
     <div class="card-body">
         <h5>{{$data->judul_video}}</h5>
