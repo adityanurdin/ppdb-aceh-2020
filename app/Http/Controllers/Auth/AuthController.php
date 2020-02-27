@@ -14,6 +14,8 @@ use Str;
 use Illuminate\Support\Facades\Schema;
 use Auth;
 Use Alert;
+use Mail;
+use Hash;
 
 class AuthController extends Controller
 {
@@ -127,6 +129,37 @@ class AuthController extends Controller
             return redirect()->route('dashboard');
         }
         toast('Gagal Memperbaharui akun, password salah','error');
+        return back();
+    }
+
+    public function lupas()
+    {
+        return view('pages.auth.lupas');
+    }
+
+    public function prosesLupas(Request $request)
+    {
+
+        $user   = User::where('email' , $request->email)->first();
+        $password = Str::random(8);
+
+        if ($user) {
+            $details = [
+                'password' => $password,
+                'email'    => $user->email
+            ];
+            
+            \Mail::to($user->email)->send(new \App\Mail\MailSender($details));
+
+            $user->update([
+                'password' => bcrypt($password)
+            ]);
+
+            toast('Berhasil mereset password, cek email atau email spam','success');
+            return redirect()->route('home');
+        }
+
+        toast('Gagal mereset password','error');
         return back();
     }
 

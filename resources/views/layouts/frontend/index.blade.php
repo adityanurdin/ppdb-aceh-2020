@@ -73,7 +73,7 @@
             </form>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{{route('auth.show.register')}}">Tidak Ada Akun? Daftar</a>
-            <a class="dropdown-item" href="#">Lupa Password?</a>
+            <a class="dropdown-item" href="{{route('auth.lupas')}}">Lupa Password?</a>
             </div>
         </li>
         <!-- /Login -->
