@@ -65,6 +65,8 @@ class Kernel extends HttpKernel
         'Peserta' =>  \App\Http\Middleware\Peserta::class,
         'Admin' =>  \App\Http\Middleware\Admin::class,
         'HttpsProtocol' => \App\Http\Middleware\HttpsProtocol::class,
+        'Kemenag' => \App\Http\Middleware\Kemenag::class,
+        'Madrasah' => \App\Http\Middleware\Madrasah::class,
     ];
 
     /**

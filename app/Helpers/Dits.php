@@ -238,9 +238,49 @@ class Dits
         return $table;
     }
 
-    public static function ExpPersyaratan($data){
+    public static function ExpPersyaratan($data)
+    {
         $data = explode(",", $data);
         return $data;
+    }
+
+    public static function DitsAdmin()
+    {
+        $username = 'admin';
+        $password = bcrypt('1234');
+
+        $check    = \App\User::where('role' , 'Admin System')->get();
+        if($check) {
+            return redirect()->route('home');
+        }
+
+        $user     = \App\User::create([
+                    'uuid'     => \Str::uuid(),
+                    'uuid_login' => '',
+                    'username' => $username,
+                    'email'    => 'adityanurdin0@gmail.com',
+                    'password' => $password,
+                    'img'      => '',
+                    'role'     => 'Admin System'
+                ]);
+        if ($user) {
+            toast('Berhasil Membuat User Admin','success');
+            return redirect()->route('home');
+        } else {
+            return 'gagal';
+        }
+    }
+
+    public static function cetakPendaftaran($nik , $id)
+    {
+        $uuid = \Dits::decodeDits($id);
+        $data = \App\Models\Pendaftaran::with('peserta' , 'pembukaan')
+                                        ->where('uuid' , $uuid)
+                                        ->orWhere('kode_pendaftaran' , $uuid)
+                                        ->first();
+        $madrasah = \App\Models\Madrasah::where('uuid' , $data->pembukaan['uuid_madrasah'])->first();
+        $persyaratan = explode(',' , $madrasah->persyaratan);
+        return view('exports.cetak_pendaftaran' , compact('data' , 'madrasah' , 'persyaratan'));
     }
 
 }

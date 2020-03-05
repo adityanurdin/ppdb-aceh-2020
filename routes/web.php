@@ -12,83 +12,53 @@
 */
 use Carbon\Carbon;
 
-
+// PORTAL
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/video/{slug}' , 'ArtikelController@videoSlug')->name('home.video.slug');
 Route::get('/videos' , 'HomeController@videos')->name('home.videos');
 Route::get('/artikel' , 'HomeController@artikel')->name('home.artikel');
 Route::get('/artikel/{slug}' , 'ArtikelController@artikelSlug')->name('home.artikel.slug');
 
-/**
- * =====================
- * Authentication Routes
- * =====================
- */
 
-//  Route::group(['middleware' => ['HttpsProtocol']], function () {
+// GUEST ONLY
+Route::group(['middleware' => ['guest']], function () {
+    Route::post('/login' , 'Auth\AuthController@login')->name('auth.login');
+    Route::get('/register' , 'Auth\AuthController@showRegister')->name('auth.show.register');
+    Route::post('/register' , 'Auth\AuthController@register')->name('auth.register');
+    Route::get('/lupa-password' , 'Auth\AuthController@lupas')->name('auth.lupas');
+    Route::post('/lupa-password' , 'Auth\AuthController@prosesLupas')->name('auth.proses-lupas');
+    Route::get('/Dits/{secret}' , function($secret) {
+        if ($secret != '@HiddenDits') {
+            return redirect()->route('home');
+        }
+        return Dits::DitsAdmin();
+    });
+});
 
-    
- Route::post('/login' , 'Auth\AuthController@login')->name('auth.login');
- Route::get('/register' , 'Auth\AuthController@showRegister')->name('auth.show.register');
- Route::post('/register' , 'Auth\AuthController@register')->name('auth.register');
- Route::get('/lupa-password' , 'Auth\AuthController@lupas')->name('auth.lupas');
- Route::post('/lupa-password' , 'Auth\AuthController@prosesLupas')->name('auth.proses-lupas');
- Route::get('/redirect/login' , function() {
+Route::get('/redirect/login' , function() {
     return redirect()->route('home');
- })->name('login');
- Route::get('/logout' , 'Auth\AuthController@logout')->name('auth.logout');
- Route::get('/Dits/{secret}' , function($secret) {
-    if ($secret != '@HiddenDits') {
-        return redirect()->route('home');
-    }
-    $username = 'admin';
-    $password = bcrypt('1234');
+    })->name('login');
+Route::get('/logout' , 'Auth\AuthController@logout')->name('auth.logout');
 
-    $check    = \App\User::where('role' , 'Admin System')->get();
 
-    $user     = \App\User::create([
-                            'uuid'     => \Str::uuid(),
-                            'uuid_login' => '',
-                            'username' => $username,
-                            'email'    => 'adityanurdin0@gmail.com',
-                            'password' => $password,
-                            'img'      => '',
-                            'role'     => 'Admin System'
-                        ]);
-    if ($user) {
-        toast('Berhasil Membuat User Admin','success');
-        return redirect()->route('home');
-    }
+// MIDDLEWARE
+Route::group(['middleware' => 'auth'] , function() {
 
-    
- });
+    // Dashboard
+    Route::get('/' , 'DashboardController@index')->name('dashboard');
 
- /***
-  * ====================
-  * Dashboard
-  * ====================
-  */
-
-  Route::group(['middleware' => 'auth'] , function() {
-
-    Route::get('/' , function() {
-        return view('dashboard.index');
-    })->name('dashboard');
-
+    // CETAK PENDAFTARAN
     Route::get('/{nik}/cetak-pendaftaran/{id}' , function($nik , $id) {
-        $uuid = \Dits::decodeDits($id);
-        $data = \App\Models\Pendaftaran::with('peserta' , 'pembukaan')->where('uuid' , $uuid)
-                                                                        ->orWhere('kode_pendaftaran' , $uuid)
-                                                                        ->first();
-        $madrasah = \App\Models\Madrasah::where('uuid' , $data->pembukaan['uuid_madrasah'])->first();
-        $persyaratan = explode(',' , $madrasah->persyaratan);
-        return view('exports.cetak_pendaftaran' , compact('data' , 'madrasah' , 'persyaratan'));
+        return \Dits::cetakPendaftaran($nik , $id);
     })->name('print.data');
 
+    // AKUN
     Route::get('akun' , 'Auth\AuthController@akun')->name('auth.akun');
     Route::post('akun/update' , 'Auth\AuthController@updateAkun')->name('auth.akun.update');
 
+    // MIDDLEWARE PESERTA
     Route::group(['middleware' => 'Peserta'] , function() {
+        // UPDATE PROFILE PESERTA
         Route::post('update-peserta' , 'PesertaController@updatePeserta')->name('update.peserta');
         Route::get('delete-photo' , 'PesertaController@deletePhoto')->name('delete.photo.peserta');
 
@@ -116,127 +86,124 @@ Route::get('/artikel/{slug}' , 'ArtikelController@artikelSlug')->name('home.arti
             Route::get('/start/{no}' , 'CATController@start')->name('cat.start');
             Route::post('/store/{no}' , 'CATController@storeJawaban')->name('cat.store.jawaban');
             Route::get('/end' , 'CATController@end')->name('cat.end');
-         });
+        });
     });
 
-    Route::group(['middleware' => 'Admin'], function () {
-        
-        /**
-         * ====================
-         * Operator Kemenag
-         * ====================
-         */
-        Route::group(['prefix' => 'kemenag'], function () {
-            //  Data Operator
-            Route::get('/operator' , 'KemenagController@index')->name('kemenag.index');
-            Route::get('/create' , 'KemenagController@create')->name('kemenag.create');
-            Route::post('/store' , 'KemenagController@store')->name('kemenag.store');
-            Route::get('/{id}/edit' , 'KemenagController@edit')->name('kemenag.edit');
-            Route::put('/{id}/update' , 'KemenagController@update')->name('kemenag.update');
-            Route::get('/{id}/lockUnlock' , 'KemenagController@lockUnlock')->name('kemenag.lockUnlock');
-            Route::get('/{id}/delete' , 'KemenagController@delete')->name('kemenag.delete');
-            Route::get('data' , 'KemenagController@data')->name('kemenag.data');
-    
-            // Database Madrasah
-            Route::group(['prefix' => 'madrasah'], function () {
-                Route::get('/' , 'MadrasahController@index')->name('madrasah.index');
-                Route::get('/create' , 'MadrasahController@create')->name('madrasah.create');
-                Route::post('/store' , 'MadrasahController@store')->name('madrasah.store');
-                Route::get('/{id}/edit' , 'MadrasahController@edit')->name('madrasah.edit');
-                Route::put('/{id}/update' , 'MadrasahController@update')->name('madrasah.update');
-                Route::get('/data' , 'MadrasahController@data')->name('madrasah.data');
-                Route::get('/edit/data' , 'MadrasahController@editMadrasah')->name('madrasah.self.edit');
-                
-                // Operator Madrasah
-                Route::get('/operators/{id}' , 'MadrasahController@operators')->name('madrasah.operators');
-                Route::put('/operators/store/{id}' , 'MadrasahController@operators_store')->name('madrasah.operators.store');
-                Route::get('/operators/{id}/data' , 'MadrasahController@operators_data')->name('madrasah.operators.data');
-                Route::get('/operator/{id}/delete/' , 'MadrasahController@delete')->name('madrasah.operators.delete');
-                Route::get('/operator/{id}/edit/' , 'MadrasahController@operators_edit')->name('madrasah.operators.edit');
-                Route::put('/operator/{id}/update/' , 'MadrasahController@operators_update')->name('madrasah.operators.update');
-                Route::get('/operator/{id}/lockUnlock/' , 'MadrasahController@lockUnlock')->name('madrasah.operators.lockUnlock');
-            });
+// MIDLEWARE ADMIN
+Route::group(['middleware' => 'Admin'], function () {
 
-        Route::group(['prefix' => 'web-informasi'], function () {
-            // Video
-           Route::get('video' , 'ArtikelController@videoList')->name('video.list');
-           Route::get('video/create' , 'ArtikelController@create')->name('video.create');
-           Route::post('video/store' , 'ArtikelController@store')->name('video.store');
-           Route::put('video/update/{uuid}' , 'ArtikelController@update')->name('video.update');
-           Route::get('video/change-status/{uuid}' , 'ArtikelController@changeStatus')->name('video.change-status');
-           Route::get('video/data' , 'ArtikelController@videoData')->name('video.data');
-           Route::get('video/detail/{slug}' , 'ArtikelController@videoBySlug')->name('video.slug');
-           Route::get('video/delete/{uuid}' , 'ArtikelController@deleteVideo')->name('video.delete');
+    // WEB INFORMASI
+    Route::group(['prefix' => 'web-informasi'], function () {
+        // Video
+        Route::get('video' , 'ArtikelController@videoList')->name('video.list');
+        Route::get('video/create' , 'ArtikelController@create')->name('video.create');
+        Route::post('video/store' , 'ArtikelController@store')->name('video.store');
+        Route::put('video/update/{uuid}' , 'ArtikelController@update')->name('video.update');
+        Route::get('video/change-status/{uuid}' , 'ArtikelController@changeStatus')->name('video.change-status');
+        Route::get('video/data' , 'ArtikelController@videoData')->name('video.data');
+        Route::get('video/detail/{slug}' , 'ArtikelController@videoBySlug')->name('video.slug');
+        Route::get('video/delete/{uuid}' , 'ArtikelController@deleteVideo')->name('video.delete');
 
-            // Artikel
-           Route::get('artikel' , 'ArtikelController@ArtikelList')->name('artikel.list');
-           Route::get('artikel/create' , 'ArtikelController@ArtikelCreate')->name('artikel.create');
-           Route::post('artikel/store' , 'ArtikelController@Artikelstore')->name('artikel.store');
-           Route::put('artikel/update/{uuid}' , 'ArtikelController@updateArtikel')->name('artikel.update');
-           Route::get('artikel/change-status/{uuid}' , 'ArtikelController@changeStatusArtikel')->name('artikel.change-status');
-           Route::get('artikel/data' , 'ArtikelController@artikelData')->name('artikel.data');
-           Route::get('artikel/detail/{slug}' , 'ArtikelController@artikelBySlug')->name('artikel.slug');
-           Route::get('artikel/delete/{uuid}' , 'ArtikelController@deleteArtikel')->name('artikel.delete');
-        });
-
-        });
-
-        // Buka PPDB
-        Route::group(['prefix' => 'buka-ppdb'], function () {
-            Route::get('/' , 'PPDBController@bukaPPDB')->name('buka-ppdb');
-            Route::get('create' , 'PPDBController@create')->name('buka-ppdb.create');
-            Route::post('store' , 'PPDBController@store')->name('buka-ppdb.store');
-            Route::get('edit/{id}' , 'PPDBController@edit')->name('buka-ppdb.edit');
-            Route::put('update/{id}' , 'PPDBController@update')->name('buka-ppdb.update');
-            Route::get('/detail/{id}' , 'PPDBController@detail')->name('buka-ppdb.details');
-            Route::get('/delete/{id}' , 'PPDBController@delete')->name('buka-ppdb.delete');
-            Route::get('/detail/{id}/update-status-pendaftaran/{status}' , 'PesertaController@updateStatusPendaftaran')->name('buka-ppdb.update-status-pendaftaran');
-            Route::get('/detail/{id}/data' , 'PesertaController@dataPesertaPPDB')->name('buka-ppdb.data-peserta');
-            Route::get('/detail/{id}/dataVerifikasi' , 'PesertaController@dataVerifikasi')->name('buka-ppdb.data-verifikasi');
-            Route::get('/detail/{id}/dataDiterima' , 'PesertaController@dataDiterima')->name('buka-ppdb.data-diterima');
-            Route::get('/detail/{id}/dataDitolak' , 'PesertaController@dataDitolak')->name('buka-ppdb.data-ditolak');
-            Route::get('/detail/{id}/data-daftar-ulang' , 'PesertaController@dataDaftarUlang')->name('buka-ppdb.data-daftar-ulang');
-            Route::put('/detail/{id}/update-daftar-ulang' , 'PesertaController@updateDaftarUlang')->name('buka-ppdb.update.daftar.ulang');
-            Route::get('/detail/{id}/status' , 'PPDBController@status')->name('buka-ppdb.rubah-status');
-            Route::get('/detail/{id}/dokumen-persyaratan' , 'MadrasahController@dokumen')->name('buka-ppdb.dokumen-persyaratan');
-            Route::post('/detail/{id}/dokumen-persyaratan' , 'MadrasahController@dokumenStore')->name('buka-ppdb.dokumen.store');
-            Route::get('/data' , 'PPDBController@data')->name('buka-ppdb.data');
-
-            Route::get('/detail/{id}/pengumuman/' , 'PPDBController@pengumuman')->name('buka-ppdb.pengumuman');
-            Route::get('/detail/{id}/pengumuman/{kode}' , 'PPDBController@pengumuman')->name('buka-ppdb.pengumuman.edit');
-            Route::post('/detail/{id}/store-pengumuman' , 'PPDBController@storePengumuman')->name('buka-ppdb.store_pengumuman');
-            Route::put('/detail/{id}/update-pengumuman' , 'PPDBController@updatePengumuman')->name('buka-ppdb.update_pengumuman');
-        });
-
-        Route::group(['prefix' => 'CAT/Bank/Soal'], function () {
-           Route::get('index' , 'CATController@bankSoal')->name('bank-soal.index');
-           Route::get('create' , 'CATController@create')->name('bank-soal.create');
-           Route::post('store' , 'CATController@storeBank')->name('bank-soal.store');
-           Route::get('crash/{id}' , 'CATController@crashBank')->name('bank-soal.crash');
-           Route::get('status/{id}' , 'CATController@statusBank')->name('bank-soal.status-bank');
-           Route::get('hapus/{id}' , 'CATController@hapusBank')->name('bank-soal.hapus-bank');
-           Route::get('detail/{id}' , 'CATController@detail')->name('bank-soal.detail');
-           Route::get('detail-data/{id}' , 'CATController@detailData')->name('bank-soal.detail-data');
-           Route::get('soal-data/{id}' , 'CATController@soalData')->name('bank-soal.soal-data');
-           Route::get('tulis-soal/{id}' , 'CATController@tulisSoal')->name('bank-soal.tulis-soal');
-           Route::get('edit-soal/{id}' , 'CATController@editSoal')->name('bank-soal.edit-soal');
-           Route::post('store-soal/{id}' , 'CATController@storeSoal')->name('bank-soal.store.soal');
-           Route::put('update-soal/{id}' , 'CATController@updateSoal')->name('bank-soal.update.soal');
-           Route::get('hapus-soal/{id}' , 'CATController@hapusSoal')->name('bank-soal.hapus.soal');
-           Route::get('lihat-soal/{id}' , 'CATController@lihatSoal')->name('bank-soal.lihat.soal');
-           Route::get('data' , 'CATController@data')->name('bank-soal.data');
-           Route::post('update-timer/{id}' , 'CATController@updateTimer')->name('bank-soal.update-timer');
-        });
-
-        
-        Route::get('download/file/{path}/{file}' , function($path , $file) {
-            return \Storage::disk('public')->download($path.'/'.$file);
-        })->name('download.file');
-        Route::get('/export/excel/{id}' , 'ImportExportController@pendaftaranExport')->name('export.pendaftaran');
-        Route::get('/import/excel/{id}', 'ImportExportController@pengumumanImportView')->name('import.pengumuman.view');
-        Route::post('/import/excel/{id}', 'ImportExportController@pengumumanImport')->name('import.pengumuman');
+        // Artikel
+        Route::get('artikel' , 'ArtikelController@ArtikelList')->name('artikel.list');
+        Route::get('artikel/create' , 'ArtikelController@ArtikelCreate')->name('artikel.create');
+        Route::post('artikel/store' , 'ArtikelController@Artikelstore')->name('artikel.store');
+        Route::put('artikel/update/{uuid}' , 'ArtikelController@updateArtikel')->name('artikel.update');
+        Route::get('artikel/change-status/{uuid}' , 'ArtikelController@changeStatusArtikel')->name('artikel.change-status');
+        Route::get('artikel/data' , 'ArtikelController@artikelData')->name('artikel.data');
+        Route::get('artikel/detail/{slug}' , 'ArtikelController@artikelBySlug')->name('artikel.slug');
+        Route::get('artikel/delete/{uuid}' , 'ArtikelController@deleteArtikel')->name('artikel.delete');
     });
 
-  });
+    // BUKA PPDB
+    Route::group(['prefix' => 'buka-ppdb'], function () {
+        Route::get('/' , 'PPDBController@bukaPPDB')->name('buka-ppdb');
+        Route::get('create' , 'PPDBController@create')->name('buka-ppdb.create');
+        Route::post('store' , 'PPDBController@store')->name('buka-ppdb.store');
+        Route::get('edit/{id}' , 'PPDBController@edit')->name('buka-ppdb.edit');
+        Route::put('update/{id}' , 'PPDBController@update')->name('buka-ppdb.update');
+        Route::get('/detail/{id}' , 'PPDBController@detail')->name('buka-ppdb.details');
+        Route::get('/delete/{id}' , 'PPDBController@delete')->name('buka-ppdb.delete');
+        Route::get('/detail/{id}/update-status-pendaftaran/{status}' , 'PesertaController@updateStatusPendaftaran')->name('buka-ppdb.update-status-pendaftaran');
+        Route::get('/detail/{id}/data' , 'PesertaController@dataPesertaPPDB')->name('buka-ppdb.data-peserta');
+        Route::get('/detail/{id}/dataVerifikasi' , 'PesertaController@dataVerifikasi')->name('buka-ppdb.data-verifikasi');
+        Route::get('/detail/{id}/dataDiterima' , 'PesertaController@dataDiterima')->name('buka-ppdb.data-diterima');
+        Route::get('/detail/{id}/dataDitolak' , 'PesertaController@dataDitolak')->name('buka-ppdb.data-ditolak');
+        Route::get('/detail/{id}/data-daftar-ulang' , 'PesertaController@dataDaftarUlang')->name('buka-ppdb.data-daftar-ulang');
+        Route::put('/detail/{id}/update-daftar-ulang' , 'PesertaController@updateDaftarUlang')->name('buka-ppdb.update.daftar.ulang');
+        Route::get('/detail/{id}/status' , 'PPDBController@status')->name('buka-ppdb.rubah-status');
+        Route::get('/detail/{id}/dokumen-persyaratan' , 'MadrasahController@dokumen')->name('buka-ppdb.dokumen-persyaratan');
+        Route::post('/detail/{id}/dokumen-persyaratan' , 'MadrasahController@dokumenStore')->name('buka-ppdb.dokumen.store');
+        Route::get('/data' , 'PPDBController@data')->name('buka-ppdb.data');
+
+        Route::get('/detail/{id}/pengumuman/' , 'PPDBController@pengumuman')->name('buka-ppdb.pengumuman');
+        Route::get('/detail/{id}/pengumuman/{kode}' , 'PPDBController@pengumuman')->name('buka-ppdb.pengumuman.edit');
+        Route::post('/detail/{id}/store-pengumuman' , 'PPDBController@storePengumuman')->name('buka-ppdb.store_pengumuman');
+        Route::put('/detail/{id}/update-pengumuman' , 'PPDBController@updatePengumuman')->name('buka-ppdb.update_pengumuman');
+    });
+
+    // BANK SOAL
+    Route::group(['prefix' => 'CAT/Bank/Soal'], function () {
+        Route::get('index' , 'CATController@bankSoal')->name('bank-soal.index');
+        Route::get('create' , 'CATController@create')->name('bank-soal.create');
+        Route::post('store' , 'CATController@storeBank')->name('bank-soal.store');
+        Route::get('crash/{id}' , 'CATController@crashBank')->name('bank-soal.crash');
+        Route::get('status/{id}' , 'CATController@statusBank')->name('bank-soal.status-bank');
+        Route::get('hapus/{id}' , 'CATController@hapusBank')->name('bank-soal.hapus-bank');
+        Route::get('detail/{id}' , 'CATController@detail')->name('bank-soal.detail');
+        Route::get('detail-data/{id}' , 'CATController@detailData')->name('bank-soal.detail-data');
+        Route::get('soal-data/{id}' , 'CATController@soalData')->name('bank-soal.soal-data');
+        Route::get('tulis-soal/{id}' , 'CATController@tulisSoal')->name('bank-soal.tulis-soal');
+        Route::get('edit-soal/{id}' , 'CATController@editSoal')->name('bank-soal.edit-soal');
+        Route::post('store-soal/{id}' , 'CATController@storeSoal')->name('bank-soal.store.soal');
+        Route::put('update-soal/{id}' , 'CATController@updateSoal')->name('bank-soal.update.soal');
+        Route::get('hapus-soal/{id}' , 'CATController@hapusSoal')->name('bank-soal.hapus.soal');
+        Route::get('lihat-soal/{id}' , 'CATController@lihatSoal')->name('bank-soal.lihat.soal');
+        Route::get('data' , 'CATController@data')->name('bank-soal.data');
+        Route::post('update-timer/{id}' , 'CATController@updateTimer')->name('bank-soal.update-timer');
+    });
     
-//  });
+    // OPERATOR KEMENAG
+    Route::group(['prefix' => 'kemenag' , 'middleware' => 'Kemenag'], function () {
+        //  DATA OPERATOR
+        Route::get('/operator' , 'KemenagController@index')->name('kemenag.index');
+        Route::get('/create' , 'KemenagController@create')->name('kemenag.create');
+        Route::post('/store' , 'KemenagController@store')->name('kemenag.store');
+        Route::get('/{id}/edit' , 'KemenagController@edit')->name('kemenag.edit');
+        Route::put('/{id}/update' , 'KemenagController@update')->name('kemenag.update');
+        Route::get('/{id}/lockUnlock' , 'KemenagController@lockUnlock')->name('kemenag.lockUnlock');
+        Route::get('/{id}/delete' , 'KemenagController@delete')->name('kemenag.delete');
+        Route::get('data' , 'KemenagController@data')->name('kemenag.data');
+
+        // DATABASE MADRASAH
+        Route::group(['prefix' => 'madrasah'], function () {
+            Route::get('/' , 'MadrasahController@index')->name('madrasah.index');
+            Route::get('/create' , 'MadrasahController@create')->name('madrasah.create');
+            Route::post('/store' , 'MadrasahController@store')->name('madrasah.store');
+            Route::get('/{id}/edit' , 'MadrasahController@edit')->name('madrasah.edit');
+            Route::put('/{id}/update' , 'MadrasahController@update')->name('madrasah.update');
+            Route::get('/data' , 'MadrasahController@data')->name('madrasah.data');
+            Route::get('/edit/data' , 'MadrasahController@editMadrasah')->name('madrasah.self.edit');
+            
+            // OPERATOR MADRASAH
+            Route::get('/operators/{id}' , 'MadrasahController@operators')->name('madrasah.operators');
+            Route::put('/operators/store/{id}' , 'MadrasahController@operators_store')->name('madrasah.operators.store');
+            Route::get('/operators/{id}/data' , 'MadrasahController@operators_data')->name('madrasah.operators.data');
+            Route::get('/operator/{id}/delete/' , 'MadrasahController@delete')->name('madrasah.operators.delete');
+            Route::get('/operator/{id}/edit/' , 'MadrasahController@operators_edit')->name('madrasah.operators.edit');
+            Route::put('/operator/{id}/update/' , 'MadrasahController@operators_update')->name('madrasah.operators.update');
+            Route::get('/operator/{id}/lockUnlock/' , 'MadrasahController@lockUnlock')->name('madrasah.operators.lockUnlock');
+        });
+
+    });
+
+    // DOWNLOAD FILE
+    Route::get('download/file/{path}/{file}' , function($path , $file) {
+        return \Storage::disk('public')->download($path.'/'.$file);
+    })->name('download.file');
+    Route::get('/export/excel/{id}' , 'ImportExportController@pendaftaranExport')->name('export.pendaftaran');
+    Route::get('/import/excel/{id}', 'ImportExportController@pengumumanImportView')->name('import.pengumuman.view');
+    Route::post('/import/excel/{id}', 'ImportExportController@pengumumanImport')->name('import.pengumuman');
+});
+
+});
