@@ -23,13 +23,17 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::post('auth/login', 'API\AuthController@login');
     
+    
     Route::middleware('auth:api')->group( function() {
+        /* INDEX */
         Route::get('/CAT' , 'API\CATController@index')->name('cat.index');
+        Route::post('set_ujian' , 'API\CATController@create')->name('cat.set_ujian');
+        Route::get('soal/{no}/{kode_soal}' , 'API\CATController@start');
+        Route::post('/kirim_jawaban/{no}/{kode_soal}' , 'API\CATController@storeJawaban');
 
+        Route::get('/jawaban/{no}/{kode_soal}/{uuid_login}' , 'API\CATController@jawaban');
 
-        Route::get('data-user/' , function() {
-            return Dits::sendResponse('Success');
-        });
+        /* Auth */
         Route::get('auth/logout', 'API\AuthController@logout');
         Route::get('auth/user', 'API\AuthController@user');
     });
