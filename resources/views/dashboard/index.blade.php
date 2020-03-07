@@ -55,7 +55,7 @@
                     <span class="btn btn-primary btn-file btn-block">
                         Pilih Foto<input type="file" name="pas_foto" autocomplete="off" {{ Dits::DataPeserta()->pas_foto ? '' : 'required' }}>
                     </span>
-                        <a href="{{route('delete.photo.peserta')}}" class="btn btn-danger btn-block {{Dits::DataPeserta()->pas_foto ? '' : 'disabled'}}">Hapus Foto</a>
+                        <a href="{{route('delete.photo.peserta')}}" onclick="return confirm_delete()" class="btn btn-danger btn-block {{Dits::DataPeserta()->pas_foto ? '' : 'disabled'}}">Hapus Foto</a>
                     </div>
                     <div class="col-sm align-self-center">
                     <hr class="d-lg-none">
@@ -287,131 +287,179 @@
         @php
             $isUpdate = Dits::checkJenjang();
         @endphp
+        {{-- MI --}}
         @if ($isUpdate == 'MI')
         <div class="card mt-5">
             <div class="card-header">
                 File Dokumen Pendaftaran
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group" style="margin-top: 5px;">
-                            Fotocopy KK
-                        </div>
-                        <div class="form-group" style="margin-top: 70px;">
-                            Fotocopy Akte
-                        </div>
+                <div class="table-resposive">
+                    <div class="form-group">
+                        @if (Dits::DataPeserta()->akte != '')
+                        <label for="">
+                            Fotocopy Akte Kelahiran
+                        </label>
+                        <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->akte))}}" target="_blank" class="btn btn-info btn-sm float-right mt-2 mb-3">Lihat File</a>
+                            <a href="{{route('delete-document' , ['akte' , Dits::DataPeserta()->NIK])}}" onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2">Hapus File</a>
+                        @else 
+                        <form action="{{route('upload-document' , 'akte')}}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <label for="">
+                                Fotocopy Akte Kelahiran
+                            </label>
+                            <input type="file" name="akte" required id="" class="form-control form-control-sm">
+                            <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
+                        </form>
+                        @endif
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <input type="file" name="" id="" class="form-control form-control-sm">
+                    <div class="form-group">
+                        @if (Dits::DataPeserta()->kk != '')
+                        <label for="">
+                            Fotocopy Kartu Keluarga
+                        </label>
+                        <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->kk))}}" target="_blank" class="btn btn-info btn-sm float-right mt-2 mb-3">Lihat File</a>
+                            <a href="{{route('delete-document' , ['kk' , Dits::DataPeserta()->NIK])}}" onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2">Hapus File</a>
+                        @else 
+                        <form action="{{route('upload-document' , 'kk')}}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <label for="">
+                                Fotocopy Kartu Keluarga
+                            </label>
+                            <input type="file" name="kk" required id="" class="form-control form-control-sm">
                             <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
-                        </div>
-                        <div class="form-group">
-                            <input type="file" name="" id="" class="form-control form-control-sm">
-                            <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
-                        </div>
+                        </form>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
+        {{-- MTs --}}
         @elseif ($isUpdate == 'MTs')
         <div class="card mt-5">
             <div class="card-header">
                 File Dokumen Pendaftaran
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group" style="margin-top: 5px;">
+                <div class="table-responsive">
+                    
+                    <div class="form-group">
+                        @if (Dits::DataPeserta()->rapot_1 != '')
+                        <label for="">
                             Fotocopy Raport Kelas 5 smt 1
-                        </div>
-                        <div class="form-group" style="margin-top: 70px;">
-                            Fotocopy Raport Kelas 5 smt 2
-                        </div>
-                        <div class="form-group" style="margin-top: 65px;">
-                            Fotocopy Raport Kelas 6 smt 1
-                        </div>
+                        </label>
+                        <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_1))}}" target="_blank" class="btn btn-info btn-sm float-right mt-2 mb-3">Lihat File</a>
+                            <a href="{{route('delete-document' , ['rapot_1' , Dits::DataPeserta()->NIK])}}" onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2">Hapus File</a>
+                        @else 
+                        <form action="{{route('upload-document' , 'rapot_1')}}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <label for="">
+                                Fotocopy Raport Kelas 5 smt 1
+                            </label>
+                            <input type="file" name="rapot_1" required id="" class="form-control form-control-sm">
+                            <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
+                        </form>
+                        @endif
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <input type="file" name="" id="" class="form-control form-control-sm">
+                    <div class="form-group">
+                        @if (Dits::DataPeserta()->rapot_2 != '')
+                        <label for="">
+                            Fotocopy Raport Kelas 5 smt 1
+                        </label>
+                        <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_2))}}" target="_blank" class="btn btn-info btn-sm float-right mt-2 mb-3">Lihat File</a>
+                            <a href="{{route('delete-document' , ['rapot_2' , Dits::DataPeserta()->NIK])}}" onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2">Hapus File</a>
+                        @else 
+                        <form action="{{route('upload-document' , 'rapot_2')}}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <label for="">
+                                Fotocopy Raport Kelas 5 smt 2
+                            </label>
+                            <input type="file" name="rapot_2" required id="" class="form-control form-control-sm">
                             <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
-                        </div>
-                        <div class="form-group">
-                            <input type="file" name="" id="" class="form-control form-control-sm">
+                        </form>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                        @if (Dits::DataPeserta()->rapot_3 != '')
+                        <label for="">
+                            Fotocopy Raport Kelas 6 smt 1
+                        </label>
+                        <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_3))}}" target="_blank" class="btn btn-info btn-sm float-right mt-2 mb-3">Lihat File</a>
+                            <a href="{{route('delete-document' , ['rapot_3' , Dits::DataPeserta()->NIK])}}" onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2">Hapus File</a>
+                        @else 
+                        <form action="{{route('upload-document' , 'rapot_3')}}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <label for="">
+                                Fotocopy Raport Kelas 6 smt 1
+                            </label>
+                            <input type="file" name="rapot_3" required id="" class="form-control form-control-sm">
                             <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
-                        </div>
-                        <div class="form-group">
-                            <input type="file" name="" id="" class="form-control form-control-sm">
-                            <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
-                        </div>
+                        </form>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
+        {{-- MA --}}
         @elseif($isUpdate == 'MA')
         <div class="card mt-5">
             <div class="card-header">
                 File Dokumen Pendaftaran
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group" style="margin-top: 5px;">
-                            Fotocopy Raport Kelas 8 smt 1
-                        </div>
-                        <div class="form-group" style="margin-top: 70px;">
-                            Fotocopy Raport Kelas 8 smt 2
-                        </div>
-                        <div class="form-group" style="margin-top: 65px;">
-                            Fotocopy Raport Kelas 9 smt 1
-                        </div>
-                    </div>
-                    <div class="col-md-6">
+                <div class="table-responsive">
+                    
+                    <div class="form-group">
                         @if (Dits::DataPeserta()->rapot_1 != '')
-                        <div class="form-group">
-                            <input type="text" value="Sudah Terupload" name="rapot_1" id="" class="form-control form-control-sm" disabled>
-                            <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_1))}}" target="_blank" class="btn btn-info btn-sm float-right mt-2 mb-3">Lihat File</a>
-                            <a href="{{route('delete-document' , ['rapot_1' , Dits::DataPeserta()->NIK])}}" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2">Hapus File</a>
-                        </div>
-                        @else
+                        <label for="">
+                            Fotocopy Raport Kelas 8 smt 1
+                        </label>
+                        <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_1))}}" target="_blank" class="btn btn-info btn-sm float-right mt-2 mb-3">Lihat File</a>
+                            <a href="{{route('delete-document' , ['rapot_1' , Dits::DataPeserta()->NIK])}}" onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2">Hapus File</a>
+                        @else 
                         <form action="{{route('upload-document' , 'rapot_1')}}" method="POST" enctype="multipart/form-data">
                             @csrf
-                            <div class="form-group">
-                                <input type="file" name="rapot_1" id="" required class="form-control form-control-sm">
-                                <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
-                            </div>
+                            <label for="">
+                                Fotocopy Raport Kelas 8 smt 1
+                            </label>
+                            <input type="file" name="rapot_1" required id="" class="form-control form-control-sm">
+                            <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
                         </form>
                         @endif
+                    </div>
+                    <div class="form-group">
                         @if (Dits::DataPeserta()->rapot_2 != '')
-                        <div class="form-group">
-                            <input type="text" value="Sudah Terupload" name="rapot_2" id="" class="form-control form-control-sm" disabled>
-                            <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_2))}}" target="_blank" class="btn btn-info btn-sm float-right mt-2 mb-3">Lihat File</a>
-                            <a href="{{route('delete-document' , ['rapot_2' , Dits::DataPeserta()->NIK])}}" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2">Hapus File</a>
-                        </div>
-                        @else
+                        <label for="">
+                            Fotocopy Raport Kelas 8 smt 2
+                        </label>
+                        <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_2))}}" target="_blank" class="btn btn-info btn-sm float-right mt-2 mb-3">Lihat File</a>
+                            <a href="{{route('delete-document' , ['rapot_2' , Dits::DataPeserta()->NIK])}}" onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2">Hapus File</a>
+                        @else 
                         <form action="{{route('upload-document' , 'rapot_2')}}" method="POST" enctype="multipart/form-data">
                             @csrf
-                        <div class="form-group">
-                            <input type="file" name="rapot_2" id="" required class="form-control form-control-sm">
+                            <label for="">
+                                Fotocopy Raport Kelas 8 smt 2
+                            </label>
+                            <input type="file" name="rapot_2" required id="" class="form-control form-control-sm">
                             <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
-                        </div>
                         </form>
                         @endif
+                    </div>
+                    <div class="form-group">
                         @if (Dits::DataPeserta()->rapot_3 != '')
-                        <div class="form-group">
-                            <input type="text" value="Sudah Terupload" name="rapot_3" id="" class="form-control form-control-sm" disabled>
-                            <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_3))}}" target="_blank" class="btn btn-info btn-sm float-right mt-2 mb-3">Lihat File</a>
-                            <a href="{{route('delete-document' , ['rapot_3' , Dits::DataPeserta()->NIK])}}" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2">Hapus File</a>
-                        </div>
-                        @else
+                        <label for="">
+                            Fotocopy Raport Kelas 9 smt 1
+                        </label>
+                        <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_3))}}" target="_blank" class="btn btn-info btn-sm float-right mt-2 mb-3">Lihat File</a>
+                            <a href="{{route('delete-document' , ['rapot_3' , Dits::DataPeserta()->NIK])}}" onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2">Hapus File</a>
+                        @else 
                         <form action="{{route('upload-document' , 'rapot_3')}}" method="POST" enctype="multipart/form-data">
                             @csrf
-                        <div class="form-group">
-                            <input type="file" name="rapot_3" id="" required class="form-control form-control-sm">
+                            <label for="">
+                                Fotocopy Raport Kelas 9 smt 1
+                            </label>
+                            <input type="file" name="rapot_3" required id="" class="form-control form-control-sm">
                             <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3">Upload</button>
-                        </div>
                         </form>
                         @endif
                     </div>
@@ -422,14 +470,7 @@
 
         @endif
 
-    @elseif (Auth::user()->role == 'Admin System')
-        <div class="card">
-            <div class="card-body">
-                <img src="https://simppdbaceh.frandikasepta.com/assets/img/banner.png" width="100%" alt="        ">
-            </div>
-        </div>
-    
-    @elseif (Auth::user()->role == 'Operator Kemenag')
+    @elseif (Auth::user()->role != 'Peserta')
         <div class="card">
             <div class="card-body">
                 <img src="https://simppdbaceh.frandikasepta.com/assets/img/banner.png" width="100%" alt="        ">

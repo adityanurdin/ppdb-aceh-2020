@@ -164,17 +164,18 @@ Route::group(['middleware' => 'Admin'], function () {
     });
     
     // OPERATOR KEMENAG
-    Route::group(['prefix' => 'kemenag' , 'middleware' => 'Kemenag'], function () {
-        //  DATA OPERATOR
-        Route::get('/operator' , 'KemenagController@index')->name('kemenag.index');
-        Route::get('/create' , 'KemenagController@create')->name('kemenag.create');
-        Route::post('/store' , 'KemenagController@store')->name('kemenag.store');
-        Route::get('/{id}/edit' , 'KemenagController@edit')->name('kemenag.edit');
-        Route::put('/{id}/update' , 'KemenagController@update')->name('kemenag.update');
-        Route::get('/{id}/lockUnlock' , 'KemenagController@lockUnlock')->name('kemenag.lockUnlock');
-        Route::get('/{id}/delete' , 'KemenagController@delete')->name('kemenag.delete');
-        Route::get('data' , 'KemenagController@data')->name('kemenag.data');
-
+    Route::group(['prefix' => 'kemenag'], function () {
+        Route::group(['middleware' => ['Kemenag']], function () {
+            //  DATA OPERATOR KEMENAG
+            Route::get('/operator' , 'KemenagController@index')->name('kemenag.index');
+            Route::get('/create' , 'KemenagController@create')->name('kemenag.create');
+            Route::post('/store' , 'KemenagController@store')->name('kemenag.store');
+            Route::get('/{id}/edit' , 'KemenagController@edit')->name('kemenag.edit');
+            Route::put('/{id}/update' , 'KemenagController@update')->name('kemenag.update');
+            Route::get('/{id}/lockUnlock' , 'KemenagController@lockUnlock')->name('kemenag.lockUnlock');
+            Route::get('/{id}/delete' , 'KemenagController@delete')->name('kemenag.delete');
+            Route::get('data' , 'KemenagController@data')->name('kemenag.data');
+        });
         // DATABASE MADRASAH
         Route::group(['prefix' => 'madrasah'], function () {
             Route::get('/' , 'MadrasahController@index')->name('madrasah.index');

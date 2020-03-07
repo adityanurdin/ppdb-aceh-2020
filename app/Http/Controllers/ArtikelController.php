@@ -142,7 +142,7 @@ class ArtikelController extends Controller
                             })
                             ->addColumn('action' , function($item) {
                                 $btn = '<a href="'.route('video.change-status' , $item->uuid).'" class="btn btn-dark btn-sm"><i class="fas fa-power-off"></i></a> ';
-                                $btn .= '<a href="'.route('video.delete' , $item->uuid).'" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>';
+                                $btn .= '<a href="'.route('video.delete' , $item->uuid).'" onclick="return confirm_delete()" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>';
                                 return $btn;
                             })
                             ->escapeColumns([])
@@ -263,7 +263,7 @@ class ArtikelController extends Controller
                             })
                             ->addColumn('action' , function($item) {
                                 $btn = '<a href="'.route('artikel.change-status' , $item->uuid).'" class="btn btn-dark btn-sm"><i class="fas fa-power-off"></i></a> ';
-                                $btn .= '<a href="'.route('artikel.delete' , $item->uuid).'" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>';
+                                $btn .= '<a href="'.route('artikel.delete' , $item->uuid).'" onclick="return confirm_delete()" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>';
                                 return $btn;
                             })
                             ->escapeColumns([])

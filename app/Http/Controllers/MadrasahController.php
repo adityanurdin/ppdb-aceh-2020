@@ -268,7 +268,7 @@ class MadrasahController extends Controller
                                     $status = '<a href="/kemenag/madrasah/operator/'.Dits::encodeDits($item->uuid).'/lockUnlock" class="btn btn-success btn-sm"><i class="fas fa-lock-open"></i></a>';
                                 }
     
-                                $btn = '<a href="/kemenag/madrasah/operator/'.Dits::encodeDits($item->uuid).'/delete"  onclick="return confirm("Yakin ingin menghapus '.$item->user['username'].'");" class="btn btn-danger btn-sm"><i class="fas fa-eraser"></i></a> ';
+                                $btn = '<a href="/kemenag/madrasah/operator/'.Dits::encodeDits($item->uuid).'/delete" onclick="return confirm_delete()" class="btn btn-danger btn-sm"><i class="fas fa-eraser"></i></a> ';
                                 $btn .= '<a href="/kemenag/madrasah/operator/'.Dits::encodeDits($item->uuid).'/edit" class="btn btn-warning btn-sm"><i class="fas fa-pen-square"></i></a> ';
                                 $btn .= '<a href="#" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a> ';
     

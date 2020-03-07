@@ -346,7 +346,7 @@ class PPDBController extends Controller
                             ->addColumn('action' , function($item) {
                                 $btn = '<a href="'.Dits::PdfViewer(asset($item->url_brosur)).'" target="_blank" class="btn btn-danger btn-sm btn-block"><i class="fas fa-file-pdf"></i> Brosur</a>';
                                 $btn .= '<a href="/ppdb/'.Dits::encodeDits($item->uuid_madrasah).'/'.$item->kode_pendaftaran.'/lihat" class="btn btn-info btn-sm btn-block" ><i class="fas fa-eye"></i> Lihat</a>';
-                                $btn .= '<a href="/ppdb/'.Dits::encodeDits($item->uuid_pembukaan).'/hapus" class="btn btn-danger btn-sm btn-block"><i class="fas fa-trash"></i> Hapus</a>';
+                                $btn .= '<a href="/ppdb/'.Dits::encodeDits($item->uuid_pembukaan).'/hapus" onclick="return confirm_delete()" class="btn btn-danger btn-sm btn-block"><i class="fas fa-trash"></i> Hapus</a>';
                                 $btn .= '<a href="'.route('print.data' , [Dits::DataPeserta()->NIK , Dits::encodeDits($item->kode_pendaftaran)]).'" class="btn btn-success btn-sm btn-block" target="_blank"><i class="fas fa-print"></i> Cetak</a>';
                                     if($item->status_diterima == 'Diterima') {
                                         $btn .= '<a href="/ppdb/sub/daftar-ulang/'.Dits::encodeDits($item->kode_pendaftaran).'/" class="btn btn-dark btn-sm btn-block"><i class="fas fa-coins"></i> Daftar Ulang</a>';

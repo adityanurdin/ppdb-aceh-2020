@@ -91,7 +91,16 @@
     </script>
     <!-- sidebar -->
 
-    @include('sweetalert::alert')
+    <script type="text/javascript">
+        function confirm_delete() {
+            return confirm('are you sure?');
+        }
+    </script>
+
+    <div class="table-responsive">
+        @include('sweetalert::alert')
+    </div>
+
     @stack('script')
 </body>
 
