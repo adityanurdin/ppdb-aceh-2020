@@ -20,6 +20,12 @@ use Illuminate\Http\Request;
 
 Route::group(['prefix' => 'v1'], function () {
 
+    Route::get('/' , function() {
+        return response()->json([
+            'status' => true,
+            'message' => 'success access CAT API'
+        ]);
+    });
 
     Route::post('auth/login', 'API\AuthController@login');
     
