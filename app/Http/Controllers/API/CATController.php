@@ -123,10 +123,6 @@ class CATController extends Controller
         $pendaftaran = Pendaftaran::where('uuid_peserta' , $uuid_peserta)
                                     ->where('uuid_pembukaan' , $pembukaan->uuid)
                                     ->first();
-                                    return response()->json([
-                                        'data' => $pendaftaran
-                                    ]);
-
         if($request->jawaban) {
             $jawaban = $request->jawaban;
         } else {
