@@ -4,6 +4,15 @@
    {{ strtoupper(isset(Dits::DataPeserta()->nama)) ? Dits::DataPeserta()->nama : Auth::user()->role }} - SIM PPDB Madrasah Kota Banda Aceh
 @endsection
 
+@section('breadchumb')
+<nav aria-label="bc">
+    <ol class="bc">
+        <li class="bc-item"><a href="{{route('dashboard')}}"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li class="bc-item" aria-current="page">Buka PPDB</li>
+    </ol>
+</nav>
+@endsection
+
 @section('css')
     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">

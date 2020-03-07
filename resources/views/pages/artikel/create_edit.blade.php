@@ -1,5 +1,16 @@
 @extends('layouts.backend.index')
 
+@section('breadchumb')
+<nav aria-label="bc">
+    <ol class="bc">
+        <li class="bc-item"><a href="{{route('dashboard')}}"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li class="bc-item" aria-current="page">Web Informasi</li>
+        <li class="bc-item" aria-current="page"><a href="{{URL::previous()}}">Artikel</a></li>
+        <li class="bc-item active" aria-current="page">Post / Edit Artikel</li>
+    </ol>
+</nav>
+@endsection
+
 @section('css')
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.js"></script>

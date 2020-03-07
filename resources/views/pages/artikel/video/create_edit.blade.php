@@ -1,5 +1,16 @@
 @extends('layouts.backend.index')
 
+@section('breadchumb')
+<nav aria-label="bc">
+    <ol class="bc">
+        <li class="bc-item"><a href="{{route('dashboard')}}"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li class="bc-item" aria-current="page">Web Informasi</li>
+        <li class="bc-item" aria-current="page"><a href="{{URL::previous()}}">Video</a></li>
+        <li class="bc-item active" aria-current="page">Post / Edit Video</li>
+    </ol>
+</nav>
+@endsection
+
 @section('content')
 <div class="row">
     <div class="col-md-2"></div>

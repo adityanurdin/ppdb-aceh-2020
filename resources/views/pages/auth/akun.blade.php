@@ -1,5 +1,14 @@
 @extends('layouts.backend.index')
 
+@section('breadchumb')
+<nav aria-label="bc">
+    <ol class="bc">
+        <li class="bc-item"><a href="{{route('dashboard')}}"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li class="bc-item" aria-current="page">Akun</li>
+    </ol>
+</nav>
+@endsection
+
 @section('content')
 <div class="row">
     <div class="col-md-2"></div>

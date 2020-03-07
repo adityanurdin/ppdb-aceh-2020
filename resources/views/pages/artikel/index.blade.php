@@ -1,5 +1,15 @@
 @extends('layouts.backend.index')
 
+@section('breadchumb')
+<nav aria-label="bc">
+    <ol class="bc">
+        <li class="bc-item"><a href="{{route('dashboard')}}"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li class="bc-item" aria-current="page">Web Informasi</li>
+        <li class="bc-item" aria-current="page">Artikel</li>
+    </ol>
+</nav>
+@endsection
+
 @section('css')
     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
