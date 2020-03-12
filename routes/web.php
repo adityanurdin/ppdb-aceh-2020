@@ -205,6 +205,7 @@ Route::group(['middleware' => 'Admin'], function () {
     Route::get('/export/excel/{id}' , 'ImportExportController@pendaftaranExport')->name('export.pendaftaran');
     Route::get('/import/excel/{id}', 'ImportExportController@pengumumanImportView')->name('import.pengumuman.view');
     Route::post('/import/excel/{id}', 'ImportExportController@pengumumanImport')->name('import.pengumuman');
+    Route::post('/import/soal', 'ImportExportController@soalImport')->name('import.soal');
 });
 
 });

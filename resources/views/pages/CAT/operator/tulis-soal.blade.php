@@ -17,6 +17,17 @@
      <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.js"></script>
 @endsection
 
+@section('breadchumb')
+<nav aria-label="bc">
+    <ol class="bc">
+        <li class="bc-item"><a href="{{route('dashboard')}}"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li class="bc-item" aria-current="page">Bank Soal</li>
+        <li class="bc-item" aria-current="page"><a href="{{URL::previous()}}">Tulis Soal</a></li>
+        <li class="bc-item active" aria-current="page">{{$data->kode_soal}}</li>
+    </ol>
+</nav>
+@endsection
+
 @section('content')
     <div class="card">
         <div class="card-header">

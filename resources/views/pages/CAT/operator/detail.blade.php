@@ -15,6 +15,17 @@
     </style>
 @endsection
 
+@section('breadchumb')
+<nav aria-label="bc">
+    <ol class="bc">
+        <li class="bc-item"><a href="{{route('dashboard')}}"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li class="bc-item" aria-current="page">Bank Soal</li>
+        <li class="bc-item" aria-current="page">Detail</li>
+        <li class="bc-item active" aria-current="page">{{$data->madrasah['nama_madrasah']}}</li>
+    </ol>
+</nav>
+@endsection
+
 @section('content')
     <div class="card">
         <div class="card-header">
@@ -46,7 +57,7 @@
                     <a href="{{route('bank-soal.status-bank' , Dits::encodeDits($data->uuid))}}" class="btn btn-warning btn-sm"><i class="fas fa-power-off"></i> Ubah Bank Status</a>
                     <a href="{{route('bank-soal.hapus-bank' , Dits::encodeDits($data->uuid))}}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Hapus Bank Soal</a>
                     <a href="#" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i> Export Peserta CAT</a>
-                    <a href="#" class="btn btn-info btn-sm"><i class="fas fa-cloud-upload-alt"></i> Import Jawaban CAT</a>
+                    {{-- <a href="#" class="btn btn-info btn-sm"><i class="fas fa-cloud-upload-alt"></i> Import Jawaban CAT</a> --}}
                     <a href="{{route('bank-soal.crash' , Dits::encodeDits($data->uuid))}}" class="btn btn-danger btn-sm"><i class="fas fa-user-slash"></i> Crash CAT</a>
                 </div>
             </div>
@@ -117,17 +128,20 @@
             </button>
             </div>
             <div class="modal-body">
-            <form action="#">
+            <form action="{{route('import.soal')}}" method="POST" enctype="multipart/form-data">
+                @csrf
                 <div class="form-group">
                     <label for="">Upload</label>
-                    <input type="file" name="upload_soal" class="form-control">
+                    <input type="file" name="file_import" class="form-control">
+                    <input type="hidden" name="kode_soal" value="{{$data->kode_soal}}" id="">
+                    <small>File : .CSV (MS-Dos/Comma Delimited) | Ukuran Maksimal : 1000KB/1MB</small>
                 </div>
-            </form>
             </div>
             <div class="modal-footer">
-            <a href="{{route('download.file' , ['Documents' , 'format_upload_soal_cat.xlsx'])}}" class="btn btn-secondary btn-sm"><i class="fas fa-download"></i> Format Soal</a>
-            <button type="button" class="btn btn-primary btn-sm">Upload</button>
+                <a href="{{route('download.file' , ['Documents' , 'format_upload_soal_cat.xlsx'])}}" class="btn btn-secondary btn-sm"><i class="fas fa-download"></i> Format Soal</a>
+                <button type="submit" class="btn btn-primary btn-sm">Upload</button>
             </div>
+        </form>
         </div>
         </div>
     </div>

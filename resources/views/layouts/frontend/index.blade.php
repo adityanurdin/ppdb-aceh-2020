@@ -31,7 +31,7 @@
             <li class="nav-item {{Request::route()->getName() == 'home.videos' ? 'active' : ''}}">
                 <a class="nav-link" href="{{route('home.videos')}}">Video</a>
             </li>
-            <li class="nav-item {{Request::route()->getName() == 'artikel' ? 'active' : ''}}">
+            <li class="nav-item {{Request::route()->getName() == 'home.artikel' ? 'active' : ''}}">
                 <a class="nav-link" href="{{route('home.artikel')}}">Artikel</a>
             </li>
         </ul>

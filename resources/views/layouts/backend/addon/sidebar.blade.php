@@ -107,11 +107,6 @@
                 <li>
                     <a href="{{route('auth.akun')}}">Akun</a>
                 </li>
-                @if (Auth::user()->role == 'Admin System')
-                <li>
-                    <a href="#">Hapus Bank Soal</a>
-                </li>
-                @endif
                 @if (Auth::user()->role == 'Operator Madrasah')
                 <li>
                     <a href="{{route('madrasah.self.edit')}}">Edit Profile Madrasah</a>

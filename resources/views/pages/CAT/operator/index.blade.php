@@ -7,6 +7,15 @@
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 @endsection
 
+@section('breadchumb')
+<nav aria-label="bc">
+    <ol class="bc">
+        <li class="bc-item"><a href="{{route('dashboard')}}"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li class="bc-item active" aria-current="page">Bank Soal</li>
+    </ol>
+</nav>
+@endsection
+
 @section('content')
     <div class="card">
         <div class="card-body">

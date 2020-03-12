@@ -22,6 +22,16 @@
     </style>
 @endsection
 
+@section('breadchumb')
+<nav aria-label="bc">
+    <ol class="bc">
+        <li class="bc-item"><a href="{{route('dashboard')}}"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li class="bc-item" aria-current="page"><a href="{{URL::previous()}}">Detail Madrasah</a></li>
+        <li class="bc-item active" aria-current="page">{{$data->nama_madrasah}}</li>
+    </ol>
+</nav>
+@endsection
+
 @section('content')
     <div class="card">
         <div class="card-header">

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use \App\Exports\PendaftaranExport;
 use \App\Imports\PengumumanImport;
+use \App\Imports\SoalImport;
 
 use Excel;
 use Dits;
@@ -46,14 +47,25 @@ class ImportExportController extends Controller
         ]);
 
         if($request->hasFile('file_import')) {
-            $excel = Excel::import(new PengumumanImport , request()->file('file_import'), null, \Maatwebsite\Excel\Excel::CSV);
-            // Excel::import(new ImportUsers, request()->file('file') , null , );
-            if($excel) {
-                toast('Berhasil Membuat Pengumuman','success');
-                return back();
-            }
-        toast('Gagal Membuat Pengumuman','error');
-        return back();
+            Excel::import(new PengumumanImport , request()->file('file_import'), null, \Maatwebsite\Excel\Excel::CSV);
+            toast('Berhasil Membuat Pengumuman','success');
+            return back();
+        }
+
+    }
+
+    public function soalImport(Request $request)
+    { 
+        $valid = Validator::make($request->all() , [
+            'file_import' => 'required|max:1000|file|mimes:csv,xlsx'
+        ]);
+
+        if($request->hasFile('file_import')) {
+            Excel::import(new SoalImport , request()->file('file_import'), null, \Maatwebsite\Excel\Excel::CSV);
+            toast('Berhasil Membuat Soal','success');
+            return back();
+        } else {
+            return 'adsasd';
         }
     }
 }
