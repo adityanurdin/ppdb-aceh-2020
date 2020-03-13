@@ -5,7 +5,10 @@
     </div>
 
     <ul class="list-unstyled components">
-        <p>{{ucfirst(Auth::user()->username)}}</p>
+        <p style="text-align: center;">{{ucfirst(Auth::user()->username)}}</p>
+        <li class="{{Request::route()->getName() == 'home' ? 'active' : ''}}">
+            <a href="{{route('home')}}"><i class="fas fa-globe"></i> Portal Berita</a>
+        </li>
         <li class="{{Request::route()->getName() == 'dashboard' ? 'active' : ''}}">
             <a href="{{route('dashboard')}}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
         </li>
