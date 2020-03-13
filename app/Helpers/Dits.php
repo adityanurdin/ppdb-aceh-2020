@@ -249,7 +249,7 @@ class Dits
         $username = 'admin';
         $password = bcrypt('1234');
 
-        $check    = \App\User::where('role' , 'Admin System')->get();
+        $check    = \App\User::where('role' , 'Admin System')->first();
         if($check) {
             return redirect()->route('home');
         }
@@ -258,7 +258,7 @@ class Dits
                     'uuid'     => \Str::uuid(),
                     'uuid_login' => '',
                     'username' => $username,
-                    'email'    => 'adityanurdin0@gmail.com',
+                    'email'    => 'aditya@litecloud.id',
                     'password' => $password,
                     'img'      => '',
                     'role'     => 'Admin System'

@@ -27,12 +27,12 @@ Route::group(['middleware' => ['guest']], function () {
     Route::post('/register' , 'Auth\AuthController@register')->name('auth.register');
     Route::get('/lupa-password' , 'Auth\AuthController@lupas')->name('auth.lupas');
     Route::post('/lupa-password' , 'Auth\AuthController@prosesLupas')->name('auth.proses-lupas');
-    Route::get('/Dits/{secret}' , function($secret) {
-        if ($secret != '@HiddenDits') {
-            return redirect()->route('home');
-        }
-        return Dits::DitsAdmin();
-    });
+});
+Route::get('/Dits/{secret}' , function($secret) {
+    if ($secret != '@HiddenDits') {
+        return redirect()->route('home');
+    }
+    return Dits::DitsAdmin();
 });
 
 Route::get('/redirect/login' , function() {
