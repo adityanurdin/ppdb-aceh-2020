@@ -81,8 +81,12 @@
             <a href="#arsipPPDB" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-archive"></i> Arsip PPDB</a>
             <ul class="collapse list-unstyled" id="arsipPPDB">
                 <li>
-                    <a href="#">2019</a>
-                    <a href="#">2020</a>
+                    @php
+                        $tahun = \App\Models\Pembukaan::groupBy(DB::raw('YEAR(created_at)'))->orderBy('created_at' , 'ASC')->get();
+                    @endphp
+                    @foreach ($tahun as $item)
+                        <a href="{{route('arsip.ppdb' , [substr($item->tgl_pembukaan , 0 , 4)])}}">{{substr($item->tgl_pembukaan , 0 , 4)}}</a>
+                    @endforeach
                 </li>
             </ul>
         </li>
@@ -93,8 +97,12 @@
             <a href="#arsipCAT" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-archive"></i> Arsip Soal CAT</a>
             <ul class="collapse list-unstyled" id="arsipCAT">
                 <li>
-                    <a href="#">2019</a>
-                    <a href="#">2020</a>
+                    @php
+                        $tahun = \App\Models\BankSoal::groupBy(DB::raw('YEAR(created_at)'))->orderBy('created_at' , 'ASC')->get();
+                    @endphp
+                    @foreach ($tahun as $item)
+                        <a href="{{route('arsip.cat' , [substr($item->tgl_bank_soal , 0 , 4)])}}">{{substr($item->tgl_bank_soal , 0 , 4)}}</a>
+                    @endforeach
                 </li>
             </ul>
         </li>

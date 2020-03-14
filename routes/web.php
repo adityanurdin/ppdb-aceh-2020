@@ -142,6 +142,15 @@ Route::group(['middleware' => 'Admin'], function () {
         Route::put('/detail/{id}/update-pengumuman' , 'PPDBController@updatePengumuman')->name('buka-ppdb.update_pengumuman');
     });
 
+    Route::group(['prefix' => 'arsip'], function () {
+        // Arsip PPDB
+        Route::get('ppdb/{tahun}' , 'ArsipController@arsipPPDB')->name('arsip.ppdb');
+        Route::get('ppdb/{tahun}/data' , 'ArsipController@arsipPPDBData')->name('arsip.ppdb.data');
+        // Arsip CAT
+        Route::get('CAT/{tahun}' , 'ArsipController@arsipCAT')->name('arsip.cat');
+        Route::get('CAT/{tahun}/data' , 'ArsipController@arsipCATData')->name('arsip.cat.data');
+    });
+
     // BANK SOAL
     Route::group(['prefix' => 'CAT/Bank/Soal'], function () {
         Route::get('index' , 'CATController@bankSoal')->name('bank-soal.index');
