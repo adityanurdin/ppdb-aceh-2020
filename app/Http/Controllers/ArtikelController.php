@@ -51,10 +51,14 @@ class ArtikelController extends Controller
 
     public function store(Request $request)
     {
-        $uuid_operator = Auth::user()->uuid_login;
-        $kode_video = Dits::genKodeSoal(4);
-        $operator  = User::where('uuid_login' , $uuid_operator)->first();
-        $kode_operator = $operator->username;
+        $uuid_operator  = Auth::user()->uuid_login;
+        $kode_video     = Dits::genKodeSoal(4);
+        if (Auth::user()->role != 'Admin') {
+            $operator       = User::where('uuid_login' , $uuid_operator)->first()->username;
+        } else {
+            $operator       = 'admin';
+        }
+        $kode_operator  = $operator;
 
         $valid = Validator::make($request->all() , [
             'thumbnail_video' => 'image|mimes:jpeg,jpg,png|max:300'
@@ -176,8 +180,12 @@ class ArtikelController extends Controller
     {
         $uuid_operator = Auth::user()->uuid_login;
         $kode_artikel = Dits::genKodeSoal(4);
-        $operator  = User::where('uuid_login' , $uuid_operator)->first();
-        $kode_operator = $operator->username;
+        if (Auth::user()->role != 'Admin') {
+            $operator       = User::where('uuid_login' , $uuid_operator)->first()->username;
+        } else {
+            $operator       = 'admin';
+        }
+        $kode_operator  = $operator;
         $input = $request->except(['files']);
 
         $valid = Validator::make($request->all() , [

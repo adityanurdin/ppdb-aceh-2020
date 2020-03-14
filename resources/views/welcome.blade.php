@@ -23,7 +23,7 @@
         <div class="card-body">
           <h5 class="card-title">{{$video->judul_video}}</h5>
           <p class="card-text">{{substr($video->deskripsi_video , 0 ,45)  }} .. Read More</p>
-          <small class="text-muted"><i class="fas fa-user-edit"></i> {{$publisher->operator['nama_operator']}}</small>
+          <small class="text-muted"><i class="fas fa-user-edit"></i> {{$publisher->operator['nama_operator'] ? $publisher->operator['nama_operator'] : 'Admin'}}</small>
           <br>
           <small class="text-muted"><i class="fas fa-clock"></i>{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $video->created_at)->toFormattedDateString() }}</small>
         </div>

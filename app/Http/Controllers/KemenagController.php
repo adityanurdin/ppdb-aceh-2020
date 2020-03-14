@@ -160,7 +160,7 @@ class KemenagController extends Controller
                             }
                             $btn = '<a href="/kemenag/'.Dits::encodeDits($item->uuid).'/delete"  onclick="return confirm_delete()" class="btn btn-danger btn-sm"><i class="fas fa-eraser"></i></a> ';
                             $btn .= '<a href="/kemenag/'.Dits::encodeDits($item->uuid).'/edit" class="btn btn-warning btn-sm"><i class="fas fa-pen-square"></i></a> ';
-                            $btn .= '<a href="#" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a> ';
+                            // $btn .= '<a href="#" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a> ';
 
                             return $btn.$status;
                         })
