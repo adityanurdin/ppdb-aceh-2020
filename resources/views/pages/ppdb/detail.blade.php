@@ -349,15 +349,18 @@
               </button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label for="">Upload</label>
-                    <input type="file" name="upload_soal" class="form-control">
+                <form action="{{route('import.jalur-khusus')}}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group">
+                        <label for="">Upload</label>
+                        <input type="file" name="file_import" class="form-control">
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <a href="{{route('download.file' , ['Documents' , 'format_jalur_khusus.xlsx'])}}" class="btn btn-secondary btn-sm"><i class="fas fa-download"></i> Format Jalur Khusus</a>
-                <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
-            </div>
+                <div class="modal-footer">
+                    <a href="{{route('download.file' , ['Documents' , 'format_jalur_khusus.xlsx'])}}" class="btn btn-secondary btn-sm"><i class="fas fa-download"></i> Format Jalur Khusus</a>
+                    <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+                </div>
+            </form>
           </div>
         </div>
       </div>

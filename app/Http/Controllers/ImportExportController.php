@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use \App\Exports\PendaftaranExport;
 use \App\Imports\PengumumanImport;
 use \App\Imports\SoalImport;
+use \App\Imports\JalurKhususImport;
 
 use Excel;
 use Dits;
@@ -65,7 +66,16 @@ class ImportExportController extends Controller
             toast('Berhasil Membuat Soal','success');
             return back();
         } else {
-            return 'adsasd';
+            return back();
+        }
+    }
+
+    public function jalurKhusus(Request $request)
+    {
+        if($request->hasFile('file_import')) {
+            Excel::import(new JalurKhususImport , request()->file('file_import'), null, \Maatwebsite\Excel\Excel::CSV);
+            toast('Berhasil Membuat Pengumuman','success');
+            return back();
         }
     }
 }

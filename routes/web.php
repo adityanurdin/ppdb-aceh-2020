@@ -215,6 +215,7 @@ Route::group(['middleware' => 'Admin'], function () {
     Route::get('/import/excel/{id}', 'ImportExportController@pengumumanImportView')->name('import.pengumuman.view');
     Route::post('/import/excel/{id}', 'ImportExportController@pengumumanImport')->name('import.pengumuman');
     Route::post('/import/soal', 'ImportExportController@soalImport')->name('import.soal');
+    Route::post('/import/jalur-khusus' , 'ImportExportController@jalurKhusus')->name('import.jalur-khusus');
 });
 
 });
