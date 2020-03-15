@@ -56,7 +56,7 @@
                     <a href="#" data-toggle="modal" data-target="#uploadSoal" class="btn btn-info btn-sm"><i class="fas fa-upload"></i> Upload Soal</a>
                     <a href="{{route('bank-soal.status-bank' , Dits::encodeDits($data->uuid))}}" class="btn btn-warning btn-sm"><i class="fas fa-power-off"></i> Ubah Bank Status</a>
                     <a href="{{route('bank-soal.hapus-bank' , Dits::encodeDits($data->uuid))}}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Hapus Bank Soal</a>
-                    <a href="#" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i> Export Peserta CAT</a>
+                    <a href="{{route('export.peserta-ujian' , $data->kode_soal)}}" class="btn btn-success btn-sm"><i class="fas fa-file-excel"></i> Export Peserta CAT</a>
                     {{-- <a href="#" class="btn btn-info btn-sm"><i class="fas fa-cloud-upload-alt"></i> Import Jawaban CAT</a> --}}
                     <a href="{{route('bank-soal.crash' , Dits::encodeDits($data->uuid))}}" class="btn btn-danger btn-sm"><i class="fas fa-user-slash"></i> Crash CAT</a>
                 </div>

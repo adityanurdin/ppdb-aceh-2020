@@ -46,7 +46,7 @@ class PendaftaranExport implements FromView
                             ->join('pesertas' , 'pesertas.uuid' , '=' , 'pendaftarans.uuid_peserta')
                             ->where('uuid_madrasah' , $pembukaan->uuid_madrasah)
                             ->get();
-
+        // dd($data);
         return view('exports.pendaftaran' , [
             'data'  => $data
         ]);

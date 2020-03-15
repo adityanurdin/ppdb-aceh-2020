@@ -212,10 +212,11 @@ Route::group(['middleware' => 'Admin'], function () {
         return \Storage::disk('public')->download($path.'/'.$file);
     })->name('download.file');
     Route::get('/export/excel/{id}' , 'ImportExportController@pendaftaranExport')->name('export.pendaftaran');
+    Route::get('/export/excel/{id}/CAT' , 'ImportExportController@pesertaUjianExport')->name('export.peserta-ujian');
     Route::get('/import/excel/{id}', 'ImportExportController@pengumumanImportView')->name('import.pengumuman.view');
     Route::post('/import/excel/{id}', 'ImportExportController@pengumumanImport')->name('import.pengumuman');
     Route::post('/import/soal', 'ImportExportController@soalImport')->name('import.soal');
     Route::post('/import/jalur-khusus' , 'ImportExportController@jalurKhusus')->name('import.jalur-khusus');
 });
-
 });
+Route::get('/export/peserta/{kode_pendaftaran}/{kode_soal}/CAT' , 'ImportExportController@pesertaUjianDetailExport')->name('export.peserta-ujian.detail');

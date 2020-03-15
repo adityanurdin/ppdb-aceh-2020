@@ -115,6 +115,9 @@ class Dits
 
     public static function PdfViewer($pdf)
     {
+        if(empty($pdf)) {
+            return $pdf;
+        }
         $file   = str_replace(base_path().'/public/' , '/' , $pdf);
         return $file;
     }

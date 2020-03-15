@@ -8,6 +8,8 @@ use \App\Exports\PendaftaranExport;
 use \App\Imports\PengumumanImport;
 use \App\Imports\SoalImport;
 use \App\Imports\JalurKhususImport;
+use \App\Exports\pesertaUjianExport;
+use \App\Exports\PesertaUjianDetailExport;
 
 use Excel;
 use Dits;
@@ -30,9 +32,20 @@ class ImportExportController extends Controller
         $pembukaan  = Pembukaan::with('madrasah')
                                 ->whereUuid($uuid)
                                 ->first();
-                                // return $pembukaan;
         $date       = Carbon::now()->toDateTimeString();
         return Excel::download(new PendaftaranExport($uuid), 'export_ppdb_'.$pembukaan->nsm.$date.'.xlsx');
+    }
+
+    public function pesertaUjianExport($id)
+    {
+        $date       = Carbon::now()->toDateTimeString();
+        return Excel::download(new PesertaUjianExport($id), 'export_ppdb_'.$id.$date.'.xlsx');
+    }
+
+    public function pesertaUjianDetailExport($kode_pendaftaran , $kode_soal)
+    {
+        $date       = Carbon::now()->toDateTimeString();
+        return Excel::download(new PesertaUjianDetailExport($kode_soal ,$kode_pendaftaran), 'export_ppdb_'.$kode_pendaftaran.$date.'.xlsx');
     }
 
     public function pengumumanImportView($id)
