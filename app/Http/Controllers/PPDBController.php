@@ -172,7 +172,7 @@ class PPDBController extends Controller
 
         $input['uuid_madrasah']     = $uuid_madrasah;
         $input['uuid_operator']     = $operator->uuid;
-        $input['status_nomor']      = 'yes';
+        $input['status_nomor']      = $request->status_nomor;
         $input['tgl_post']          = Carbon::now();
         $input['url_brosur']        = '';
         // $input['status_pembukaan']  = 'Dibuka';

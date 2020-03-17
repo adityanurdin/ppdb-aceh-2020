@@ -37,7 +37,10 @@
                             <div class="form-group">
                                 <label for="">Tahun Akademik</label>
                             </div>
-                            <div class="form-group" style="margin-top: 45px">
+                            <div class="form-group" style="margin-top: 45px;">
+                                <label for="">Status Penomoran</label>
+                            </div>
+                            <div class="form-group" style="margin-top: 25px">
                                 <label for="">File Brosur</label>
                             </div>
                         </div>
@@ -66,6 +69,12 @@
                                 <input type="text" name="tahun_akademik" value="{{isset($data) ? $data->tahun_akademik : ''}}" id="" placeholder="Tahun Akademik" class="form-control form-control-sm">
                                 <small>Contoh: 2019/2020</small>
                             </div>
+                            <div class="form-group">
+                                <select class="form-control form-control-sm" name="status_nomor" id="exampleFormControlSelect1">
+                                  <option {{Dits::selected(isset($data) ? $data->status_nomor : '', 'yes' )}} value="yes">Aktif</option>
+                                  <option {{Dits::selected(isset($data) ? $data->status_nomor  : '', 'no' )}} value="no">Tidak</option>
+                                </select>
+                              </div>
                             @if (isset($data))
                                 <div class="form-group">
                                     <div class="row">
