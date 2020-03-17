@@ -498,7 +498,7 @@ class CATController extends Controller
                             ->addColumn('action' , function($item) {
                                 $btn = '<a href="'.route('bank-soal.edit-soal' , Dits::encodeDits($item->uuid)).'" class="btn btn-info btn-sm btn-block">Edit Soal</a>';
                                 $btn .= '<a href="'.route('bank-soal.lihat.soal' , Dits::encodeDits($item->uuid)).'" target="_blank" class="btn btn-warning btn-sm btn-block">Lihat / Preview Soal</a>';
-                                $btn .= '<a href="'.route('bank-soal.hapus.soal' , Dits::encodeDits($item->uuid)).'" class="btn btn-danger btn-sm btn-block">Hapus Soal</a>';
+                                $btn .= '<a href="'.route('bank-soal.hapus.soal' , Dits::encodeDits($item->uuid)).'" onclick="return confirm_delete()" class="btn btn-danger btn-sm btn-block">Hapus Soal</a>';
                                 return $btn;
                             })
                             ->escapeColumns([])
