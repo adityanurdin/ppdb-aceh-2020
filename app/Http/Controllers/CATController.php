@@ -481,7 +481,7 @@ class CATController extends Controller
                                 return $jawaban_benar;
                             })
                             ->addColumn('action' , function($item) {
-                                $btn = '<a href="" class="btn btn-success btn-block btn-sm"><i class="fas fa-file-excel"></i> Export Jawaban</a>';
+                                $btn = '<a href="'.route('export.peserta-ujian.detail' , [$item->kode_pendaftaran , $item->kode_soal]).'" class="btn btn-success btn-block btn-sm"><i class="fas fa-file-excel"></i> Export Jawaban</a>';
                                 $btn .= '<a href="" class="btn btn-danger btn-block btn-sm"><i class="fas fa-trash"></i> Hapus Peserta</a>';
                                 return $btn;
                             })

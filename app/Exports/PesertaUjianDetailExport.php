@@ -47,6 +47,35 @@ class PesertaUjianDetailExport implements FromView
         $kode_soal = $this->kode_soal;
         $kode_pendaftaran = $this->kode_pendaftaran;
 
-        return view('exports.peserta_ujian_detail' , compact('jawaban' , 'peserta' , 'pendaftaran' , 'kode_soal' , 'kode_pendaftaran'));
+        $data   = Jawaban::where('kode_soal' , $kode_soal)
+                            ->where('kode_pendaftaran' , $this->kode_pendaftaran)
+                            ->groupBy('kode_pendaftaran')
+                            ->get();
+
+        
+        $result = [];
+        foreach($data as $item) {
+
+            array_push($result, [
+                'jawab_benar'           => Jawaban::where('status_jawaban','Benar')
+                                            ->where('kode_soal',$item['kode_soal'])
+                                            ->where('kode_pendaftaran',$item['kode_pendaftaran'])
+                                            ->count(),
+                'jawab_salah'           => Jawaban::where('status_jawaban','Salah')
+                                            ->where('kode_soal',$item['kode_soal'])
+                                            ->where('kode_pendaftaran',$item['kode_pendaftaran'])
+                                            ->count(),
+                'tidak_jawab'           => Jawaban::where('status_jawaban','')
+                                            ->where('kode_soal',$item['kode_soal'])
+                                            ->where('kode_pendaftaran',$item['kode_pendaftaran'])
+                                            ->count(),
+            ]);
+        }
+
+        $result = $result[0];
+        // dd($result['jawab_benar']);
+
+
+        return view('exports.peserta_ujian_detail' , compact('jawaban' , 'peserta' , 'pendaftaran' , 'kode_soal' , 'kode_pendaftaran' , 'result'));
     }
 }
