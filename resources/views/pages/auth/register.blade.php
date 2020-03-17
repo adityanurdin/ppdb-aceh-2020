@@ -1,46 +1,77 @@
 @extends('layouts.frontend.index')
 
+@push('title')
+<title>Halaman Register | SIM PPDB Madrasah Kota Banda Aceh</title>
+<meta name="description"
+content="Halaman Register, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Informasi Manajamen Penerimaan Peserta Didik Baru Madrasah Kota Banda Aceh" />
+<meta name="keywords"
+content="Halaman Register, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Informasi Manajamen Penerimaan Peserta Didik Baru Madrasah Kota Banda Aceh, SIMPPDB, Madrasah, Kota Banda Aceh, Kemenag Kota Banda Aceh. Madrasah Kota Banca Aceh, Penerimaan Siswa Baru Kota Banda Aceh, PPDB Kota Banda Aceh" />
+@endpush
+
 @section('content')
-<div class="bd-callout bd-callout-blue">
-    <h3>Registrasi Peserta PPDB Madrasah</h3>
-  </div>
-  <div class="row">
-    <div class="col-md">
-      <img class="img-fluid" src="{{asset('img/logo_1-min.png')}}" width="400px">
+{{-- register --}}
+<section id="sec_login">
+  <div id="pattern_register">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 offset-md-3 col-sm-12 offset-sm-0">
+          <div class="div_form">
+            <div class="logo">
+              <img src="{{ asset('img/logo-min.png') }}" alt="SIM PPDB Madrasah Kota Banda Aceh | Login">
+            </div>
+            <div class="title">
+              <h1>Halaman Register</h1>
+            </div>
+            <form action="" method="POST">
+              @csrf
+              <div class="form-group">
+                <label for="NIK">NIK *</label>
+                <input type="text" class="form-control @error('NIK') is-invalid @enderror" id="NIK" name="NIK"
+                  placeholder="NIK Anda..." autocomplete="off" maxlength="16" required>
+                <small class="form-text text-muted">NIK Peserta Adalah <b>NIK</b>.</small>
+                @error('NIK')
+                <div class="invalid-feedback text-left">
+                  <label>{{ $message }}</label>
+                </div>
+                @enderror
+              </div>
+              <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email"
+                  placeholder="Email Anda..." autocomplete="off" maxlength="100" required>
+                @error('email')
+                <div class="invalid-feedback text-left">
+                  <label>{{ $message }}</label>
+                </div>
+                @enderror
+              </div>
+              <div class="row">
+                <div class="form-group col-md-6 col-sm-12">
+                  <label for="password">Password *</label>
+                  <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
+                    name="password" placeholder="Password Anda..." autocomplete="off" maxlength="100" required>
+                  @error('password')
+                  <div class="invalid-feedback text-left">
+                    <label>{{ $message }}</label>
+                  </div>
+                  @enderror
+                </div>
+                <div class="form-group col-md-6 col-sm-12">
+                  <label for="password_confirmation">Konfirmasi Password *</label>
+                  <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
+                    placeholder="Konfirmasi Password Anda..." autocomplete="off" maxlength="100" required>
+                </div>
+              </div>
+              <div class="form-group mt-3">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-desktop"></i>
+                  Register</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="col-md">
-      @if ($errors->any())
-          <div class="alert alert-danger">
-              <ul>
-                  @foreach ($errors->all() as $error)
-                      <li>{{ $error }}</li>
-                  @endforeach
-              </ul>
-          </div>
-      @endif
-      <form action="{{route('auth.register')}}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="form-group">
-          <label for="inputNik">NIK</label>
-          <input type="number" name="NIK" class="form-control" id="inputNik" placeholder="99321312312312">
-          <small>Pastikan NIK yang di masukan benar dan valid.</small>
-        </div>
-        <div class="form-group">
-          <label for="inputEmail">Email</label>
-          <input type="email" name="email" class="form-control" id="inputEmail" placeholder="contoh@email.com">
-        </div>
-        <div class="form-row">
-          <div class="form-group col-md-6">
-            <label for="inputPassword">Password</label>
-            <input type="password" name="password" class="form-control" id="inputEmail4" placeholder="Password">
-          </div>
-          <div class="form-group col-md-6">
-            <label for="inputCPassword">Konfirmasi Password</label>
-            <input type="password" name="password_confirmation" class="form-control" id="inputCPassword" placeholder="Password">
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Daftar</button>
-      </form>
-    </div>
   </div>
+</section>
+{{-- register --}}
 @endsection

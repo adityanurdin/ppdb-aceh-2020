@@ -473,7 +473,7 @@
     @elseif (Auth::user()->role != 'Peserta')
         <div class="card">
             <div class="card-body">
-                <img src="https://simppdbaceh.frandikasepta.com/assets/img/banner.png" width="100%" alt="">
+                <img src="https://simppdbaceh.frandikasepta.com/assets/img/banner-min.png" width="100%" alt="">
             </div>
         </div>
 

@@ -17,6 +17,45 @@ a:focus {
     transition: all 0.3s;
 }
 
+/* DATATABLES */
+.div_res{
+    width: auto;
+    height: auto;
+    padding: auto;
+    margin: auto;
+}
+.div_res_min{
+    width: auto;
+    min-width: 760px;
+    height: auto;
+    padding: auto;
+    margin: auto;
+    overflow-x: scroll;
+}
+.min_action{
+    width: auto;
+    height: auto;
+    min-width: 100px;
+}
+.min_id{
+    width: 45px;
+}
+.min_table{
+    width: auto;
+    height: auto;
+    overflow: auto;
+    overflow-x: auto;
+    overflow-y: none;
+    padding: 10px;
+}
+.min_table ._x{
+    min-width: 560px;
+}
+table.table{
+    width: 100%;
+}
+/* DATATABLES */
+
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
@@ -35,7 +74,7 @@ a:focus {
     z-index: 999;
     background-image:
     linear-gradient(242deg, rgba(15,144,30,0.5634628851540616) 0%, rgba(82,195,24,0.9164040616246498) 100%),
-    url('/img/background-with-different-green-shapes_23-2148358648-freepik.jpg') ;
+    url('../../../img/background-with-different-green-shapes_23-2148358648-freepik.jpg') ;
     background-size: cover;
     color: #fff;
     transition: all 0.3s;

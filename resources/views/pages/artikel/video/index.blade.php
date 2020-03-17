@@ -1,10 +1,10 @@
-@extends('layouts.backend.index')  
+@extends('layouts.backend.index')
 
 @section('css')
-    <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+<link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 @endsection
 
 @section('breadchumb')
@@ -18,12 +18,14 @@
 @endsection
 
 @section('content')
-    <div class="card">
-        <div class="card-body">
-            
-            <a href="{{route('video.create')}}" class="btn btn-sm btn-success mb-5"><i class="fas fa-plus"></i> Post Video</a>
+<div class="card">
+    <div class="card-body">
 
-            <div class="table-responsive">
+        <a href="{{route('video.create')}}" class="btn btn-sm btn-success mb-5"><i class="fas fa-plus"></i> Post
+            Video</a>
+
+        <div class="min_table">
+            <div class="_x">
                 <table class="table table-striped table-hover" id="table-video">
                     <thead>
                         <tr>
@@ -39,14 +41,15 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
+
     </div>
+</div>
 @endsection
 
 @push('script')
-    <script>
-        $(function() {
+<script>
+    $(function() {
             
             $.ajaxSetup({
                 headers: {
@@ -70,5 +73,5 @@
             });
 
         })
-    </script>
+</script>
 @endpush

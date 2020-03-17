@@ -37,11 +37,16 @@ class ArtikelController extends Controller
 
     public function videoSlug($slug)
     {
+        
+        $video = Video::where('status_video' , 'Publish')->where('slug_video' , "!=" , $slug)->orderBy('created_at' , 'Desc')->limit(6)->get();
         $data = Video::where('slug_video' , $slug)->first();
-        if(isset($data)) {
-            $publisher = User::with('operator')->where('username' , $data->kode_user)->first();
+        $publisher = \App\User::where('username' , $data->kode_user)->first();
+        if($publisher->role=="Admin System"){
+            $nama = "Admin System";
+        }else{
+            $nama = $publisher->operator->nama_operator;
         }
-        return view('home.video' , compact('data' , 'publisher'));
+        return view('home.video' , compact('data','nama','video'));
     }
 
     public function create()
@@ -166,9 +171,15 @@ class ArtikelController extends Controller
 
     public function artikelSlug($slug)
     {
-        $artikel = Artikel::where('slug_artikel' , $slug)->first();
-
-        return view('home.artikel' , compact('artikel'));
+        $artikel = Artikel::where('status_artikel' , 'Publish')->orderBy('created_at' , 'Desc')->limit(6)->get();
+        $data = Artikel::where('slug_artikel' , $slug)->first();
+        $publisher = \App\User::where('username' , $data->kode_user)->first();
+        if($publisher->role=="Admin System"){
+            $nama = "Admin System";
+        }else{
+            $nama = $publisher->operator->nama_operator;
+        }
+        return view('home.artikel' , compact('data','nama','artikel'));
     }
 
     public function ArtikelCreate()

@@ -6,22 +6,27 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\User;
-use App\Models\Operator;
 use App\Models\Peserta;
-
 use Validator;
 use Str;
-use Illuminate\Support\Facades\Schema;
 use Auth;
-Use Alert;
-use Mail;
-use Hash;
 
 class AuthController extends Controller
 {
 
+    public function index()
+    {
+        return view('pages.auth.login');
+    }
+
     public function login(Request $request)
     {
+
+        $request->validate([
+            'NIK' => 'required|string|max:16',
+            'password' => 'required|string|min:4|'
+        ]);
+
         $credentials = [
             'username'  => $request->NIK,
             'password'  => $request->password
@@ -35,7 +40,7 @@ class AuthController extends Controller
                 toast('Status User Tidak Aktif','error');
                 return redirect()->route('dashboard');
             }
-            toast('Berhasil Login','success');
+            // toast('Berhasil Login','success');
             return redirect()->route('dashboard');
         } else {
             toast('NIK atau Password Salah !','error');
@@ -52,21 +57,27 @@ class AuthController extends Controller
     {
         $uuid_peserta = Str::uuid();
 
-        $rule  = [
+        $request->validate([
             'NIK' => 'required|integer',
             'email'    => 'required|email|unique:users',
             'password' => 'required|confirmed|min:6|'
-        ];
-        $messages = [
-            'username.integer' => 'NIK wajib menggunakan angka',
-            'username.min' => 'NIK wajib 16 angka',
-        ];
+        ]);
 
-        $valid = Validator::make($request->all() , $rule);
+        // $rule  = [
+        //     'NIK' => 'required|integer',
+        //     'email'    => 'required|email|unique:users',
+        //     'password' => 'required|confirmed|min:6|'
+        // ];
+        // $messages = [
+        //     'username.integer' => 'NIK wajib menggunakan angka',
+        //     'username.min' => 'NIK wajib 16 angka',
+        // ];
 
-        if($valid->fails()) {
-            return redirect('/register')->withErrors($valid);
-        }
+        // $valid = Validator::make($request->all() , $rule);
+
+        // if($valid->fails()) {
+        //     return redirect('/register')->withErrors($valid);
+        // }
 
         if(strlen($request->NIK) < 16) {
             toast('NIK wajib 16 angka','error');
@@ -139,6 +150,10 @@ class AuthController extends Controller
 
     public function prosesLupas(Request $request)
     {
+
+        $request->validate([
+            'email'    => 'required|email|max:100',
+        ]);
 
         $user   = User::where('email' , $request->email)->first();
         $password = Str::random(8);

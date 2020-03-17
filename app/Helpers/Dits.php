@@ -67,12 +67,12 @@ class Dits
         return $peserta;
     }
 
-    public static function imageUrl($file, $default = 'https://simppdbaceh.frandikasepta.com/assets/img/logo-min.png'){
+    public static function imageUrl($file, $default = ""){
         if (!empty($file)) {
             return Storage::disk('public')->url($file);
         }
 
-        return $default;
+        return $default = asset('img/logo-min.png');
     }
 
     public static function decodeDits($encode)

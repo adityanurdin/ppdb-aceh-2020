@@ -22,18 +22,19 @@ Route::get('/artikel/{slug}' , 'ArtikelController@artikelSlug')->name('home.arti
 
 // GUEST ONLY
 Route::group(['middleware' => ['guest']], function () {
+    Route::get('/login' , 'Auth\AuthController@index')->name('auth.login');
     Route::post('/login' , 'Auth\AuthController@login')->name('auth.login');
     Route::get('/register' , 'Auth\AuthController@showRegister')->name('auth.show.register');
     Route::post('/register' , 'Auth\AuthController@register')->name('auth.register');
     Route::get('/lupa-password' , 'Auth\AuthController@lupas')->name('auth.lupas');
     Route::post('/lupa-password' , 'Auth\AuthController@prosesLupas')->name('auth.proses-lupas');
 });
-Route::get('/Dits/{secret}' , function($secret) {
-    if ($secret != '@HiddenDits') {
-        return redirect()->route('home');
-    }
-    return Dits::DitsAdmin();
-});
+// Route::get('/Dits/{secret}' , function($secret) {
+//     if ($secret != '@HiddenDits') {
+//         return redirect()->route('home');
+//     }
+//     return Dits::DitsAdmin();
+// });
 
 Route::get('/redirect/login' , function() {
     return redirect()->route('home');

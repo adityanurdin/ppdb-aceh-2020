@@ -1,110 +1,164 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+{{--  
+    This Template For simppdbmadrasah.com
+    Builded At March 2020
+    =====================================
+    Builded Under License CODINGERS.ID
+    Designer Frandika Septa
+    Developer Aditya Nurdin
+    You Can Change Anything, But You Not Allowed Remove This Credit
+--}}
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-    <link rel="icon" 
-      type="image/png" 
-      href="{{asset('img/favicon/favicon-96x96.png')}}">
+<head>
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="ROBOTS" content="index, follow" />
+    <meta name="author" content="https://codingers.id/ | Frandika Septa" />
+    <meta name="application-name" content="SIM PPDB MADRASAH KOTA BANDA ACEH" />
+    @stack('title')
+    <meta name="msapplication-TileImage" content="{{ asset('img/favicon/ms-icon-144x144.png') }}" />
+    <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('img/favicon/apple-icon-57x57.png') }}" />
+    <link rel="apple-touch-icon" sizes="60x60" href="{{ asset('img/favicon/apple-icon-60x60.png') }}" />
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('img/favicon/apple-icon-72x72.png') }}" />
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/favicon/apple-icon-76x76.png') }}" />
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ asset('img/favicon/apple-icon-114x114.png') }}" />
+    <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('img/favicon/apple-icon-120x120.png') }}" />
+    <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('img/favicon/apple-icon-144x144.png') }}" />
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('img/favicon/apple-icon-152x152.png') }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/favicon/apple-icon-180x180.png') }}" />
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('img/favicon/android-icon-192x192.png') }}" />
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.png') }}" />
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('img/favicon/favicon-96x96.png') }}" />
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}" />
+    <link rel="manifest" href="{{ asset('img/favicon/manifest.json') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/fontawesome/css/all.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/owlcarousel/assets/owl.carousel.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/animate.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/frandikasepta.css?v=170320') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/res_frandikasepta.css?v=170320') }}" />
+</head>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{asset('bootstrap/dist/css/bootstrap-custom-new.css')}}">
-    <!-- Our CSS -->
-    <link rel="stylesheet" href="{{asset('bootstrap/dist/css/style-new.css')}}">
-    <!-- Font Awesome JS -->
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+<body>
 
-    <title>SIMPPDB</title>
-  </head>
-  <body>
-    <!-- navbar -->
-<nav class="navbar navbar-expand-md navbar-dark navsgrad">
-    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item {{Request::route()->getName() == 'home' ? 'active' : ''}}">
-                <a class="nav-link" href="{{route('home')}}">Home</a>
-            </li>
-            <li class="nav-item {{Request::route()->getName() == 'home.videos' ? 'active' : ''}}">
-                <a class="nav-link" href="{{route('home.videos')}}">Video</a>
-            </li>
-            <li class="nav-item {{Request::route()->getName() == 'home.artikel' ? 'active' : ''}}">
-                <a class="nav-link" href="{{route('home.artikel')}}">Artikel</a>
-            </li>
-        </ul>
-    </div>
-    <div class="mx-auto order-0">
-        <a class="navbar-brand mx-auto" href="#">SIMPPDB Madrasah Kota Banda Aceh</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-        <ul class="navbar-nav ml-auto">
-        @if (Auth::user())
-        <li class="nav-item">
-            <a href="{{route('dashboard')}}" class="nav-link">Dashboard</a>
-        </li>
-        @else
-            <!-- Login -->
-        <li class="nav-item dropdown">
-            <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user"></i></a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-            <form class="px-4 py-3" method="POST" enctype="multipart/form-data" action="{{route('auth.login')}}">
-                @csrf
-                <div class="form-group">
-                <label for="exampleDropdownFormEmail1">NIK</label>
-                <input type="text" name="NIK" class="form-control" id="exampleDropdownFormEmail1" placeholder="99334512377213">
-                </div>
-                <div class="form-group">
-                <label for="exampleDropdownFormPassword1">Password</label>
-                <input type="password" name="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Password">
-                </div>
-                <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="dropdownCheck" name="remember_me">
-                <label class="form-check-label" for="dropdownCheck">
-                    Ingat Saya
-                </label>
-                </div>
-                <button type="submit" class="btn btn-primary">Masuk</button>
-            </form>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{{route('auth.show.register')}}">Tidak Ada Akun? Daftar</a>
-            <a class="dropdown-item" href="{{route('auth.lupas')}}">Lupa Password?</a>
+    {{--  navbar  --}}
+    <nav class="navbar navbar-expand-md navbar-transparan fixed-top" id="nav">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="{{ asset('img/logo-min.png') }}" alt="SIM PPDB Madrasah Kota Banda Aceh">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="fa fa-bars"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav justify-content-end">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home.videos') }}">Video</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home.artikel') }}">Artikel</a>
+                    </li>
+                    <div class="sparator"></div>
+                    @if (Auth::check())
+                    <li class="nav-item nav_register">
+                        <a class="nav-link" href="{{ route('dashboard') }}"><i class="fa fa-desktop"></i> Dashboard</a>
+                    </li>
+                    @else
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('auth.login') }}">Login</a>
+                    </li>
+                    <li class="nav-item nav_register">
+                        <a class="nav-link" href="{{ route('auth.register') }}"><i class="fa fa-desktop"></i>
+                            Register</a>
+                    </li>
+                    @endif
+                </ul>
             </div>
-        </li>
-        <!-- /Login -->
-        @endif
-          <li class="nav-item dropdown">
-            <a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-search"></i></a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-              <form class="form-inline px-4">
-                <input class="form-control mr-sm-2" type="search" placeholder="Kata Kunci" aria-label="Search">
-                <button class="btn btn-sm btn-outline-info my-2 my-sm-0" type="submit">Cari</button>
-              </form>
+        </div>
+    </nav>
+    {{--  navbar  --}}
+    {{--  header  --}}
+    <header data-scroll-index="1">
+        <div class="container">
+            <div class="title">
+                <h1>Sistem Informasi Manajamen</h1>
+                <h1>Pendaftaran peserta didik baru madrasah</h1>
+                <h1 class="kota">kota banda aceh</h1>
+                <p>Website Untuk Melakukan Pendaftaran Peserta Didik Baru<br />
+                    Pada Madrasah Di Kota Banda Aceh Secara ONLINE
+                </p>
+                <a href="{{ route('auth.register') }}"><i class="fa fa-desktop"></i> DAFTAR
+                    SEKARANG</a>
             </div>
-          </li>
-        </ul>
-    </div>
-</nav>
-    <!-- Navbar -->
-<div class="container">
-  @yield('content')
-</div>
+        </div>
+    </header>
+    {{--  header  --}}
+    @yield('content')
+    {{--  footer  --}}
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-sm-12">
+                    <div class="copyright">
+                        <h6>Copyright &copy; 2019-{{ date('Y') }} | Kemenag Kota Banda Aceh</h6>
+                        <h6>Made With <i class="icon ion-heart"></i> By <a target="_BLANK"
+                                href="http://codingers.id/">CODINGERS.ID</a></h6>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-12">
+                    <div class="footer_menus">
+                        <ul class="nav justify-content-lg-end justify-content-sm-center justify-content-center">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('home') }}">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('home.videos') }}">Video</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('home.artikel') }}">Artikel</a>
+                            </li>
+                            <div class="sparator"></div>
+                            @if (Auth::check())
+                            <li class="nav-item nav_register">
+                                <a class="nav-link" href="{{ route('dashboard') }}"><i class="fa fa-desktop"></i> Dashboard</a>
+                            </li>
+                            @else
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('auth.login') }}">Login</a>
+                            </li>
+                            <li class="nav-item nav_register">
+                                <a class="nav-link" href="{{ route('auth.register') }}"><i class="fa fa-desktop"></i>
+                                    Register</a>
+                            </li>
+                            @endif
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{--  Gotoup  --}}
+        <a href="javascript:void(0);" class="gotoup invisible" data-scroll-goto="1"><i class="fa fa-chevron-up"></i></a>
+        {{--  Gotoup  --}}
+    </footer>
+    {{--  footer  --}}
 
-<br>
-<br>
-<br>
-<footer class="fixed-bottom bg-dark text-light text-center pt-2">Copyright © 2019 | Kemenag Kota Banda Aceh Powered By <a href=""><u>CODINGERS.ID</u></a>
-</footer>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script type="text/javascript" src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('plugins/bootstrap/js/bootstrap.popper.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('plugins/scrollIt/scrollIt.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('plugins/owlcarousel/owl.carousel.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/frandikasepta.js?v=170320') }}"></script>
     @include('sweetalert::alert')
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  </body>
+</body>
+
 </html>
