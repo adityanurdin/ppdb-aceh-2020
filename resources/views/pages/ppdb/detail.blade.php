@@ -349,7 +349,7 @@
               </button>
             </div>
             <div class="modal-body">
-                <form action="{{route('import.jalur-khusus')}}" method="POST" enctype="multipart/form-data">
+                <form action="{{route('import.jalur-khusus' , $data->uuid)}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="form-group">
                         <label for="">Upload</label>

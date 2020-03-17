@@ -152,11 +152,16 @@ class CATController extends Controller
                                 ->where('nomor_soal' , $no)
                                 ->orderBy('nomor_soal' , 'ASC')
                                 ->get();
+        
+        $jawaban_peserta  = Jawaban::where('kode_soal' , $cookie_value)
+                                ->where('kode_pendaftaran' , $pendaftaran->kode_pendaftaran)
+                                ->where('nomor_soal' , $no)
+                                ->first();
 
-                                // return $jawaban;
+                                // return $jawaban_peserta;
                             
 
-        return view('pages.CAT.soal' , compact('no' , 'soal' , 'navigasi' , 'finish' , 'jawaban' , 'bank_soal' , 'waktu_mulai'));
+        return view('pages.CAT.soal' , compact('no' , 'soal' , 'navigasi' , 'finish' , 'jawaban' , 'bank_soal' , 'waktu_mulai', 'jawaban_peserta'));
     }
 
     public function storeJawaban(Request $request, $no)

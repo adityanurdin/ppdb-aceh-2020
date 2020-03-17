@@ -83,10 +83,10 @@ class ImportExportController extends Controller
         }
     }
 
-    public function jalurKhusus(Request $request)
+    public function jalurKhusus(Request $request , $id)
     {
         if($request->hasFile('file_import')) {
-            Excel::import(new JalurKhususImport , request()->file('file_import'), null, \Maatwebsite\Excel\Excel::CSV);
+            Excel::import(new JalurKhususImport($id) , request()->file('file_import'), null, \Maatwebsite\Excel\Excel::CSV);
             toast('Berhasil Membuat Pengumuman','success');
             return back();
         }

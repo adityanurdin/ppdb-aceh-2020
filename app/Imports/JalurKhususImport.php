@@ -18,27 +18,32 @@ use App\Models\Pembukaan;
 use App\Models\Pendaftaran;
 class JalurKhususImport implements ToCollection
 {
+
+    public function __construct($id) 
+    {
+        $this->id = $id;
+    }
+
+
     /**
     * @param Collection $collection
     */
     public function collection(Collection $rows)
     {
-        // dd($rows);
+        dd($rows);
         foreach ($rows as $item) 
         {
-            $data0 = explode(';' ,$item[0]);
-            $data1 = explode(';' ,$item[1]);
-            $data2 = explode(';' ,$item[2]);
-            // $data3 = explode(';' ,$item[3]);
-            $data = array_merge($data0 , $data1 , $data2);
-            $alamat = $data[11].$data[12].$data[13];
-            unset($data[11] , $data[12] , $data[13]);
             try {
+                $data0 = explode(';' ,$item[0]);
+                $data1 = explode(';' ,$item[1]);
+                $data2 = explode(';' ,$item[2]);
+                $data = array_merge($data0 , $data1 , $data2);
+                $alamat = $data[11].$data[12].$data[13];
                 $peserta = Peserta::create([
                     'uuid'  => \Str::uuid(),
                     'nama'  => $data[0],
                     'NIK'   => $data[1],
-                    'nisn'  => $data[2],
+                    'nisn'  => \Str::uuid().'aditya',
                     'tmp'       => $data[3],
                     'tgl'       => $data[4],
                     'jkl'       => $data[5],
@@ -72,7 +77,7 @@ class JalurKhususImport implements ToCollection
                 $nomor_pendaftaran = Dits::interval('pendaftarans' , 'nomor_pendaftaran');
                 Pendaftaran::create([
                     'uuid'              => \Str::uuid(),
-                    'uuid_pembukaan'    => \Str::uuid(),
+                    'uuid_pembukaan'    => $this->id,
                     'uuid_peserta'      => $peserta->uuid,
                     'kode_pendaftaran'  => Dits::generateCode(),
                     'nomor_pendaftaran' => $nomor_pendaftaran,

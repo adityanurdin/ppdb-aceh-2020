@@ -37,6 +37,7 @@ class PesertaUjianDetailExport implements FromView
 
         $jawaban = Jawaban::where('kode_soal' , $this->kode_soal)
                             ->where('kode_pendaftaran' , $this->kode_pendaftaran)
+                            ->orderBy('nomor_soal' , 'ASC')
                             ->get();
         $pendaftaran = Pendaftaran::where('kode_pendaftaran' , $this->kode_pendaftaran)
                                         ->first();

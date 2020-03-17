@@ -222,10 +222,10 @@ class Dits
         return $cookie_value;
     }
 
-    public static function selected($data , $value)
+    public static function selected($data , $value , $option = 'selected')
     {
         if ($data == $value) {
-            $selected = 'selected';
+            $selected = $option;
         } else {
             $selected = '';
         }
