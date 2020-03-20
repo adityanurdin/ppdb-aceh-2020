@@ -33,6 +33,83 @@ class CATController extends Controller
         return view('pages.CAT.index' , compact('data'));
     }
 
+    public function testUjian(Request $request)
+    {
+        $bank_soal = BankSoal::where('kode_soal' , $request->kode_soal)->first();
+        $uuid_peserta = Auth::user()->uuid_login;
+
+        $soal      = Soal::where('kode_soal' , $request->kode_soal)
+                            ->orderBy('nomor_soal' , 'ASC')
+                            ->get();
+
+        $madrasah    = Madrasah::where('uuid' , $bank_soal->uuid_madrasah)->first();
+        $pembukaan   = Pembukaan::where('uuid_madrasah' , $madrasah->uuid)
+                                    ->where('status_pembukaan' , 'Dibuka')
+                                    ->first();
+        $pendaftaran = Pendaftaran::where('uuid_peserta' , $uuid_peserta)
+                                    ->where('uuid_pembukaan' , $pembukaan->uuid)
+                                    ->first();
+        return view('pages.CAT.ujian.ikut_ujian' , compact('soal' , 'pendaftaran'));
+    }
+
+    public function saveUjian(Request $request)
+    {
+        
+        $uuid_jawaban = Dits::decodeDits($request->uuid_jawaban);
+        $nomor_soal   = Dits::decodeDits($request->nomor_soal);
+        $kode_soal    = Dits::decodeDits($request->kode_soal);
+        $kode_pendaftaran = Dits::decodeDits($request->kode_pendaftaran);
+        $nums         = Dits::decodeDits($request->nums);
+
+        if($request->jawaban) {
+            $jawaban = implode('"' ,$request->jawaban);
+        } else {
+            $jawaban = NULL;
+        }
+
+        $jawab = Soal::where('kode_soal' , $kode_soal)
+                            ->where('nomor_soal' , $nomor_soal)
+                            ->first();
+        if($jawaban == $jawab->kunci_jawaban) {
+            $status_jawaban = 'Benar';
+        } elseif ($jawaban == NULL) {
+            $status_jawaban = '';
+        } else {
+            $status_jawaban = 'Salah';
+        }
+
+        $checkJawaban = Jawaban::where('kode_soal' , $kode_soal)
+                                    ->where('kode_pendaftaran' , $kode_pendaftaran)
+                                    ->where('nomor_soal' , $nomor_soal)
+                                    ->first();
+        if($checkJawaban) {
+            $checkJawaban->update([
+                'kode_soal'         => $kode_soal,
+                'kode_pendaftaran'  => $kode_pendaftaran,
+                'nomor_soal'        => $nomor_soal,
+                'jawaban'           => $jawaban,
+                'status_jawaban'    => $status_jawaban,
+                'tgl_cat'           => Carbon::now()
+            ]);
+        } else {
+            $store   = Jawaban::create([
+                                    'uuid'              => Str::uuid(),
+                                    'kode_soal'         => $kode_soal,
+                                    'kode_pendaftaran'  => $kode_pendaftaran,
+                                    'nomor_soal'        => $nomor_soal,
+                                    'jawaban'           => $jawaban,
+                                    'status_jawaban'    => $status_jawaban,
+                                    'tgl_cat'           => Carbon::now()
+                                ]);
+        }
+
+        
+        return response()->json([
+            'status' => true,
+            'data'   => $request->all()
+        ], 200);
+    }
+
     public function store(Request $request)
     {
 
@@ -160,7 +237,6 @@ class CATController extends Controller
 
                                 // return $jawaban_peserta;
                             
-
         return view('pages.CAT.soal' , compact('no' , 'soal' , 'navigasi' , 'finish' , 'jawaban' , 'bank_soal' , 'waktu_mulai', 'jawaban_peserta'));
     }
 
@@ -474,7 +550,7 @@ class CATController extends Controller
                                 return $jawaban_benar;
                             })
                             ->addColumn('tidak_jawab' , function($item) {
-                                $jawaban_benar = Jawaban::where('status_jawaban','')
+                                $jawaban_benar = Jawaban::where('jawaban', NULL)
                                 ->where('kode_soal',$item->kode_soal)
                                 ->where('kode_pendaftaran',$item->kode_pendaftaran)
                                 ->count();

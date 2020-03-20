@@ -83,10 +83,12 @@ Route::group(['middleware' => 'auth'] , function() {
         // CAT
         Route::group(['prefix' => 'CAT'], function () {
             Route::get('/' , 'CATController@index')->name('cat.index');
-            Route::post('/store' , 'CATController@store')->name('cat.store');
+            Route::post('/store' , 'CATController@testUjian')->name('cat.store');
+            // Route::post('/store' , 'CATController@store')->name('cat.store');
             Route::get('/start/{no}' , 'CATController@start')->name('cat.start');
             Route::post('/store/{no}' , 'CATController@storeJawaban')->name('cat.store.jawaban');
             Route::get('/end' , 'CATController@end')->name('cat.end');
+            Route::post('save-ujian' , 'CATController@saveUjian')->name('save-ujian');
         });
     });
 
