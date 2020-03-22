@@ -165,7 +165,7 @@ content="SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Informasi Manajamen Penerimaa
 {{--  list_madrasah  --}}
 <section id="sec_list_madrasah">
     <div class="container">
-        title section
+        {{--  title section  --}}
         <div class="title_sec">
             <h1>LIST MADRASAH</h1>
             <p>List Madrasah Yang Terdaftar Ke Dalam SIM PPDB Madrasah Kota Banda Aceh</p>

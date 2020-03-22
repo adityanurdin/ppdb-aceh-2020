@@ -12,7 +12,7 @@ content="Halaman Register, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Informasi M
 {{-- register --}}
 <section id="sec_login">
   <div id="pattern_register">
-    <div class="container">
+    <div class="container" id="tag-register">
       <div class="row">
         <div class="col-md-6 offset-md-3 col-sm-12 offset-sm-0">
           <div class="div_form">

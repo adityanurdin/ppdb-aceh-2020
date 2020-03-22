@@ -13,79 +13,84 @@
             <a href="{{route('dashboard')}}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
         </li>
         @if (Auth::user()->role == 'Admin System')
-            <li class="">
-                <a href="#menuKemenag" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-align-justify"></i> Menu Kemenag</a>
-                <ul class="collapse list-unstyled" id="menuKemenag">
-                    <li>
-                        <a href="{{route('kemenag.index')}}">Data Operator</a>
-                    </li>
-                    <li class="">
-                        <a href="#dataWeb" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Data Web</a>
-                        <ul class="collapse list-unstyled" id="dataWeb">
-                            <li>
-                                <a href="{{route('video.list')}}">Video</a>
-                                <a href="{{route('artikel.list')}}">Artikel</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
+        <li class="">
+            <a href="#menuKemenag" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i
+                    class="fas fa-align-justify"></i> Menu Kemenag</a>
+            <ul class="collapse list-unstyled" id="menuKemenag">
+                <li>
+                    <a href="{{route('kemenag.index')}}">Data Operator</a>
+                </li>
+                <li class="">
+                    <a href="#dataWeb" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Data Web</a>
+                    <ul class="collapse list-unstyled" id="dataWeb">
+                        <li>
+                            <a href="{{route('video.list')}}">Video</a>
+                            <a href="{{route('artikel.list')}}">Artikel</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
         @endif
 
         @if (Auth::user()->role == 'Operator Kemenag' || Auth::user()->role == 'Operator Madrasah')
-            <li class="">
-                <a href="#dataWeb" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Web Informasi</a>
-                <ul class="collapse list-unstyled" id="dataWeb">
-                    <li>
-                        <a href="{{route('video.list')}}">Video</a>
-                        <a href="{{route('artikel.list')}}">Artikel</a>
-                    </li>
-                </ul>
-            </li>
+        <li class="">
+            <a href="#dataWeb" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Web Informasi</a>
+            <ul class="collapse list-unstyled" id="dataWeb">
+                <li>
+                    <a href="{{route('video.list')}}">Video</a>
+                    <a href="{{route('artikel.list')}}">Artikel</a>
+                </li>
+            </ul>
+        </li>
         @endif
 
-        @if (Auth::user()->role == 'Peserta')    
-            <li class="">
-                <a href="#pilihPPDB" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-users"></i> Pilih PPDB</a>
-                <ul class="collapse list-unstyled" id="pilihPPDB">
-                    <li>
-                        <a href="{{route('ppdb.list.id' , base64_encode('DITSMI'))}}">MI</a>
-                    </li>
-                    <li>
-                        <a href="{{route('ppdb.list.id' , base64_encode('DITSMTs'))}}">MTs</a>
-                    </li>
-                    <li>
-                        <a href="{{route('ppdb.list.id' , base64_encode('DITSMA'))}}">MA</a>
-                    </li>
-                </ul>
-            </li>
-            @php
-                $uuid_peserta = \Auth::user()->uuid_login;
-                $pendaftaran = \App\Models\Pendaftaran::where('uuid_peserta' , $uuid_peserta)
-                                                        ->first();
-            @endphp
-            @isset($pendaftaran)
-            <li>
-                <a href="{{route('buka-ppdb.madrasah-terpilih')}}"><i class="fas fa-check"></i> Madrasah Terpilih</a>
-            </li>
-            <li>
-                <a href="{{route('cat.index')}}"><i class="fas fa-tv"></i> Ujian CAT</a>
-            </li>
-            @endisset
+        @if (Auth::user()->role == 'Peserta')
+        <li class="">
+            <a href="#pilihPPDB" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i
+                    class="fas fa-users"></i> Pilih PPDB</a>
+            <ul class="collapse list-unstyled" id="pilihPPDB">
+                <li>
+                    <a href="{{route('ppdb.list.id' , base64_encode('DITSMI'))}}">MI</a>
+                </li>
+                <li>
+                    <a href="{{route('ppdb.list.id' , base64_encode('DITSMTs'))}}">MTs</a>
+                </li>
+                <li>
+                    <a href="{{route('ppdb.list.id' , base64_encode('DITSMA'))}}">MA</a>
+                </li>
+            </ul>
+        </li>
+        @php
+        $uuid_peserta = \Auth::user()->uuid_login;
+        $pendaftaran = \App\Models\Pendaftaran::where('uuid_peserta' , $uuid_peserta)
+        ->first();
+        @endphp
+        @isset($pendaftaran)
+        <li>
+            <a href="{{route('buka-ppdb.madrasah-terpilih')}}"><i class="fas fa-check"></i> Madrasah Terpilih</a>
+        </li>
+        <li>
+            <a href="{{route('cat.index')}}"><i class="fas fa-tv"></i> Ujian CAT</a>
+        </li>
+        @endisset
         @endif
         @if(Auth::user()->role != 'Peserta')
         <li>
             <a href="{{route('buka-ppdb')}}"><i class="fas fa-users"></i> Buka PPDB</a>
         </li>
         <li>
-            <a href="#arsipPPDB" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-archive"></i> Arsip PPDB</a>
+            <a href="#arsipPPDB" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i
+                    class="fas fa-archive"></i> Arsip PPDB</a>
             <ul class="collapse list-unstyled" id="arsipPPDB">
                 <li>
                     @php
-                        $tahun = \App\Models\Pembukaan::groupBy(DB::raw('YEAR(created_at)'))->orderBy('created_at' , 'ASC')->get();
+                    $tahun = \App\Models\Pembukaan::groupBy(DB::raw('YEAR(created_at)'))->orderBy('created_at' ,
+                    'ASC')->get();
                     @endphp
                     @foreach ($tahun as $item)
-                        <a href="{{route('arsip.ppdb' , [substr($item->tgl_pembukaan , 0 , 4)])}}">{{substr($item->tgl_pembukaan , 0 , 4)}}</a>
+                    <a
+                        href="{{route('arsip.ppdb' , [substr($item->tgl_pembukaan , 0 , 4)])}}">{{substr($item->tgl_pembukaan , 0 , 4)}}</a>
                     @endforeach
                 </li>
             </ul>
@@ -94,26 +99,30 @@
             <a href="{{route('bank-soal.index')}}"><i class="fas fa-tv"></i> Bank Soal CAT</a>
         </li>
         <li>
-            <a href="#arsipCAT" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-archive"></i> Arsip Soal CAT</a>
+            <a href="#arsipCAT" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i
+                    class="fas fa-archive"></i> Arsip Soal CAT</a>
             <ul class="collapse list-unstyled" id="arsipCAT">
                 <li>
                     @php
-                        $tahun = \App\Models\BankSoal::groupBy(DB::raw('YEAR(created_at)'))->orderBy('created_at' , 'ASC')->get();
+                    $tahun = \App\Models\BankSoal::groupBy(DB::raw('YEAR(created_at)'))->orderBy('created_at' ,
+                    'ASC')->get();
                     @endphp
                     @foreach ($tahun as $item)
-                        <a href="{{route('arsip.cat' , [substr($item->tgl_bank_soal , 0 , 4)])}}">{{substr($item->tgl_bank_soal , 0 , 4)}}</a>
+                    <a
+                        href="{{route('arsip.cat' , [substr($item->tgl_bank_soal , 0 , 4)])}}">{{substr($item->tgl_bank_soal , 0 , 4)}}</a>
                     @endforeach
                 </li>
             </ul>
         </li>
-        @if (Auth::user()->role != 'Operator Madrasah' && Auth::user()->role != 'Peserta')   
+        @if (Auth::user()->role != 'Operator Madrasah' && Auth::user()->role != 'Peserta')
         <li class="{{Request::route()->getName() == 'madrasah.index' ? 'active' : ''}}">
             <a href="{{route('madrasah.index')}}"><i class="fas fa-building"></i> Database Madrasah</a>
         </li>
         @endif
         @endif
         <li>
-            <a href="#pengaturan" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-cog"></i> Pengaturan</a>
+            <a href="#pengaturan" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i
+                    class="fas fa-cog"></i> Pengaturan</a>
             <ul class="collapse list-unstyled" id="pengaturan">
                 <li>
                     <a href="{{route('auth.akun')}}">Akun</a>

@@ -12,7 +12,7 @@ content="Halaman Login, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Informasi Mana
 {{-- login --}}
 <section id="sec_login">
     <div id="pattern_login">
-        <div class="container">
+        <div class="container" id="tag-login">
             <div class="row">
                 <div class="col-md-6 offset-md-3 col-sm-12 offset-sm-0">
                     <div class="div_form">

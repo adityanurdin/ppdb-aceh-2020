@@ -1,27 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <link rel="icon" 
-      type="image/png" 
-      href="{{asset('img/favicon/favicon-96x96.png')}}">
-
-    <title>{{ strtoupper(isset(Dits::DataPeserta()->nama)) ? Dits::DataPeserta()->nama : Auth::user()->role }} - SIM PPDB Madrasah Kota Banda Aceh</title>
-
-    <!-- Bootstrap CSS -->
-    <link href="{{asset('bootstrap/dist/css/bootstrap-custom-new.css')}}" rel="stylesheet">
-    <!-- Our Custom CSS -->
-    <link href="{{asset('bootstrap/dist/css/style-new.css')}}" rel="stylesheet">
-    <!-- Scrollbar Custom CSS -->
-    <link rel="stylesheet" href="{{asset('css/jquery.mCustomScrollbar.min.css')}}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-
-
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="ROBOTS" content="noindex, nofollow" />
+    <meta name="author" content="https://codingers.id/ | Frandika Septa" />
+    <meta name="application-name" content="SIM PPDB MADRASAH KOTA BANDA ACEH" />
+    <meta name="msapplication-TileImage" content="{{ asset('img/favicon/ms-icon-144x144.png') }}" />
+    <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('img/favicon/apple-icon-57x57.png') }}" />
+    <link rel="apple-touch-icon" sizes="60x60" href="{{ asset('img/favicon/apple-icon-60x60.png') }}" />
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('img/favicon/apple-icon-72x72.png') }}" />
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('img/favicon/apple-icon-76x76.png') }}" />
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ asset('img/favicon/apple-icon-114x114.png') }}" />
+    <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('img/favicon/apple-icon-120x120.png') }}" />
+    <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('img/favicon/apple-icon-144x144.png') }}" />
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('img/favicon/apple-icon-152x152.png') }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/favicon/apple-icon-180x180.png') }}" />
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('img/favicon/android-icon-192x192.png') }}" />
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.png') }}" />
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('img/favicon/favicon-96x96.png') }}" />
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}" />
+    <link rel="manifest" href="{{ asset('img/favicon/manifest.json') }}" />
+    <title>{{ strtoupper(isset(Dits::DataPeserta()->nama)) ? Dits::DataPeserta()->nama : Auth::user()->role }} - SIM
+        PPDB Madrasah Kota Banda Aceh</title>
+    <script type="text/javascript" src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/dist/css/bootstrap-custom-new.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/fontawesome/css/all.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/dist/css/style-new.css') }}?v={{ date('ymdHis') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css') }}">
     @yield('css')
     <!-- Font Awesome JS -->
     {{-- <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
@@ -30,75 +40,43 @@
 </head>
 
 <body>
-
     <div class="wrapper">
-        <!-- Sidebar  -->
+        {{--  Sidebar   --}}
         @include('layouts.backend.addon.sidebar')
-        <!-- Sidebar -->
-
-        <!-- Page Content  -->
+        {{--  Sidebar  --}}
+        {{--  Page Content   --}}
         <div id="content">
-            <!-- Top -->
+            {{--  Top  --}}
             <nav class="navbar navbar-expand-lg">
                 <div class="container">
                     <button type="button" id="sidebarCollapse" class="btn btn-success">
                         <i class="fas fa-align-left"></i>
-                        {{-- <span>Menu</span> --}}
                     </button>
-                    <h3 class="mx-auto">@yield('headers')</></h3>
+                    <h3 class="mx-auto">
+                        @yield('headers')
+                    </h3>
                 </div>
             </nav>
             <hr>
             <div class="table-responsive">
                 @yield('breadchumb')
             </div>
-
-            <!-- Top -->
+            {{--  Top  --}}
             @yield('content')
-            
         </div>
-
         @yield('modal')
-</div>
-    <!-- jQuery CDN - Slim version (=without AJAX) -->
-    {{-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> --}}
-    {{-- <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> --}}
-    <!-- Popper.JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-    <!-- jQuery Custom Scroller CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
-    <!-- sidebar -->
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#sidebar").mCustomScrollbar({
-                theme: "minimal"
-            });
-
-            $('#sidebarCollapse').on('click', function () {
-                $('#sidebar, #content').toggleClass('active');
-                $('.collapse.in').toggleClass('in');
-                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-            });
-
-            $(function () {
-                $('[data-toggle="tooltip"]').tooltip()
-            })
-        });
-    </script>
-    <!-- sidebar -->
-
-    <script type="text/javascript">
-        function confirm_delete() {
-            return confirm('are you sure?');
-        }
-    </script>
-
+    </div>
     <div class="table-responsive">
         @include('sweetalert::alert')
     </div>
-
+    <script type="text/javascript" src="{{ asset('plugins/bootstrap/js/bootstrap.popper.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('plugins/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('plugins/datatables/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('plugins/moment/moment.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('plugins/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/admin.js') }}"></script>
     @stack('script')
 </body>
 

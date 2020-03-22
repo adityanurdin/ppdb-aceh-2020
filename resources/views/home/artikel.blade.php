@@ -9,20 +9,11 @@ content="{{ $data->judul_artikel }}, {{ $data->deskripsi_artikel }}, SIM PPDB MA
 @endpush
 
 @section('content')
-{{-- <div class="bd-callout bd-callout-green">
-    <p class="mb-0"><i class="fas fa-file-alt"></i> [Now Reading] {{$artikel->judul_artikel}}</p>
-</div>
-<div class="container">
-  <div class="table-responsive">
-    {!! $artikel->isi_artikel !!}
-  </div>
-</div> --}}
-
 {{-- open_artikel --}}
 <section id="sec_open_artikel">
-  <div class="container">
+  <div class="container" id="tag-articles">
     {{-- title section --}}
-    <div class="title_sec">
+    <div class="title_sec" id="open">
       <h1>{{ $data->judul_artikel }}</h1>
       <span><i class=" fa fa-user"></i>{{ $nama }}</span>
       <span class="sparator"></span>
@@ -66,7 +57,7 @@ content="{{ $data->judul_artikel }}, {{ $data->deskripsi_artikel }}, SIM PPDB MA
           <img src="{{ Dits::imageUrl($datas->thumbnail_artikel)}}" alt="{{ $datas->judul_artikel }}">
         </div>
         <div class="related_artikel_desc">
-          <a href="{{ route('home.artikel.slug',['slug'=>$datas->slug_artikel]) }}">
+          <a href="{{ route('home.artikel.slug',['slug'=>$datas->slug_artikel]) }}#open">
             <h1>{{ $datas->judul_artikel }}</h1>
           </a>
           <span><i class="fa fa-user"></i>{{ $namas }}</span>

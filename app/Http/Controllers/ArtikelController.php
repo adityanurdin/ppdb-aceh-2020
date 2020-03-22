@@ -2,25 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\User;
-use App\Models\Operator;
-use App\Models\Peserta;
-use App\Models\Madrasah;
-use App\Models\Pembukaan;
-use App\Models\Pendaftaran;
 use App\Models\Artikel;
 use App\Models\Video;
-
-use Validator;
-use Str;
+use App\User;
 use Auth;
-use Carbon\Carbon;
-use Dits;
 use DataTables;
-use Alert;
-use Hash;
+use Dits;
+use Illuminate\Http\Request;
+use Str;
+use Validator;
 
 class ArtikelController extends Controller
 {
@@ -31,22 +21,22 @@ class ArtikelController extends Controller
 
     public function videoBySlug($slug)
     {
-        $data = Video::where('slug_video' , $slug)->first();
-        return view('pages.artikel.video.create_edit' , compact('slug' , 'data'));
+        $data = Video::where('slug_video', $slug)->first();
+        return view('pages.artikel.video.create_edit', compact('slug', 'data'));
     }
 
     public function videoSlug($slug)
     {
-        
-        $video = Video::where('status_video' , 'Publish')->where('slug_video' , "!=" , $slug)->orderBy('created_at' , 'Desc')->limit(6)->get();
-        $data = Video::where('slug_video' , $slug)->first();
-        $publisher = \App\User::where('username' , $data->kode_user)->first();
-        if($publisher->role=="Admin System"){
+
+        $video = Video::where('status_video', 'Publish')->where('slug_video', "!=", $slug)->orderBy('created_at', 'Desc')->limit(6)->get();
+        $data = Video::where('slug_video', $slug)->first();
+        $publisher = \App\User::where('username', $data->kode_user)->first();
+        if ($publisher->role == "Admin System") {
             $nama = "Admin System";
-        }else{
+        } else {
             $nama = $publisher->operator->nama_operator;
         }
-        return view('home.video' , compact('data','nama','video'));
+        return view('home.video', compact('data', 'nama', 'video'));
     }
 
     public function create()
@@ -56,59 +46,67 @@ class ArtikelController extends Controller
 
     public function store(Request $request)
     {
-        $uuid_operator  = Auth::user()->uuid_login;
-        $kode_video     = Dits::genKodeSoal(4);
-        if (Auth::user()->role != 'Admin') {
-            $operator       = User::where('uuid_login' , $uuid_operator)->first()->username;
-        } else {
-            $operator       = 'admin';
-        }
-        $kode_operator  = $operator;
 
-        $valid = Validator::make($request->all() , [
-            'thumbnail_video' => 'image|mimes:jpeg,jpg,png|max:300'
+        // Validation
+        $request->validate([
+            'judul_video' => 'required|string|max:300',
+            'url_video' => 'required|string|max:100',
+            'deskripsi_video' => 'sometimes|nullable|max:300',
         ]);
 
-        if($valid->fails()) {
-            toast('Gagal menambah video, Thumbnail video tidak sesuai','error');
+        $uuid_operator = Auth::user()->uuid_login;
+        $kode_video = Dits::genKodeSoal(4);
+        if (Auth::user()->role != 'Admin') {
+            $operator = User::where('uuid_login', $uuid_operator)->first()->username;
+        } else {
+            $operator = 'admin';
+        }
+        $kode_operator = $operator;
+
+        $valid = Validator::make($request->all(), [
+            'thumbnail_video' => 'image|mimes:jpeg,jpg,png|max:300',
+        ]);
+
+        if ($valid->fails()) {
+            toast('Gagal menambah video, Thumbnail video tidak sesuai', 'error');
             return back();
         }
 
-        $slug = Str::slug($request->judul_video , '-');
+        $slug = Str::slug($request->judul_video, '-');
 
         $input = $request->all();
-        if($request->hasFile('thumbnail_video')) {
-            $input['thumbnail_video'] = Dits::UploadImage($request , 'thumbnail_video' , 'thumbnail_video');
+        if ($request->hasFile('thumbnail_video')) {
+            $input['thumbnail_video'] = Dits::UploadImage($request, 'thumbnail_video', 'thumbnail_video');
         }
         // $input['thumbnail_video'] = Dits::UploadImage($request , 'thumbnail_video' , 'thumbnail_video');
-        $input['uuid']          = Str::uuid();
-        $input['status_video']  = 'Publish';
-        $input['slug_video']    = $slug;
-        $input['kode_user']     = $kode_operator;
-        $input['kode_video']    = $kode_video;
+        $input['uuid'] = Str::uuid();
+        $input['status_video'] = 'Publish';
+        $input['slug_video'] = $slug;
+        $input['kode_user'] = $kode_operator;
+        $input['kode_video'] = $kode_video;
         // return $input;
 
         $create = Video::create($input);
         if ($create) {
-            toast('Berhasil menambah video','success');
+            toast('Berhasil menambah video', 'success');
             return redirect()->route('video.list');
         }
-        toast('Gagal menambah video','error');
+        toast('Gagal menambah video', 'error');
         return back();
     }
 
-    public function update(Request $request , $uuid)
+    public function update(Request $request, $uuid)
     {
         $input = $request->all();
 
-        if($request->hasFile('thumbnail_video')) {
-            $input['thumbnail_video'] = Dits::UploadImage($request , 'thumbnail_video' , 'thumbnail_video');
+        if ($request->hasFile('thumbnail_video')) {
+            $input['thumbnail_video'] = Dits::UploadImage($request, 'thumbnail_video', 'thumbnail_video');
         }
 
         $video = Video::whereUuid($uuid)->first();
         if ($video) {
             $video->update($input);
-            toast('Berhasil memperbaharui video','success');
+            toast('Berhasil memperbaharui video', 'success');
             return redirect()->route('video.list');
         }
     }
@@ -121,11 +119,11 @@ class ArtikelController extends Controller
         } else {
             $status = 'Publish';
         }
-        if($video) {
+        if ($video) {
             $video->update([
-                'status_video' => $status
+                'status_video' => $status,
             ]);
-            toast('Berhasil memperbaharui video','success');
+            toast('Berhasil memperbaharui video', 'success');
             return redirect()->route('video.list');
         }
     }
@@ -133,29 +131,29 @@ class ArtikelController extends Controller
     public function videoData()
     {
         $user = Auth::user();
-        if($user->role == 'Admin System') {
+        if ($user->role == 'Admin System') {
             $data = Video::all();
         } else {
-            $data = Video::where('kode_user' , $user->username)->get();
+            $data = Video::where('kode_user', $user->username)->get();
         }
 
         return DataTables::of($data)
-                            ->addIndexColumn()
-                            ->editColumn('judul_video' , function($item) {
-                                $link = '<a href="'.route('video.slug' , $item->slug_video).'"><u>'.substr($item->judul_video , 0 , 45).' ...</u></a>';
-                                return $link;
-                            })
-                            ->addColumn('publisher' , function($item) {
-                                $publisher = User::with('operator')->where('username' , $item->kode_user)->first();
-                                return $publisher->operator['nama_operator'];
-                            })
-                            ->addColumn('action' , function($item) {
-                                $btn = '<a href="'.route('video.change-status' , $item->uuid).'" class="btn btn-dark btn-sm"><i class="fas fa-power-off"></i></a> ';
-                                $btn .= '<a href="'.route('video.delete' , $item->uuid).'" onclick="return confirm_delete()" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>';
-                                return $btn;
-                            })
-                            ->escapeColumns([])
-                            ->make();
+            ->addIndexColumn()
+            ->editColumn('judul_video', function ($item) {
+                $link = '<a href="' . route('video.slug', $item->slug_video) . '"><u>' . substr($item->judul_video, 0, 45) . ' ...</u></a>';
+                return $link;
+            })
+            ->addColumn('publisher', function ($item) {
+                $publisher = User::with('operator')->where('username', $item->kode_user)->first();
+                return $publisher->operator['nama_operator'];
+            })
+            ->addColumn('action', function ($item) {
+                $btn = '<a href="' . route('video.change-status', $item->uuid) . '" class="btn btn-dark btn-sm"><i class="fas fa-power-off"></i></a> ';
+                $btn .= '<a href="' . route('video.delete', $item->uuid) . '" onclick="return confirm(\'Anda Yakin Untuk Hapus Data Ini?\');" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>';
+                return $btn;
+            })
+            ->escapeColumns([])
+            ->make();
     }
 
     public function artikelList()
@@ -165,21 +163,21 @@ class ArtikelController extends Controller
 
     public function artikelBySlug($slug)
     {
-        $data = Artikel::where('slug_artikel' , $slug)->first();
-        return view('pages.artikel.create_edit' , compact('slug' , 'data'));
+        $data = Artikel::where('slug_artikel', $slug)->first();
+        return view('pages.artikel.create_edit', compact('slug', 'data'));
     }
 
     public function artikelSlug($slug)
     {
-        $artikel = Artikel::where('status_artikel' , 'Publish')->orderBy('created_at' , 'Desc')->limit(6)->get();
-        $data = Artikel::where('slug_artikel' , $slug)->first();
-        $publisher = \App\User::where('username' , $data->kode_user)->first();
-        if($publisher->role=="Admin System"){
+        $artikel = Artikel::where('status_artikel', 'Publish')->orderBy('created_at', 'Desc')->limit(6)->get();
+        $data = Artikel::where('slug_artikel', $slug)->first();
+        $publisher = \App\User::where('username', $data->kode_user)->first();
+        if ($publisher->role == "Admin System") {
             $nama = "Admin System";
-        }else{
+        } else {
             $nama = $publisher->operator->nama_operator;
         }
-        return view('home.artikel' , compact('data','nama','artikel'));
+        return view('home.artikel', compact('data', 'nama', 'artikel'));
     }
 
     public function ArtikelCreate()
@@ -189,41 +187,48 @@ class ArtikelController extends Controller
 
     public function ArtikelStore(Request $request)
     {
+        // Validation
+        $request->validate([
+            'judul_artikel' => 'required|string|max:300',
+            'deskripsi_artikel' => 'required|string|max:300',
+            'isi_artikel' => 'required|string|max:5000',
+        ]);
+
         $uuid_operator = Auth::user()->uuid_login;
         $kode_artikel = Dits::genKodeSoal(4);
         if (Auth::user()->role != 'Admin') {
-            $operator       = User::where('uuid_login' , $uuid_operator)->first()->username;
+            $operator = User::where('uuid_login', $uuid_operator)->first()->username;
         } else {
-            $operator       = 'admin';
+            $operator = 'admin';
         }
-        $kode_operator  = $operator;
+        $kode_operator = $operator;
         $input = $request->except(['files']);
 
-        $valid = Validator::make($request->all() , [
-            'thumbnail_artikel' => 'image|mimes:jpeg,jpg,png|max:300'
+        $valid = Validator::make($request->all(), [
+            'thumbnail_artikel' => 'image|mimes:jpeg,jpg,png|max:300',
         ]);
 
-        if($valid->fails()) {
-            toast('Gagal menambah video, Thumbnail artikel tidak sesuai','error');
+        if ($valid->fails()) {
+            toast('Gagal menambah video, Thumbnail artikel tidak sesuai', 'error');
             return back();
         }
 
-        $slug = Str::slug($request->judul_artikel , '-');
+        $slug = Str::slug($request->judul_artikel, '-');
 
         if ($request->hasFile('thumbnail_artikel')) {
-            $input['thumbnail_artikel'] = Dits::UploadImage($request , 'thumbnail_artikel' , 'thumbnail_artikel');
+            $input['thumbnail_artikel'] = Dits::UploadImage($request, 'thumbnail_artikel', 'thumbnail_artikel');
         }
-        
+
         // $input['thumbnail_artikel'] = Dits::UploadImage($request , 'thumbnail_artikel' , 'thumbnail_artikel');
-        $input['uuid']              = Str::uuid();
-        $input['kode_artikel']      = $kode_artikel;
-        $input['kode_user']         = $kode_operator;
-        $input['slug_artikel']      = $slug;
-        $input['status_artikel']    = 'Publish';
+        $input['uuid'] = Str::uuid();
+        $input['kode_artikel'] = $kode_artikel;
+        $input['kode_user'] = $kode_operator;
+        $input['slug_artikel'] = $slug;
+        $input['status_artikel'] = 'Publish';
 
         $create = Artikel::create($input);
         if ($create) {
-            toast('Berhasil menambah artikel','success');
+            toast('Berhasil menambah artikel', 'success');
             return redirect()->route('artikel.list');
         }
     }
@@ -236,27 +241,27 @@ class ArtikelController extends Controller
         } else {
             $status = 'Publish';
         }
-        if($artikel) {
+        if ($artikel) {
             $artikel->update([
-                'status_artikel' => $status
+                'status_artikel' => $status,
             ]);
-            toast('Berhasil memperbaharui artikel','success');
+            toast('Berhasil memperbaharui artikel', 'success');
             return redirect()->route('artikel.list');
         }
     }
 
-    public function updateArtikel(Request $request , $uuid)
+    public function updateArtikel(Request $request, $uuid)
     {
         $input = $request->all();
 
-        if($request->hasFile('thumbnail_artikel')) {
-            $input['thumbnail_artikel'] = Dits::UploadImage($request , 'thumbnail_artikel' , 'thumbnail_artikel');
+        if ($request->hasFile('thumbnail_artikel')) {
+            $input['thumbnail_artikel'] = Dits::UploadImage($request, 'thumbnail_artikel', 'thumbnail_artikel');
         }
 
         $artikel = Artikel::whereUuid($uuid)->first();
         if ($artikel) {
             $artikel->update($input);
-            toast('Berhasil memperbaharui artikel','success');
+            toast('Berhasil memperbaharui artikel', 'success');
             return redirect()->route('artikel.list');
         }
     }
@@ -264,47 +269,47 @@ class ArtikelController extends Controller
     public function artikelData()
     {
         $user = Auth::user();
-        if($user->role == 'Admin System') {
+        if ($user->role == 'Admin System') {
             $data = Artikel::all();
         } else {
-            $data = Artikel::where('kode_user' , $user->username)->get();
+            $data = Artikel::where('kode_user', $user->username)->get();
         }
 
         return DataTables::of($data)
-                            ->addIndexColumn()
-                            ->editColumn('judul_artikel' , function($item) {
-                                $link = '<a href="'.route('artikel.slug' , $item->slug_artikel).'"><u>'.substr($item->judul_artikel , 0 , 45).' ...</u></a>';
-                                return $link;
-                            })
-                            ->addColumn('publisher' , function($item) {
-                                $publisher = User::with('operator')->where('username' , $item->kode_user)->first();
-                                return $publisher->operator['nama_operator'];
-                            })
-                            ->addColumn('action' , function($item) {
-                                $btn = '<a href="'.route('artikel.change-status' , $item->uuid).'" class="btn btn-dark btn-sm"><i class="fas fa-power-off"></i></a> ';
-                                $btn .= '<a href="'.route('artikel.delete' , $item->uuid).'" onclick="return confirm_delete()" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>';
-                                return $btn;
-                            })
-                            ->escapeColumns([])
-                            ->make();
+            ->addIndexColumn()
+            ->editColumn('judul_artikel', function ($item) {
+                $link = '<a href="' . route('artikel.slug', $item->slug_artikel) . '"><u>' . substr($item->judul_artikel, 0, 45) . ' ...</u></a>';
+                return $link;
+            })
+            ->addColumn('publisher', function ($item) {
+                $publisher = User::with('operator')->where('username', $item->kode_user)->first();
+                return $publisher->operator['nama_operator'];
+            })
+            ->addColumn('action', function ($item) {
+                $btn = '<a href="' . route('artikel.change-status', $item->uuid) . '" class="btn btn-dark btn-sm"><i class="fas fa-power-off"></i></a> ';
+                $btn .= '<a href="' . route('artikel.delete', $item->uuid) . '" onclick="return confirm(\'Anda Yakin Untuk Hapus Data Ini?\');" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>';
+                return $btn;
+            })
+            ->escapeColumns([])
+            ->make();
     }
-    
+
     public function deleteArtikel($uuid)
     {
         $data = Artikel::whereUuid($uuid)->first();
-        if($data) {
+        if ($data) {
             $data->delete();
-            toast('Berhasil menghapus artikel','success');
+            toast('Berhasil menghapus artikel', 'success');
             return redirect()->route('artikel.list');
         }
     }
-    
+
     public function deleteVideo($uuid)
     {
         $data = Video::whereUuid($uuid)->first();
-        if($data) {
+        if ($data) {
             $data->delete();
-            toast('Berhasil menghapus video','success');
+            toast('Berhasil menghapus video', 'success');
             return redirect()->route('video.list');
         }
     }

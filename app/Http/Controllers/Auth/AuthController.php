@@ -24,7 +24,7 @@ class AuthController extends Controller
 
         $request->validate([
             'NIK' => 'required|string|max:16',
-            'password' => 'required|string|min:4|'
+            'password' => 'required|string|min:4'
         ]);
 
         $credentials = [
@@ -55,29 +55,13 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $uuid_peserta = Str::uuid();
-
         $request->validate([
-            'NIK' => 'required|integer',
-            'email'    => 'required|email|unique:users',
-            'password' => 'required|confirmed|min:6|'
+            'NIK' => 'required|integer|unique:pesertas,NIK|max:16',
+            'email'    => 'required|email|unique:users,email|max:100',
+            'password' => 'required|confirmed|min:6'
         ]);
-
-        // $rule  = [
-        //     'NIK' => 'required|integer',
-        //     'email'    => 'required|email|unique:users',
-        //     'password' => 'required|confirmed|min:6|'
-        // ];
-        // $messages = [
-        //     'username.integer' => 'NIK wajib menggunakan angka',
-        //     'username.min' => 'NIK wajib 16 angka',
-        // ];
-
-        // $valid = Validator::make($request->all() , $rule);
-
-        // if($valid->fails()) {
-        //     return redirect('/register')->withErrors($valid);
-        // }
+        
+        $uuid_peserta = Str::uuid();
 
         if(strlen($request->NIK) < 16) {
             toast('NIK wajib 16 angka','error');
@@ -103,7 +87,6 @@ class AuthController extends Controller
         ]);
 
         if ($user && $peserta) {
-            // return redirect()->route('dashboard');
             $credentials = [
                 'username'  => $request->NIK,
                 'password'  => $request->password
@@ -117,8 +100,6 @@ class AuthController extends Controller
         } else {
             return 'gagal';
         }
-
-
     }
 
     public function akun()
@@ -150,7 +131,6 @@ class AuthController extends Controller
 
     public function prosesLupas(Request $request)
     {
-
         $request->validate([
             'email'    => 'required|email|max:100',
         ]);

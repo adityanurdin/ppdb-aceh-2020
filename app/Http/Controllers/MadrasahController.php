@@ -2,23 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\User;
-use App\Models\Operator;
-use App\Models\Peserta;
-use App\Models\Madrasah;
-use App\Models\Pembukaan;
-use App\Models\Pendaftaran;
-
-use Validator;
-use Str;
-use Auth;
-use Carbon\Carbon;
-use Dits;
-use DataTables;
 use Alert;
-use Hash;
+use App\Models\Madrasah;
+use App\Models\Operator;
+use App\Models\Pembukaan;
+use App\User;
+use Auth;
+use DataTables;
+use Dits;
+use Illuminate\Http\Request;
+use Str;
+use Validator;
 
 class MadrasahController extends Controller
 {
@@ -34,36 +28,53 @@ class MadrasahController extends Controller
 
     public function store(Request $request)
     {
-        $uuid   = Str::uuid();
-        $input  = $request->except(['files']);
-        $input['uuid'] = $uuid; 
+
+        // Validation
+        $request->validate([
+            "kode_satker" => "required|unique:madrasahs,kode_satker|string|max:100",
+            "nsm" => "required|string|unique:madrasahs,nsm|max:100",
+            "npsn" => "required|string|unique:madrasahs,npsn|max:100",
+            "nama_madrasah" => "required|string|max:100",
+            "alamat" => "required|string|max:300",
+            "kelurahan" => "required|string|max:100",
+            "kecamatan" => "required|string|max:100",
+            "kabupaten" => "required|string|max:100",
+            "provinsi" => "required|string|max:100",
+            "email_madrasah" => "required|string|max:100",
+            "kontak_madrasah" => "required|string|max:30",
+            "preview" => "required|string|max:1000",
+        ]);
+
+        $uuid = Str::uuid();
+        $input = $request->except(['files']);
+        $input['uuid'] = $uuid;
         $input['status'] = 'Negeri';
         $input['nama_madrasah'] = strtoupper($request->nama_madrasah);
 
-        $valid = Validator::make($request->all() , [
-            'logo_madrasah' => 'image|mimes:jpeg,jpg,png|max:300'
+        $valid = Validator::make($request->all(), [
+            'logo_madrasah' => 'image|mimes:jpeg,jpg,png|max:300',
         ]);
 
-        if($valid->fails()) {
-            toast('Gagal menambah soal, Logo madrasah tidak sesuai','error');
+        if ($valid->fails()) {
+            toast('Gagal menambah soal, Logo madrasah tidak sesuai', 'error');
             return back();
         }
 
         if ($request->hasFile('logo_madrasah')) {
-            $image = Dits::UploadImage($request , 'logo_madrasah' , 'Madrasah');
+            $image = Dits::UploadImage($request, 'logo_madrasah', 'Madrasah');
         } else {
-            $image = NULL;
+            $image = null;
         }
 
         $input['logo_madrasah'] = $image;
 
         $madrasah = Madrasah::create($input);
 
-        if($madrasah) {
-            toast('Berhasil menambah Madrasah','success');
+        if ($madrasah) {
+            toast('Berhasil menambah Madrasah', 'success');
             return redirect()->route('madrasah.index');
         } else {
-            toast('Gagal menambah Madrasah','error');
+            toast('Gagal menambah Madrasah', 'error');
             return redirect()->route('madrasah.index');
         }
     }
@@ -72,119 +83,149 @@ class MadrasahController extends Controller
     {
         $uuid = Dits::decodeDits($id);
         $data = Madrasah::whereUuid($uuid)->first();
-        return view('pages.database_madrasah.create_edit' , compact('data'));
+        return view('pages.database_madrasah.create_edit', compact('data'));
     }
 
     public function editMadrasah()
     {
         $uuid = Auth::user()->uuid_login;
-        $operator = Operator::where('uuid' , $uuid)->first();
+        $operator = Operator::where('uuid', $uuid)->first();
         $data = Madrasah::whereUuid($operator->uuid_madrasah)->first();
         // return $data;
-        return view('pages.database_madrasah.create_edit' , compact('data'));
+        return view('pages.database_madrasah.create_edit', compact('data'));
     }
 
     public function operators_edit($id)
     {
         $uuid = Dits::decodeDits($id);
         $data = Operator::whereUuid($uuid)->first();
-        return view('pages.database_madrasah.operators.edit' , compact('data'));
+        return view('pages.database_madrasah.operators.edit', compact('data'));
     }
 
-    public function update(Request $request , $id)
+    public function update(Request $request, $id)
     {
-        $uuid   = Dits::decodeDits($id);
-        $input  = $request->all();
+        // Validation
+        $request->validate([
+            "kode_satker" => "required|string|max:100",
+            "nsm" => "required|string|max:100",
+            "npsn" => "required|string|max:100",
+            "nama_madrasah" => "required|string|max:100",
+            "alamat" => "required|string|max:300",
+            "kelurahan" => "required|string|max:100",
+            "kecamatan" => "required|string|max:100",
+            "kabupaten" => "required|string|max:100",
+            "provinsi" => "required|string|max:100",
+            "email_madrasah" => "required|string|max:100",
+            "kontak_madrasah" => "required|string|max:30",
+            "preview" => "required|string|max:1000",
+        ]);
 
-        if($request->hasFile('logo_madrasah')) {
-            $image = Dits::UploadImage($request , 'logo_madrasah' , 'Logo_Madrasah');
+        $uuid = Dits::decodeDits($id);
+        $input = $request->all();
+
+        if ($request->hasFile('logo_madrasah')) {
+            $image = Dits::UploadImage($request, 'logo_madrasah', 'Logo_Madrasah');
             $input['logo_madrasah'] = $image;
         }
         // return $input;
-        $madrasah   = Madrasah::whereUuid($uuid)->first();
+        $madrasah = Madrasah::whereUuid($uuid)->first();
         $madrasah->update($input);
         if ($madrasah) {
-            toast('Berhasil Memperbaharui Data','success');
+            toast('Berhasil Memperbaharui Data', 'success');
             return back();
         } else {
-            toast('Gagal Memperbaharui Data','error');
-            return back();
-        }   
-    }
-
-    public function operators_update(Request $request , $id)
-    {
-        $uuid   = Dits::decodeDits($id);
-        $data   = Operator::whereUuid($uuid)
-                            ->first();
-        if(Hash::check($request->old_password, $data->user['password'])){
-            $data->update([
-                'nama_operator'     => $request->nama_operator,
-                'kontak_operator'   => $request->kontak_operator,
-                'email_operator'    => $request->email_operator
-            ]);
-
-            if($request->password) {
-                $user = User::whereUuidLogin($id)->first();
-                $user->update([
-                    'password' => bcrypt($request->password)
-                ]);
-            }
-
-            if($data) {
-                toast('Berhasil memperbaharui data','success');
-                return back();
-            }
-            toast('Gagal memperbaharui data','error');
+            toast('Gagal Memperbaharui Data', 'error');
             return back();
         }
-        toast('Password lama salah','error');
+    }
+
+    public function operators_update(Request $request, $id)
+    {
+        // Validation
+        $request->validate([
+            "nama_operator" => "required|string|max:100",
+            "kontak_operator" => "required|string|max:30",
+            "email_operator" => "required|email|max:100",
+        ]);
+
+        $uuid = Dits::decodeDits($id);
+        $data = Operator::whereUuid($uuid)
+            ->first();
+        $data->update([
+            'nama_operator' => $request->nama_operator,
+            'kontak_operator' => $request->kontak_operator,
+            'email_operator' => $request->email_operator,
+        ]);
+
+        if ($request->password) {
+            // Validation
+            $request->validate([
+                "password" => "required|string|max:100",
+            ]);
+            $user = User::whereUuidLogin($uuid)->first();
+            $user->update([
+                'password' => bcrypt($request->password),
+            ]);
+        }
+
+        if ($data) {
+            toast('Berhasil memperbaharui data', 'success');
+            return back();
+        }
+        toast('Gagal memperbaharui data', 'error');
         return back();
     }
 
     public function operators($id)
     {
-        $uuid   = Dits::decodeDits($id);
-        $data   = Madrasah::whereUuid($uuid)->first();
-        return view('pages.database_madrasah.operators.index' , compact('data'));
+        $uuid = Dits::decodeDits($id);
+        $data = Madrasah::whereUuid($uuid)->first();
+        return view('pages.database_madrasah.operators.index', compact('data'));
     }
 
-    public function operators_store(Request $request , $id)
+    public function operators_store(Request $request, $id)
     {
-        $uuid_madrasah       = Dits::decodeDits($id);
-        $uuid       = Str::uuid();
-        $password   = '1234';
-        $OP_NAME    = 'OP-'.rand(1 , 5000);
+        // Validation
+        $request->validate([
+            "nama_operator" => "required|string|max:100",
+            "kontak_operator" => "required|string|max:30",
+            "email_operator" => "required|email|unique:operators,email_operator|max:100",
+        ]);
 
-        $madrasah   = Madrasah::whereUuid($uuid_madrasah)->first();
-        if(isset($madrasah->kode_satker)) {
+        $uuid_madrasah = Dits::decodeDits($id);
+        $uuid = Str::uuid();
+        $password = '1234';
+        $OP_NAME = 'OP-' . rand(1, 5000);
+
+        $madrasah = Madrasah::whereUuid($uuid_madrasah)->first();
+        if (isset($madrasah->kode_satker)) {
             $satker = $madrasah->kode_satker;
         } else {
-            $satker = NULL;
+            $satker = null;
         }
 
         $operator = Operator::create([
-            'uuid'              => $uuid,
-            'uuid_madrasah'     => $uuid_madrasah,
-            'satker'            => $satker,
-            'nama_operator'     => $request->nama_operator,
-            'kontak_operator'   => $request->kontak_operator,
-            'email_operator'    => $request->email_operator
+            'uuid' => $uuid,
+            'uuid_madrasah' => $uuid_madrasah,
+            'satker' => $satker,
+            'nama_operator' => $request->nama_operator,
+            'kontak_operator' => $request->kontak_operator,
+            'email_operator' => $request->email_operator,
         ]);
 
         $user = User::create([
-            'uuid'          => Str::uuid(),
-            'uuid_login'    => $uuid,
-            'username'      => $OP_NAME,
-            'email'         => $request->email_operator,
-            'password'      => bcrypt($password),
-            'role'          => 'Operator Madrasah',
-            'status_aktif'  => 'yes',
-            'img'           => ''
+            'uuid' => Str::uuid(),
+            'uuid_login' => $uuid,
+            'username' => $OP_NAME,
+            'email' => $request->email_operator,
+            'password' => bcrypt($password),
+            'role' => 'Operator Madrasah',
+            'status_aktif' => 'yes',
+            'img' => '',
         ]);
 
         if ($user && $operator) {
-            Alert::success('Berhasil Menambahkan Operator', 'Password '.$OP_NAME.' adalah : '.$password);
+            Alert::success('Berhasil Menambahkan Operator', 'Password ' . $OP_NAME . ' adalah : ' . $password);
             return back();
         }
         Alert::success('Gagal Menambahkan Operator');
@@ -197,15 +238,15 @@ class MadrasahController extends Controller
         $id = Dits::decodeDits($id);
         $data = Operator::whereUuid($id)->first();
         $user = User::whereUuidLogin($id)->first();
-            if( $data ) {
-                $data->delete();
-                if($user) {
-                    $user->delete();
-                }
-                toast('Berhasil menghapus Operator','success');
-                return back();
+        if ($data) {
+            $data->delete();
+            if ($user) {
+                $user->delete();
             }
-        toast('Gagal menghapus Operator','error');
+            toast('Berhasil menghapus Operator', 'success');
+            return back();
+        }
+        toast('Gagal menghapus Operator', 'error');
         return back();
     }
 
@@ -213,91 +254,105 @@ class MadrasahController extends Controller
     {
         $id = Dits::decodeDits($id);
         $data = User::whereUuidLogin($id)->first();
-            
-            if ($data->status_aktif == 'yes')
-            {
-                $data->update([
-                    'status_aktif' => 'no'
-                ]);
-                if ($data) {
-                    toast('Berhasil mengunci Operator','success');
-                    return back();
-                }
-            } else {
-                $data->update([
-                    'status_aktif' => 'yes'
-                ]);
-                if ($data) {
-                    toast('Berhasil membuka Operator','success');
-                    return back();
-                }
-            }
 
-        toast('Gagal mengunci Operator','error');
+        if ($data->status_aktif == 'yes') {
+            $data->update([
+                'status_aktif' => 'no',
+            ]);
+            if ($data) {
+                toast('Berhasil mengunci Operator', 'success');
+                return back();
+            }
+        } else {
+            $data->update([
+                'status_aktif' => 'yes',
+            ]);
+            if ($data) {
+                toast('Berhasil membuka Operator', 'success');
+                return back();
+            }
+        }
+
+        toast('Gagal mengunci Operator', 'error');
         return back();
+    }
+
+    public function deleteMadrasah($id)
+    {
+        $id = Dits::decodeDits($id);
+        $data = Madrasah::whereUuid($id)->first();
+        $user = Operator::whereUuidMadrasah($id)->first();
+        if ($user) {
+            toast('Gagal menghapus Madrasah, Sudah Ada Operator!', 'error');
+            return redirect()->route('madrasah.index');
+        } else {
+            $data->delete();
+            toast('Berhasil menghapus Madrasah', 'success');
+            return redirect()->route('madrasah.index');
+        }
     }
 
     public function data()
     {
-        $data = Madrasah::all();
+        $data = Madrasah::orderBy('nama_madrasah','ASC')->get();
 
         return DataTables::of($data)
-                            ->addIndexColumn()
-                            ->addColumn('action' , function($item) {
-                                $btn = '<a href="/kemenag/madrasah/'.Dits::encodeDits($item->uuid).'/edit" class="btn btn-warning btn-sm"><i class="fas fa-pen-square"></i></a> ';
-                                $btn .= '<a href="/kemenag/madrasah/operators/'.Dits::encodeDits($item->uuid).'" class="btn btn-info btn-sm"><i class="fas fa-users"></i></a>';
-                                return $btn;
-                            })
-                            ->escapeColumns([])
-                            ->make(true);
+            ->addIndexColumn()
+            ->addColumn('action', function ($item) {
+                $btn = '<a href="' . \env('APP_URL') . 'kemenag/madrasah/' . Dits::encodeDits($item->uuid) . '/edit" class="btn btn-warning btn-sm"><i class="fas fa-pen-square"></i></a> ';
+                $btn .= '<a href="' . \env('APP_URL') . 'kemenag/madrasah/operators/' . Dits::encodeDits($item->uuid) . '" class="btn btn-info btn-sm mr-1"><i class="fas fa-users"></i></a>';
+                $btn .= '<a href="' . \env('APP_URL') . 'kemenag/madrasah/' . Dits::encodeDits($item->uuid) . '/delete"  onclick="return confirm(\'Anda Yakin Untuk Hapus Data Ini?\');" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a> ';
+                return $btn;
+            })
+            ->escapeColumns([])
+            ->make(true);
     }
 
     public function operators_data($id)
     {
-        $uuid_madrasah       = Dits::decodeDits($id);
+        $uuid_madrasah = Dits::decodeDits($id);
         $data = Operator::with('user')
-                            ->whereUuidMadrasah($uuid_madrasah)
-                            ->get();
+            ->whereUuidMadrasah($uuid_madrasah)
+            ->get();
 
         return DataTables::of($data)
-                            ->addIndexColumn()
-                            ->addColumn('action' , function($item) {
-                                if ($item->user['status_aktif'] == 'yes') {
-                                    $status = '<a href="/kemenag/madrasah/operator/'.Dits::encodeDits($item->uuid).'/lockUnlock" class="btn btn-dark btn-sm"><i class="fas fa-lock"></i></a>';
-                                } else {
-                                    $status = '<a href="/kemenag/madrasah/operator/'.Dits::encodeDits($item->uuid).'/lockUnlock" class="btn btn-success btn-sm"><i class="fas fa-lock-open"></i></a>';
-                                }
-    
-                                $btn = '<a href="/kemenag/madrasah/operator/'.Dits::encodeDits($item->uuid).'/delete" onclick="return confirm_delete()" class="btn btn-danger btn-sm"><i class="fas fa-eraser"></i></a> ';
-                                $btn .= '<a href="/kemenag/madrasah/operator/'.Dits::encodeDits($item->uuid).'/edit" class="btn btn-warning btn-sm"><i class="fas fa-pen-square"></i></a> ';
-                                // $btn .= '<a href="#" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a> ';
-    
-                                return $btn.$status;
-                            })
-                            ->escapeColumns([])
-                            ->make(true);
+            ->addIndexColumn()
+            ->addColumn('action', function ($item) {
+                if ($item->user['status_aktif'] == 'yes') {
+                    $status = '<a href="' . \env('APP_URL') . 'kemenag/madrasah/operator/' . Dits::encodeDits($item->uuid) . '/lockUnlock" class="btn btn-dark btn-sm"><i class="fas fa-lock"></i></a>';
+                } else {
+                    $status = '<a href="' . \env('APP_URL') . 'kemenag/madrasah/operator/' . Dits::encodeDits($item->uuid) . '/lockUnlock" class="btn btn-success btn-sm"><i class="fas fa-lock-open"></i></a>';
+                }
+
+                $btn = '<a href="' . \env('APP_URL') . 'kemenag/madrasah/operator/' . Dits::encodeDits($item->uuid) . '/delete" onclick="return confirm(\'Anda Yakin Untuk Hapus Data Ini?\');" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a> ';
+                $btn .= '<a href="' . \env('APP_URL') . 'kemenag/madrasah/operator/' . Dits::encodeDits($item->uuid) . '/edit" class="btn btn-warning btn-sm"><i class="fas fa-pen-square"></i></a> ';
+
+                return $btn . $status;
+            })
+            ->escapeColumns([])
+            ->make(true);
     }
 
     public function dokumen($id)
     {
         $uuid = Dits::decodeDits($id);
-        $data = Pembukaan::where('uuid' , $uuid)->first();
-        $madrasah = Madrasah::where('uuid' , $data->uuid_madrasah)->first();
+        $data = Pembukaan::where('uuid', $uuid)->first();
+        $madrasah = Madrasah::where('uuid', $data->uuid_madrasah)->first();
 
-        $persyaratan = explode(',' , $madrasah->persyaratan);
-        return view('pages.database_madrasah.operators.dokumen' , compact('data' , 'persyaratan' , 'madrasah'));
+        $persyaratan = explode(',', $madrasah->persyaratan);
+        return view('pages.database_madrasah.operators.dokumen', compact('data', 'persyaratan', 'madrasah'));
     }
 
-    public function dokumenStore(Request $request , $id)
+    public function dokumenStore(Request $request, $id)
     {
         $uuid = Dits::decodeDits($id);
-        $data = Madrasah::where('uuid' , $uuid)->first();
+        $data = Madrasah::where('uuid', $uuid)->first();
         if ($data) {
             $data->update([
-                'persyaratan' => $request->persyaratan
+                'persyaratan' => $request->persyaratan,
             ]);
             if ($data) {
-                toast('Berhasil membuat persyaratan','success');
+                toast('Berhasil membuat persyaratan', 'success');
                 return back();
             }
         }

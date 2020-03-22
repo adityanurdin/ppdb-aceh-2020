@@ -34,9 +34,9 @@
     <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('img/favicon/favicon-96x96.png') }}" />
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}" />
     <link rel="manifest" href="{{ asset('img/favicon/manifest.json') }}" />
+    <link rel="stylesheet" type="text/css" href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap/css/bootstrap.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/fontawesome/css/all.min.css') }}" />
-    <link rel="stylesheet" type="text/css" href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/owlcarousel/assets/owl.carousel.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/animate.css') }}" />
@@ -45,11 +45,10 @@
 </head>
 
 <body>
-
     {{--  navbar  --}}
     <nav class="navbar navbar-expand-md navbar-transparan fixed-top" id="nav">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="{{ route('home') }}">
                 <img src="{{ asset('img/logo-min.png') }}" alt="SIM PPDB Madrasah Kota Banda Aceh">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
@@ -62,10 +61,10 @@
                         <a class="nav-link" href="{{ route('home') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('home.videos') }}">Video</a>
+                        <a class="nav-link" href="{{ route('home.videos') }}#tag-videos">Video</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('home.artikel') }}">Artikel</a>
+                        <a class="nav-link" href="{{ route('home.artikel') }}#tag-articles">Artikel</a>
                     </li>
                     <div class="sparator"></div>
                     @if (Auth::check())
@@ -74,10 +73,10 @@
                     </li>
                     @else
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('auth.login') }}">Login</a>
+                        <a class="nav-link" href="{{ route('auth.login') }}#tag-login">Login</a>
                     </li>
                     <li class="nav-item nav_register">
-                        <a class="nav-link" href="{{ route('auth.register') }}"><i class="fa fa-desktop"></i>
+                        <a class="nav-link" href="{{ route('auth.register') }}#tag-register"><i class="fa fa-desktop"></i>
                             Register</a>
                     </li>
                     @endif
@@ -121,10 +120,10 @@
                                 <a class="nav-link" href="{{ route('home') }}">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('home.videos') }}">Video</a>
+                                <a class="nav-link" href="{{ route('home.videos') }}#tag-videos">Video</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('home.artikel') }}">Artikel</a>
+                                <a class="nav-link" href="{{ route('home.artikel') }}#tag-articles">Artikel</a>
                             </li>
                             <div class="sparator"></div>
                             @if (Auth::check())
@@ -133,10 +132,10 @@
                             </li>
                             @else
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('auth.login') }}">Login</a>
+                                <a class="nav-link" href="{{ route('auth.login') }}#tag-login">Login</a>
                             </li>
                             <li class="nav-item nav_register">
-                                <a class="nav-link" href="{{ route('auth.register') }}"><i class="fa fa-desktop"></i>
+                                <a class="nav-link" href="{{ route('auth.register') }}#tag-register"><i class="fa fa-desktop"></i>
                                     Register</a>
                             </li>
                             @endif

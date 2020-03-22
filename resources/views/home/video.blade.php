@@ -9,28 +9,11 @@ content="{{ $data->judul_video }}, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Inf
 @endpush
 
 @section('content')
-{{-- <div class="bd-callout bd-callout-blue">
-    <p class="mb-0"><i class="fas fa-play-circle"></i> [Now Playing]  {{$data->judul_video}}</p>
-</div>
-<div class="table-responsive">
-    <iframe width="1110" height="512" src="https://www.youtube.com/embed/{{ $data->url_video }}" frameborder="0"
-        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</div>
-<div class="card">
-    <div class="card-body">
-        <h5>{{$data->judul_video}}</h5>
-        <h6>{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $data->created_at)->toFormattedDateString() }}</h6>
-        <small class="text-muted"><i class="fas fa-user-edit"></i> {{$publisher->operator['nama_operator']}}</small>
-        <hr>
-        {{$data->deskripsi_video}}
-    </div>
-</div> --}}
-
 {{-- open_video --}}
 <section id="sec_open_video">
-    <div class="container">
+    <div class="container" id="tag-videos">
         {{-- title section --}}
-        <div class="title_sec">
+        <div class="title_sec" id="open">
             <h1>{{ $data->judul_video }}</h1>
             <span><i class=" fa fa-user"></i>{{ $nama }}</span>
             <span class="sparator"></span>
@@ -72,7 +55,7 @@ content="{{ $data->judul_video }}, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Inf
                     </div>
                 </div>
                 <div class="related_video_desc">
-                    <a href="{{ route('home.video.slug',['slug'=>$datas->slug_video]) }}">
+                    <a href="{{ route('home.video.slug',['slug'=>$datas->slug_video]) }}#open">
                         <h1>{{ $datas->judul_video }}</h1>
                     </a>
                     <span><i class="fa fa-user"></i>{{ $namas }}</span>
