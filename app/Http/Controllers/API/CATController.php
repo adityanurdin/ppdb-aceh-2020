@@ -37,25 +37,77 @@ class CATController extends Controller
         $bank_soal      = BankSoal::where('kode_soal' , $request->kode_soal)->first();
         $uuid_peserta   = $request->uuid_login;
         $soal           = Soal::where('kode_soal' , $request->kode_soal)->get();
+        $bank_soal      = ankSoal::where('kode_soal' , $kode_soal)->first();
 
         $data = [
-            'cookie_ujian' => [
-                'cookie_name'   => base64_encode('DitsUjian'),
-                'cookie_value'  => json_encode($request->kode_soal),
-                'minute'        => $bank_soal->timer_cat
-            ],
-            'cookie_waktu_ujian' => [
-                'cookie_name'   => base64_encode('DitsWaktu'),
-                'cookie_value'  => json_encode(Carbon::now()),
-                'minute'        => $bank_soal->timer_cat
-            ],
-            'nomer_soal'        => 1
+            // 'cookie_ujian' => [
+            //     'cookie_name'   => base64_encode('DitsUjian'),
+            //     'cookie_value'  => json_encode($request->kode_soal),
+            //     'minute'        => $bank_soal->timer_cat
+            // ],
+            // 'cookie_waktu_ujian' => [
+            //     'cookie_name'   => base64_encode('DitsWaktu'),
+            //     'cookie_value'  => json_encode(Carbon::now()),
+            //     'minute'        => $bank_soal->timer_cat
+            // ],
+            // 'nomer_soal'        => 1
+            'kode_soal'     => Dits::encodeDits($request->kode_soal),
+            'uuid_peserta'  => Dits::encodeDits($request->uuid_peserta)
         ];
         
-        return response()->json([
-            'status' => true,
-            'data'   => $data,
-        ]);
+        return Dits::sendResponse('success' , $data , 200 , 'set-ujian');
+    }
+
+    public function getSoal($kode_soal , $uuid_peserta) 
+    {
+        $kode_soal      = Dits::decodeDits($kode_soal);
+        $uuid_peserta   = Dits::decodeDits($uuid_peserta);
+
+        $soal           = Soal::where('kode_soal' , $kode_soal)->orderBy('nomor_soal' , 'ASC')->get();
+        $bank_soal      = BankSoal::where('kode_soal' , $kode_soal)->first();
+
+        $madrasah       = Madrasah::where('uuid' , $bank_soal->uuid_madrasah)->first();
+        $pembukaan      = Pembukaan::where('uuid_madrasah' , $madrasah->uuid)
+                                    ->where('status_pembukaan' , 'Dibuka')
+                                    ->first();
+        $pendaftaran    = Pendaftaran::where('uuid_peserta' , $uuid_peserta)
+                                    ->where('uuid_pembukaan' , $pembukaan->uuid)
+                                    ->first();
+
+        $imageSoal      = [];
+        foreach($soal as $item) {
+            array_push($imageSoal , [
+                'image' => Dits::imageUrl($item->gambar)
+            ]);
+        }
+
+
+        $data = [
+            'soal' => $soal,
+            'bank_soal' => $bank_soal,
+            'pendaftaran'   => $pendaftaran,
+        ];
+        return Dits::sendResponse('success' , $data , 200 , 'get-soal');
+    }
+
+    public function testUjian($kode_soal)
+    {
+        $kode_soal = Dits::decodeDits($kode_soal);
+        $bank_soal = BankSoal::where('kode_soal' , $kode_soal)->first();
+        $uuid_peserta = Auth::user()->uuid_login;
+
+        $soal      = Soal::where('kode_soal' , $kode_soal)
+                            ->orderBy('nomor_soal' , 'ASC')
+                            ->get();
+
+        $madrasah    = Madrasah::where('uuid' , $bank_soal->uuid_madrasah)->first();
+        $pembukaan   = Pembukaan::where('uuid_madrasah' , $madrasah->uuid)
+                                    ->where('status_pembukaan' , 'Dibuka')
+                                    ->first();
+        $pendaftaran = Pendaftaran::where('uuid_peserta' , $uuid_peserta)
+                                    ->where('uuid_pembukaan' , $pembukaan->uuid)
+                                    ->first();
+        return view('pages.CAT.ujian.ikut_ujian' , compact('soal' , 'pendaftaran' , 'bank_soal'));
     }
 
     public function start($no , $kode_soal)

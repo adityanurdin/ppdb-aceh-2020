@@ -34,7 +34,8 @@ Route::group(['prefix' => 'v1'], function () {
         /* INDEX */
         Route::get('/CAT' , 'API\CATController@index')->name('cat.index');
         Route::post('set_ujian' , 'API\CATController@create')->name('cat.set_ujian');
-        Route::get('soal/{no}/{kode_soal}' , 'API\CATController@start');
+        Route::get('/get_soal/{kode_soal}/{uuid_peserta}' , 'API\CATController@getSoal')->name('cat.get_soal');
+        // Route::get('soal/{no}/{kode_soal}' , 'API\CATController@start');
         Route::post('/kirim_jawaban/{no}/{kode_soal}' , 'API\CATController@storeJawaban');
 
         Route::get('/jawaban/{no}/{kode_soal}/{uuid_login}' , 'API\CATController@jawaban');
