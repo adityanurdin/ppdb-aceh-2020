@@ -66,6 +66,6 @@ class AuthController extends Controller
         $user   = User::with('peserta')
                         ->whereUuidLogin($uuid)
                         ->first();
-        return \Dits::sendResponse('Success' , $user);
+        return \Dits::sendResponse('Success' , $user , 200 , 'user');
     }
 }

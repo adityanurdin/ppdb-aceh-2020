@@ -22,6 +22,9 @@
             margin: auto;
             position: relative;
         }
+        .navigasi_soal .terjawab{
+            background: #fff000;
+        }
         .navigasi_soal a{
             display: inline-block;
             padding: 8px 15px;
@@ -192,7 +195,7 @@
                                     alert('Sesi Ujian Anda Telah Selesai!')
                                 } else if ( data.status == true ) {
                                     $('#notifikasi_'+{{$item->nomor_soal}}).html('<div class="notifikasi"><i class="fa fa-check-circle"></i> Berhasil Disimpan!</div>')
-                                    
+                                    $('#daftar{{$item->nomor_soal}}').addClass('terjawab');
                                 } else if ( data.status == false) {
                                     $('#notifikasi_'+{{$item->nomor_soal}}).html('<div class="notifikasi"><i class="fa fa-check-circle"></i> Gagal Disimpan!</div>');
                                     
@@ -378,7 +381,7 @@
         }
     }
 
-    countdown('{{$bank_soal->timer_cat}}',true,"{{route('cat.end')}}");
+    countdown('{!!$bank_soal->timer_cat!!}',true,"{{route('cat.end')}}");
     </script>
     
 </body>

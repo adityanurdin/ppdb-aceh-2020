@@ -142,12 +142,13 @@ class Dits
         return $code;
     }
 
-    public static function sendResponse($msg , $data = [] , $code = 200)
+    public static function sendResponse($msg , $data = [] , $code = 200 , $usage = '')
     {
         return response()->json([
             'status'    => true,
             'messages'  => $msg,
-            'data'      => $data
+            'data'      => $data,
+            'usage'     => $usage
         ]);
     }
 
