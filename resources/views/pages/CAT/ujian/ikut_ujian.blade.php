@@ -10,8 +10,8 @@
     <!-- Our CSS -->
     <link rel="stylesheet" href="{{asset('css/style_home.css')}}">
     <!-- Font Awesome JS -->
-    {{-- <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script> --}}
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
     <script type="text/javascript" src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 
     <style>
@@ -109,11 +109,10 @@
                             <h4 class="px-5 text-secondary"><i class="fas fa-hourglass-half"></i> Sisa Waktu <span class="badge badge-warning"><div id="timer"></div></span></h4>
                         </div>
                     </div>
-                    {{-- <div class="card-header">
+                    <div class="card-header">
                         <h6>Kode Soal : <b style="color:red;">{{$item->kode_soal}}</b></h6>
-                        <h6>Nomor Soal : <b>{{$item->nomor_soal}}</b></h6>
                         <h6>Jenis Soal : <b>{{$item->jenis_soal}}</b></h6>
-                    </div> --}}
+                    </div>
                     <div class="row no-gutters mt-5">
 
                         <div class="col-12 col-sm-6 col-md-8">
@@ -189,13 +188,14 @@
                                 $('#notifikasi_'+{{$item->nomor_soal}}).html('<div class="notifikasi"><i class="fa fa-clock"></i> Sedang Menyimpan, Tunggu Sampai Berhasil.</div>');
                             },
                             success: function(data) {
-                                console.log(data)
                                 if ( data.status == 'stop') {
                                     alert('Sesi Ujian Anda Telah Selesai!')
                                 } else if ( data.status == true ) {
                                     $('#notifikasi_'+{{$item->nomor_soal}}).html('<div class="notifikasi"><i class="fa fa-check-circle"></i> Berhasil Disimpan!</div>')
+                                    
                                 } else if ( data.status == false) {
                                     $('#notifikasi_'+{{$item->nomor_soal}}).html('<div class="notifikasi"><i class="fa fa-check-circle"></i> Gagal Disimpan!</div>');
+                                    
                                 }
                             },
                             error: function(err) {
@@ -207,7 +207,7 @@
 
                     if(jwb != ""){
                             $('#daftar{{$item->nomor_soal}}').addClass('terjawab');
-                        }
+                    }
                     return false;
         
                 })
@@ -221,6 +221,12 @@
                         {{-- </div> --}}
                     @endfor
             </div>
+
+            <div class="card card-body">
+                <a title="Selesai Ujian CAT" onclick="ExportJawaban('frans_table');return confirm('Apakah Anda Yakin Sudah Menjawab Semua Soal?');" href="{{route('cat.end')}}" class="btn btn-sm btn-info float-right"><i class="fas fa-check-circle"></i> Selesai Ujian CAT</a> &nbsp
+                <a title="Simpan Semua Jawaban" class="btn btn-sm btn-info float-right" onclick="KirimSemuaJawaban();"><i class="fa fa-save"></i> Simpan Semua Jawaban</a>
+            </div>
+
 
             <div style="display:none;">
                 <table class="table" id="frans_table">
@@ -250,6 +256,8 @@
                 </table>
             </div>
 
+            <div id="notifikasi_all"></div>
+
             
 
     </div>
@@ -260,12 +268,14 @@
     <script type="text/javascript" src="{{ asset('plugins/bootstrap/js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{asset('js/jquery.countdown.min.js')}}"></script>
+    <script src="{{asset('js/timer-cat.js')}}"></script>
     <script type="text/javascript">
     $(document).ready(function(){
         $(".divs > .divss").each(function(e) {
             if (e != 0)
             $(this).hide();
         });
+        $(".navbar").hide();
     });
     
                     
@@ -278,6 +288,8 @@
                 || el.mozRequestFullScreen
         ;
         rfs.call(el);
+        console.log('Fullscreen Mode On')
+
     });
         
     function Soal(i) {
@@ -318,6 +330,55 @@
             },
         });
     }
+    function KirimSemuaJawaban() {
+        $('#notifikasi_all').html('');
+        var nums = "{{$soal->count()}}";
+        var i;
+        for(var i=1; i <= nums; i++) {
+            SimpanJawaban(i);
+        }
+        ExportJawaban('frans_table');
+    }
+    function SimpanJawaban(id) {
+        var form = $("#form_soal_"+id);
+        $.ajax({
+            url: "{{route('save-ujian')}}",
+            type: "POST",
+            data:  form.serialize(),
+            success: function(sising){
+                if(sising=="berhasil"){
+                    $('#notifikasi_all').append('<div class="notifikasi" id="'+id+'" onclick="$(\'#'+id+'\').hide();"><i class="fa fa-check-circle"></i> Soal '+id+' Berhasil Disimpan!</div>');
+                    $('#daftar'+id).addClass('terjawab');
+                }else if(sising=="gagal"){
+                    $('#notifikasi_all').append('<div class="notifikasi" id="'+id+'" onclick="$(\'#'+id+'\').hide();"><i class="fa fa-times-circle" style="background:red;color:#fff;"></i> Soal '+id+' Gagal Disimpan!</div>');
+                }
+            },
+            error : function (data) {
+                alert(data);
+            },
+        });
+    }
+    function ExportJawaban(tableID, filename = ''){
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+        filename = filename?filename+'.xls':'[{{Auth::user()->email}}]-[{{$pendaftaran->kode_pendaftaran}}]-[{{date('H:i:s')}}].xls';
+        downloadLink = document.createElement("a");    
+        document.body.appendChild(downloadLink);    
+        if(navigator.msSaveOrOpenBlob){
+            var blob = new Blob(['\ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob( blob, filename);
+        }else{
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+            downloadLink.download = filename;
+            downloadLink.click();
+        }
+    }
+
+    countdown('{{$bank_soal->timer_cat}}',true,"{{route('cat.end')}}");
     </script>
     
 </body>

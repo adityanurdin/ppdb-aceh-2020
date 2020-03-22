@@ -33,12 +33,13 @@ class CATController extends Controller
         return view('pages.CAT.index' , compact('data'));
     }
 
-    public function testUjian(Request $request)
+    public function testUjian($kode_soal)
     {
-        $bank_soal = BankSoal::where('kode_soal' , $request->kode_soal)->first();
+        $kode_soal = Dits::decodeDits($kode_soal);
+        $bank_soal = BankSoal::where('kode_soal' , $kode_soal)->first();
         $uuid_peserta = Auth::user()->uuid_login;
 
-        $soal      = Soal::where('kode_soal' , $request->kode_soal)
+        $soal      = Soal::where('kode_soal' , $kode_soal)
                             ->orderBy('nomor_soal' , 'ASC')
                             ->get();
 
@@ -49,7 +50,7 @@ class CATController extends Controller
         $pendaftaran = Pendaftaran::where('uuid_peserta' , $uuid_peserta)
                                     ->where('uuid_pembukaan' , $pembukaan->uuid)
                                     ->first();
-        return view('pages.CAT.ujian.ikut_ujian' , compact('soal' , 'pendaftaran'));
+        return view('pages.CAT.ujian.ikut_ujian' , compact('soal' , 'pendaftaran' , 'bank_soal'));
     }
 
     public function saveUjian(Request $request)
@@ -104,10 +105,16 @@ class CATController extends Controller
         }
 
         
-        return response()->json([
-            'status' => true,
-            'data'   => $request->all()
-        ], 200);
+        if ($checkJawaban OR $store) {
+            return response()->json([
+                'status' => true,
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => false,
+            ], 500);
+        }
+
     }
 
     public function store(Request $request)
@@ -147,26 +154,16 @@ class CATController extends Controller
                                 
         if($bank_soal->crash_session == 'No') {
 
-            if ($jawaban->count() >= $soal->count()) {
-                toast('Gagal memasuki halaman ujian, Kamu sudah mengikuti ujian ini','error');
-                return redirect()->route('cat.index');
-            }
+            // if ($jawaban->count() >= $soal->count()) {
+            //     toast('Gagal memasuki halaman ujian, Kamu sudah mengikuti ujian ini','error');
+            //     return redirect()->route('cat.index');
+            // }
         }
 
 
         $minutes        = $bank_soal->timer_cat;
 
-        // Set Cookie Ujian
-        $cookie_name    = Dits::encodeDits('DitsUjian');
-        $cookie_value   = json_encode($request->kode_soal);
-        Cookie::queue(Cookie::make($cookie_name, $cookie_value, $minutes));
-
-        // Set waktu ujian
-        $nama_cookie    = Dits::encodeDits('DitsWaktu');
-        $isi_cookie     = json_encode($request->start);
-        Cookie::queue(Cookie::make($nama_cookie, $isi_cookie, $minutes));
-
-        return redirect()->route('cat.start' , Dits::encodeDits(1));
+        return redirect()->route('cat.ujian' , Dits::encodeDits($request->kode_soal));
     }
 
     public function start($no = 1)
