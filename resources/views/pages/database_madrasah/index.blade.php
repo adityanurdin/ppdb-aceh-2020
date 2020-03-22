@@ -1,23 +1,23 @@
 @extends('layouts.backend.index')
 
-@section('css')
-    <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-@endsection
-
-@section('title')
-   {{ strtoupper(isset(Dits::DataPeserta()->nama)) ? Dits::DataPeserta()->nama : Auth::user()->role }} - SIM PPDB Madrasah Kota Banda Aceh
+@section('breadchumb')
+<nav aria-label="bc">
+    <ol class="bc">
+        <li class="bc-item"><a href="{{route('dashboard')}}"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li class="bc-item active" aria-current="page">Database Madrasah</li>
+    </ol>
+</nav>
 @endsection
 
 @section('content')
-    <div class="card">
-        <div class="card-body">
-            <a href="{{route('madrasah.create')}}" class="btn btn-info mb-3 float-right">Tambah Madrasah</a>
-            <table class="table table-borderless table-sm table-responsive table-hover" id="myTable">
+<div class="card">
+    <div class="card-body">
+        <a href="{{route('madrasah.create')}}" class="btn btn-info mb-3 float-right"><i class="fa fa-plus"></i> Tambah Madrasah</a>
+        <div class="clearfix"></div>
+        <div class="table-responsive-sm">
+            <table class="table table-bordered table-hover" id="myTable">
                 <thead>
-                    <tr>
+                    <tr class="text-center">
                         <th>ID</th>
                         <th width="15">Kode Satker</th>
                         <th>NSM</th>
@@ -25,7 +25,7 @@
                         <th>Namaa Madrasah</th>
                         <th>Jenjang</th>
                         <th>Kecamatan</th>
-                        <th width="75">Opsi</th>
+                        <th style="min-width:120px;">Opsi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,36 +33,33 @@
             </table>
         </div>
     </div>
+</div>
 @endsection
 
 @push('script')
 
-    <script>
-        $(function() {
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            
-            $('#myTable').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: "{{ route('madrasah.data') }}",
-                columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'kode_satker', name: 'kode_satker'},
-                    {data: 'nsm', name: 'nsm'},
-                    {data: 'npsn', name: 'npsn'},
-                    {data: 'nama_madrasah', name: 'nama_madrasah'},
-                    {data: 'jenjang', name: 'jenjang'},
-                    {data: 'kecamatan', name: 'kecamatan'},
-                    {data: 'action', name: 'action', orderable: false, searchable: false},
-                ]
-            });
-
-
+<script>
+    $(function() {
+        $('#myTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('madrasah.data') }}",
+            columns: [
+                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'kode_satker', name: 'kode_satker'},
+                {data: 'nsm', name: 'nsm'},
+                {data: 'npsn', name: 'npsn'},
+                {data: 'nama_madrasah', name: 'nama_madrasah'},
+                {data: 'jenjang', name: 'jenjang'},
+                {data: 'kecamatan', name: 'kecamatan'},
+                {data: 'action', name: 'action', orderable: false, searchable: false},
+            ],
+            "columnDefs": [
+              { className: "min_id text-center", "targets": [0] },
+              { className: "text-center", "targets": [1,2,3] },
+              { className: "min_action text-center", "targets": [7] }
+            ],
         });
-    </script>
+    });
+</script>
 @endpush
