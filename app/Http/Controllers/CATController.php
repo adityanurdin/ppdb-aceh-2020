@@ -518,53 +518,28 @@ class CATController extends Controller
     {
         $data = BankSoal::with('madrasah')->get();
 
-        return DataTables::of($data)
+         return DataTables::of($data)
                             ->addIndexColumn()
-                            ->addColumn('nama_peserta' , function($item) {
-                                $pendaftaran = Pendaftaran::where('kode_pendaftaran' , $item->kode_pendaftaran)->first();
-                                $peserta     = Peserta::where('uuid' , $pendaftaran->uuid_peserta)->first();
-                                return $peserta->nama;
-                            })
-                            ->addColumn('jawaban_benar' , function($item) {
-                                $jawaban_benar = Jawaban::where('status_jawaban','Benar')
-                                ->where('kode_soal',$item->kode_soal)
-                                ->where('kode_pendaftaran',$item->kode_pendaftaran)
-                                ->count();
-                                return $jawaban_benar;
-                            })
-                            ->addColumn('jawaban_salah' , function($item) {
-                                $jawaban_benar = Jawaban::where('status_jawaban','Salah')
-                                ->where('kode_soal',$item->kode_soal)
-                                ->where('kode_pendaftaran',$item->kode_pendaftaran)
-                                ->count();
-                                return $jawaban_benar;
-                            })
-                            ->addColumn('tidak_jawab' , function($item) {
-                                $jawaban_benar = Jawaban::where('jawaban', NULL)
-                                ->where('kode_soal',$item->kode_soal)
-                                ->where('kode_pendaftaran',$item->kode_pendaftaran)
-                                ->count();
-                                return $jawaban_benar;
-                            })
                             ->addColumn('action' , function($item) {
-                                $btn = '<a href="'.route('export.peserta-ujian.detail' , [$item->kode_pendaftaran , $item->kode_soal]).'" class="btn btn-success btn-block btn-sm"><i class="fas fa-file-excel"></i> Export Jawaban</a>';
-                                $btn .= '<a href="" class="btn btn-danger btn-block btn-sm"><i class="fas fa-trash"></i> Hapus Peserta</a>';
-                                return $btn;
+                                return '<a href="' . \env('APP_URL') . '/CAT/Bank/Soal/detail/'.Dits::encodeDits($item->uuid).'" class="btn btn-dark btn-sm"><i class="fas fa-cogs"></i> Opsi Lanjutan</a>';
                             })
                             ->escapeColumns([])
                             ->make(true);
      }
 
-     public function soalData($id)
+     public function detailData($id)
      {
-        $data = Soal::where('kode_soal' , $id)
-                        ->get();
+        $id = Dits::decodeDits($id);
+        $data = Jawaban::where('kode_soal' , $id)
+                            ->groupBy('kode_pendaftaran')
+                            ->get();
+                        // return $data;
         return DataTables::of($data)
             ->addIndexColumn()
             ->addColumn('nama_peserta', function ($item) {
                 $pendaftaran = Pendaftaran::where('kode_pendaftaran', $item->kode_pendaftaran)->first();
                 $peserta = Peserta::where('uuid', $pendaftaran->uuid_peserta)->first();
-                return $peserta->nama;
+                return $pendaftaran->peserta->nama;
             })
             ->addColumn('jawaban_benar', function ($item) {
                 $jawaban_benar = Jawaban::where('status_jawaban', 'Benar')
@@ -581,7 +556,7 @@ class CATController extends Controller
                 return $jawaban_benar;
             })
             ->addColumn('tidak_jawab', function ($item) {
-                $jawaban_benar = Jawaban::where('status_jawaban', '')
+                $jawaban_benar = Jawaban::where('jawaban', '')
                     ->where('kode_soal', $item->kode_soal)
                     ->where('kode_pendaftaran', $item->kode_pendaftaran)
                     ->count();
