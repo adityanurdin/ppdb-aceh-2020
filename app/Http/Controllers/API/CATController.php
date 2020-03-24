@@ -37,7 +37,10 @@ class CATController extends Controller
         $bank_soal      = BankSoal::where('kode_soal' , $request->kode_soal)->first();
         $uuid_peserta   = $request->uuid_login;
         $soal           = Soal::where('kode_soal' , $request->kode_soal)->get();
-        $bank_soal      = ankSoal::where('kode_soal' , $kode_soal)->first();
+        $bank_soal      = BankSoal::where('kode_soal' , $request->kode_soal)->first();
+        if (!$bank_soal) {
+            return Dits::sendResponse('error' , '' , 500 , 'set-ujian');
+        }
 
         $data = [
             // 'cookie_ujian' => [
@@ -65,6 +68,7 @@ class CATController extends Controller
 
         $soal           = Soal::where('kode_soal' , $kode_soal)->orderBy('nomor_soal' , 'ASC')->get();
         $bank_soal      = BankSoal::where('kode_soal' , $kode_soal)->first();
+
 
         $madrasah       = Madrasah::where('uuid' , $bank_soal->uuid_madrasah)->first();
         $pembukaan      = Pembukaan::where('uuid_madrasah' , $madrasah->uuid)
