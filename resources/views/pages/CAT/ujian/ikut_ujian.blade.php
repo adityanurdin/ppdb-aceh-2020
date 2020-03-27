@@ -134,19 +134,19 @@
                                 <input type="hidden" name="kode_pendaftaran" id="kode_pendaftaran{{$item->nomor_soal}}" value="{{Dits::encodeDits($pendaftaran->kode_pendaftaran)}}" readonly>
                                 <input type="hidden" name="nums" id="nums_{{$item->nomor_soal}}" value="{{Dits::encodeDits($item->nomor_soal)}}" readonly>
                                 <div class="form-group">
-                                    <input type="radio" name="jawaban[]" id="" value="a" {{Dits::selected($item->jawaban , 'a' , 'selected')}} onclick="SendTable('{{$item->nomor_soal}}','a')">
+                                    <input type="radio" name="jawaban[]" id="" value="A" {{Dits::selected($item->jawaban , 'A' , 'selected')}} onclick="SendTable('{{$item->nomor_soal}}','a')">
                                     <label for="" class="label_radio">A. {{$item->a}}</label>
                                 </div>
                                 <div class="form-group">
-                                    <input type="radio" name="jawaban[]" id="" value="b" {{Dits::selected($item->jawaban , 'b' , 'selected')}} onclick="SendTable('{{$item->nomor_soal}}','b')">
+                                    <input type="radio" name="jawaban[]" id="" value="B" {{Dits::selected($item->jawaban , 'B' , 'selected')}} onclick="SendTable('{{$item->nomor_soal}}','b')">
                                     <label for="" class="label_radio">B. {{$item->b}}</label>
                                 </div>
                                 <div class="form-group">
-                                    <input type="radio" name="jawaban[]" id="" value="c" {{Dits::selected($item->jawaban , 'c' , 'selected')}} onclick="SendTable('{{$item->nomor_soal}}','c')">
+                                    <input type="radio" name="jawaban[]" id="" value="C" {{Dits::selected($item->jawaban , 'D' , 'selected')}} onclick="SendTable('{{$item->nomor_soal}}','c')">
                                     <label for="" class="label_radio">C. {{$item->c}}</label>
                                 </div>
                                 <div class="form-group">
-                                    <input type="radio" name="jawaban[]" id="" value="d" {{Dits::selected($item->jawaban , 'd' , 'selected')}} onclick="SendTable('{{$item->nomor_soal}}','d')">
+                                    <input type="radio" name="jawaban[]" id="" value="D" {{Dits::selected($item->jawaban , 'E' , 'selected')}} onclick="SendTable('{{$item->nomor_soal}}','d')">
                                     <label for="" class="label_radio">D. {{$item->d}}</label>
                                 </div>
                             </form>

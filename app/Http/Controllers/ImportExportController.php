@@ -8,6 +8,7 @@ use \App\Exports\PendaftaranExport;
 use \App\Imports\PengumumanImport;
 use \App\Imports\SoalImport;
 use \App\Imports\JalurKhususImport;
+use \App\Imports\JawabanImport;
 use \App\Exports\pesertaUjianExport;
 use \App\Exports\PesertaUjianDetailExport;
 
@@ -66,6 +67,19 @@ class ImportExportController extends Controller
             return back();
         }
 
+    }
+
+    public function jawabanImport(Request $request)
+    {
+        $request->validate([
+            // 'file_upload' => 'required|max:300|file|mimes:csv,xls'
+        ]);
+
+         if($request->hasFile('file_upload')) {
+             Excel::import(new jawabanImport() , request()->file('file_upload'));
+             toast('Berhasil Upload Jawaban','success');
+             return back();
+         }
     }
 
     public function soalImport(Request $request)

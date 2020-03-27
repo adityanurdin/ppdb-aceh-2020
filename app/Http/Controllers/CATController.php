@@ -61,7 +61,7 @@ class CATController extends Controller
         if($request->jawaban) {
             $jawaban = implode('"' ,$request->jawaban);
         } else {
-            $jawaban = NULL;
+            $jawaban = '';
         }
 
         $jawab = Soal::where('kode_soal' , $kode_soal)
@@ -69,7 +69,7 @@ class CATController extends Controller
                             ->first();
         if($jawaban == $jawab->kunci_jawaban) {
             $status_jawaban = 'Benar';
-        } elseif ($jawaban == NULL) {
+        } elseif ($jawaban == '') {
             $status_jawaban = '';
         } else {
             $status_jawaban = 'Salah';
@@ -84,7 +84,7 @@ class CATController extends Controller
                 'kode_soal'         => $kode_soal,
                 'kode_pendaftaran'  => $kode_pendaftaran,
                 'nomor_soal'        => $nomor_soal,
-                'jawaban'           => $jawaban,
+                'jawaban'           => strtoupper($jawaban),
                 'status_jawaban'    => $status_jawaban,
                 'tgl_cat'           => Carbon::now()
             ]);
@@ -94,7 +94,7 @@ class CATController extends Controller
                                     'kode_soal'         => $kode_soal,
                                     'kode_pendaftaran'  => $kode_pendaftaran,
                                     'nomor_soal'        => $nomor_soal,
-                                    'jawaban'           => $jawaban,
+                                    'jawaban'           => strtoupper($jawaban),
                                     'status_jawaban'    => $status_jawaban,
                                     'tgl_cat'           => Carbon::now()
                                 ]);
@@ -150,10 +150,10 @@ class CATController extends Controller
 
         if ($bank_soal->crash_session == 'No') {
 
-            // if ($jawaban->count() >= $soal->count()) {
-            //     toast('Gagal memasuki halaman ujian, Kamu sudah mengikuti ujian ini','error');
-            //     return redirect()->route('cat.index');
-            // }
+            if ($jawaban->count() >= $soal->count()) {
+                toast('Gagal memasuki halaman ujian, Kamu sudah mengikuti ujian ini','error');
+                return redirect()->route('cat.index');
+            }
         }
 
         $minutes = $bank_soal->timer_cat;
@@ -608,7 +608,7 @@ class CATController extends Controller
         $valid = Validator::make($request->all(), [
             'gambar' => 'image|mimes:jpeg,jpg,png|max:300',
         ]);
-
+ 
         if ($valid->fails()) {
             toast('Gagal menambah soal, Gambar tidak sesuai', 'error');
             return back();

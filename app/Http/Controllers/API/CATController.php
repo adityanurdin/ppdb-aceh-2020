@@ -43,17 +43,6 @@ class CATController extends Controller
         }
 
         $data = [
-            // 'cookie_ujian' => [
-            //     'cookie_name'   => base64_encode('DitsUjian'),
-            //     'cookie_value'  => json_encode($request->kode_soal),
-            //     'minute'        => $bank_soal->timer_cat
-            // ],
-            // 'cookie_waktu_ujian' => [
-            //     'cookie_name'   => base64_encode('DitsWaktu'),
-            //     'cookie_value'  => json_encode(Carbon::now()),
-            //     'minute'        => $bank_soal->timer_cat
-            // ],
-            // 'nomer_soal'        => 1
             'kode_soal'     => Dits::encodeDits($request->kode_soal),
             'uuid_peserta'  => Dits::encodeDits($request->uuid_peserta)
         ];
@@ -87,11 +76,87 @@ class CATController extends Controller
 
 
         $data = [
-            'soal' => $soal,
-            'bank_soal' => $bank_soal,
-            'pendaftaran'   => $pendaftaran,
+            'soal'          => $soal,
+            'bank_soal'     => $bank_soal,
+            'pendaftaran'   => $pendaftaran
         ];
         return Dits::sendResponse('success' , $data , 200 , 'get-soal');
+    }
+
+    public function getJawaban($kode_soal , $kode_pendaftaran , $nomor_soal) 
+    {
+        $jawaban = Jawaban::where('kode_soal' , $kode_soal)
+                    ->where('kode_pendaftaran' , $kode_pendaftaran)
+                    ->where('nomor_soal' , $nomor_soal)
+                    ->first();
+
+        $data = [
+            'jawaban' => $jawaban
+        ];
+
+        return Dits::sendResponse('success' , $data , 200 , 'get-jawaban');
+    }
+
+    public function saveUjian(Request $request)
+    {
+        
+        if($request->jawaban) {
+            $jawaban = implode('"' ,$request->jawaban);
+        } else {
+            $jawaban = '';
+        }
+
+        $jawab = Soal::where('kode_soal' , $request->kode_soal)
+                ->where('nomor_soal' , $request->nomor_soal)
+                ->first();
+
+        if($jawaban == $jawab->kunci_jawaban) {
+            $status_jawaban = 'Benar';
+        } elseif ($jawaban == '') {
+            $status_jawaban = '';
+        } else {
+            $status_jawaban = 'Salah';
+        }
+
+        $checkJawaban = Jawaban::where('kode_soal' , $request->kode_soal)
+                                ->where('kode_pendaftaran' , $request->kode_pendaftaran)
+                                ->where('nomor_soal' , $request->nomor_soal)
+                                ->first();
+
+        if($checkJawaban) {
+            $checkJawaban->update([
+                'kode_soal'         => $request->kode_soal,
+                'kode_pendaftaran'  => $request->kode_pendaftaran,
+                'nomor_soal'        => $request->nomor_soal,
+                'jawaban'           => $jawaban,
+                'status_jawaban'    => $status_jawaban,
+                'tgl_cat'           => Carbon::now()
+            ]);
+        } else {
+            $store   = Jawaban::create([
+                'uuid'              => Str::uuid(),
+                'kode_soal'         => $request->kode_soal,
+                'kode_pendaftaran'  => $request->kode_pendaftaran,
+                'nomor_soal'        => $request->nomor_soal,
+                'jawaban'           => $jawaban,
+                'status_jawaban'    => $status_jawaban,
+                'tgl_cat'           => Carbon::now()
+            ]);
+        }
+
+        $data = [
+            'request'       => $request->all(),
+            'jawab'         => $jawab,
+            'check_jawaban' => $checkJawaban
+        ];
+
+        if ($checkJawaban OR $store) {
+            return Dits::sendResponse(true , $data , 200 , 'save-ujian');
+        } else {
+            return Dits::sendResponse(false , '' , 200 , 'save-ujian');
+        }
+
+        
     }
 
     public function testUjian($kode_soal)
