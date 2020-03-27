@@ -40,9 +40,10 @@ class PPDBController extends Controller
     public function store(Request $request)
     {
 
+
         // Validation
         $request->validate([
-            'uuid_madrasah' => 'required|string|max:100',
+            // 'uuid_madrasah' => 'required|string|max:100',
             'tgl_pembukaan' => 'required|string|max:10',
             'tgl_penutupan' => 'required|string|max:10',
             'tgl_pengumuman' => 'required|string|max:10',
