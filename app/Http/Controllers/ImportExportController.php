@@ -13,6 +13,23 @@ use \App\Exports\pesertaUjianExport;
 use \App\Imports\JalurKhususImport;
 use \App\Imports\PengumumanImport;
 use \App\Imports\SoalImport;
+use \App\Imports\JalurKhususImport;
+use \App\Imports\JawabanImport;
+use \App\Exports\pesertaUjianExport;
+use \App\Exports\PesertaUjianDetailExport;
+
+use Excel;
+use Dits;
+use Carbon\Carbon;
+use Validator;
+
+use App\User;
+use App\Models\Operator;
+use App\Models\Peserta;
+use App\Models\Madrasah;
+use App\Models\Pembukaan;
+use App\Models\Pendaftaran;
+
 
 class ImportExportController extends Controller
 {
@@ -56,6 +73,19 @@ class ImportExportController extends Controller
             return back();
         }
 
+    }
+
+    public function jawabanImport(Request $request)
+    {
+        $request->validate([
+            // 'file_upload' => 'required|max:300|file|mimes:csv,xls'
+        ]);
+
+         if($request->hasFile('file_upload')) {
+             Excel::import(new jawabanImport() , request()->file('file_upload'));
+             toast('Berhasil Upload Jawaban','success');
+             return back();
+         }
     }
 
     public function soalImport(Request $request)

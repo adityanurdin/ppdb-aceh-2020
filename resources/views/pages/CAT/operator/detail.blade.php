@@ -90,7 +90,7 @@
                     class="fas fa-trash"></i> Hapus Bank Soal</a>
             <a href="{{route('export.peserta-ujian' , $data->kode_soal)}}" class="btn btn-success btn-sm"><i
                     class="fas fa-file-excel"></i> Export Peserta CAT</a>
-            <a href="#" class="btn btn-info btn-sm"><i class="fas fa-cloud-upload-alt"></i> Import Jawaban CAT</a>
+            <a href="" data-toggle="modal" data-target="#importJawaban" class="btn btn-info btn-sm"><i class="fas fa-cloud-upload-alt"></i> Import Jawaban CAT</a>
             <a href="{{route('bank-soal.crash' , Dits::encodeDits($data->uuid))}}" class="btn btn-danger btn-sm"><i
                     class="fas fa-user-slash"></i> Crash CAT</a>
         </div>
@@ -188,6 +188,35 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Import jawaban -->
+<div class="modal fade" id="importJawaban" tabindex="-1" role="dialog" aria-labelledby="importJawabanLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="importJawabanLabel">Import Jawaban</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="{{route('import.jawaban')}}" method="POST" enctype="multipart/form-data">
+            @csrf
+
+            <div class="modal-body">
+              <div class="form-group">
+                  <label for="">File Import Jawaban</label>
+                  <input type="file" name="file_upload" id="" class="form-control">
+                  <small style="color: red;">File harus berformat CSV | Max 300kb</small>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Import</button>
+            </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
 
 {{-- Modal update timer --}}
 <div class="modal fade" id="updateTimer" tabindex="-1" role="dialog" aria-labelledby="updateTimerLabel"
