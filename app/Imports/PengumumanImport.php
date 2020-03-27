@@ -19,15 +19,26 @@ class PengumumanImport implements ToCollection
         foreach ($rows as $item) 
         {
             $data = explode(';' ,$item[0]);
-            try {
-                Pendaftaran::where('kode_pendaftaran' , $data[0])->update([
-                    'status_diterima'   => $data[1],
-                    'jalur_diterima'    => $data[2]
-                ]);
-            } catch (\Throwable $th) {
-                throw $th;
+            if($data[1]=="Diterima"){
+                try {
+                    Pendaftaran::where('kode_pendaftaran' , $data[0])->update([
+                        'status_pendaftaran'   => "Lolos Tahap Dokumen",
+                        'status_diterima'   => $data[1],
+                        'jalur_diterima'    => $data[2]
+                    ]);
+                } catch (\Throwable $th) {
+                    throw $th;
+                }
+            }else{
+                try {
+                    Pendaftaran::where('kode_pendaftaran' , $data[0])->update([
+                        'status_diterima'   => $data[1],
+                        'jalur_diterima'    => $data[2]
+                    ]);
+                } catch (\Throwable $th) {
+                    throw $th;
+                }
             }
-            
         }
     }
 }

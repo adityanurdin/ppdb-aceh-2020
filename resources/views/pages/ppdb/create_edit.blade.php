@@ -138,7 +138,7 @@
                             <div class="col-md-8">
                                 <input type="file" name="url_brosur" id=""
                                     class="form-control @error('url_brosur') is-invalid @enderror">
-                                <small>File: PDF | Ukuran Maksimal: 300KB</small>
+                                <small>File: PDF | Ukuran Maksimal: 1000KB</small>
                                 @error('url_brosur')
                                 <div class="invalid-feedback text-left">
                                     <label>{{ $message }}</label>
@@ -147,7 +147,7 @@
                             </div>
                             <div class="col-md-4">
                                 <a href="{{Dits::pdfViewer(asset($data->url_brosur))}}" target="_blank"
-                                    class="btn btn-info btn-sm btn-block">Lihat Brosur</a>
+                                    class="btn btn-info btn-sm btn-block"><i class="fa fa-file-pdf"></i> Lihat Brosur</a>
                             </div>
                         </div>
                     </div>
@@ -156,7 +156,7 @@
                         <label for="">File Brosur</label>
                         <input type="file" name="url_brosur" id=""
                             class="form-control @error('url_brosur') is-invalid @enderror">
-                        <small>File: PDF | Ukuran Maksimal: 300KB</small>
+                        <small>File: PDF | Ukuran Maksimal: 1000KB</small>
                         @error('url_brosur')
                         <div class="invalid-feedback text-left">
                             <label>{{ $message }}</label>
@@ -174,24 +174,32 @@
 @endsection
 @push('script')
 <script>
-    {{--  $('#tgl_pembukaan').datepicker({
-        uiLibrary: 'bootstrap4'
-    });
-    $('#tgl_penutupan').datepicker({
-        uiLibrary: 'bootstrap4'
-    });
-    $('#tgl_pengumuman').datepicker({
-        uiLibrary: 'bootstrap4'
-    });  --}}
-    
     $('#tgl_pembukaan').datetimepicker({
-        format: 'DD-MM-YYYY'
+        format: 'DD-MM-YYYY',
+        icons: {
+            up: "fa fa-chevron-circle-up",
+            down: "fa fa-chevron-circle-down",
+            next: 'fa fa-chevron-circle-right',
+            previous: 'fa fa-chevron-circle-left'
+        }
     });
     $('#tgl_penutupan').datetimepicker({
-        format: 'DD-MM-YYYY'
+        format: 'DD-MM-YYYY',
+        icons: {
+            up: "fa fa-chevron-circle-up",
+            down: "fa fa-chevron-circle-down",
+            next: 'fa fa-chevron-circle-right',
+            previous: 'fa fa-chevron-circle-left'
+        }
     });
     $('#tgl_pengumuman').datetimepicker({
-        format: 'DD-MM-YYYY'
+        format: 'DD-MM-YYYY',
+        icons: {
+            up: "fa fa-chevron-circle-up",
+            down: "fa fa-chevron-circle-down",
+            next: 'fa fa-chevron-circle-right',
+            previous: 'fa fa-chevron-circle-left'
+        }
     });
 </script>
 @endpush

@@ -25,83 +25,89 @@ class CATController extends Controller
     public function index()
     {
         $uuid_peserta = \Auth::user()->uuid_login;
-        $data = \App\Models\Peserta::where('uuid', $uuid_peserta)->first();
-        return view('pages.CAT.index', compact('data'));
+        $data = Peserta::where('uuid', $uuid_peserta)->first();
+        $tahun = date('Y');
+        $pendaftaran = Pendaftaran::whereUuidPeserta($uuid_peserta)->whereYear('created_at', $tahun)->first();
+        $jenjang = $pendaftaran->pembukaan->madrasah->jenjang;
+        if ($jenjang != "MI") {
+            return view('pages.CAT.index', compact('data'));
+        }
+        toast('Anda Tidak Memiliki Akses!', 'error');
+        return redirect()->route('dashboard');
     }
 
     public function testUjian($kode_soal)
     {
         $kode_soal = Dits::decodeDits($kode_soal);
-        $bank_soal = BankSoal::where('kode_soal' , $kode_soal)->first();
+        $bank_soal = BankSoal::where('kode_soal', $kode_soal)->first();
         $uuid_peserta = Auth::user()->uuid_login;
 
-        $soal      = Soal::where('kode_soal' , $kode_soal)
-                            ->orderBy('nomor_soal' , 'ASC')
-                            ->get();
+        $soal = Soal::where('kode_soal', $kode_soal)
+            ->orderBy('nomor_soal', 'ASC')
+            ->get();
 
-        $madrasah    = Madrasah::where('uuid' , $bank_soal->uuid_madrasah)->first();
-        $pembukaan   = Pembukaan::where('uuid_madrasah' , $madrasah->uuid)
-                                    ->where('status_pembukaan' , 'Dibuka')
-                                    ->first();
-        $pendaftaran = Pendaftaran::where('uuid_peserta' , $uuid_peserta)
-                                    ->where('uuid_pembukaan' , $pembukaan->uuid)
-                                    ->first();
-        return view('pages.CAT.ujian.ikut_ujian' , compact('soal' , 'pendaftaran' , 'bank_soal'));
+        $madrasah = Madrasah::where('uuid', $bank_soal->uuid_madrasah)->first();
+        $pembukaan = Pembukaan::where('uuid_madrasah', $madrasah->uuid)
+            ->where('status_pembukaan', 'Dibuka')
+            ->first();
+        $pendaftaran = Pendaftaran::where('uuid_peserta', $uuid_peserta)
+            ->where('uuid_pembukaan', $pembukaan->uuid)
+            ->first();
+        return view('pages.CAT.ujian.ikut_ujian', compact('soal', 'pendaftaran', 'bank_soal'));
     }
 
     public function saveUjian(Request $request)
     {
-        
-        $uuid_jawaban = Dits::decodeDits($request->uuid_jawaban);
-        $nomor_soal   = Dits::decodeDits($request->nomor_soal);
-        $kode_soal    = Dits::decodeDits($request->kode_soal);
-        $kode_pendaftaran = Dits::decodeDits($request->kode_pendaftaran);
-        $nums         = Dits::decodeDits($request->nums);
 
-        if($request->jawaban) {
-            $jawaban = implode('"' ,$request->jawaban);
+        $uuid_jawaban = Dits::decodeDits($request->uuid_jawaban);
+        $nomor_soal = Dits::decodeDits($request->nomor_soal);
+        $kode_soal = Dits::decodeDits($request->kode_soal);
+        $kode_pendaftaran = Dits::decodeDits($request->kode_pendaftaran);
+        $nums = Dits::decodeDits($request->nums);
+
+        if ($request->jawaban) {
+            $jawaban = implode('"', $request->jawaban);
         } else {
-            $jawaban = NULL;
+            $jawaban = null;
         }
 
-        $jawab = Soal::where('kode_soal' , $kode_soal)
-                            ->where('nomor_soal' , $nomor_soal)
-                            ->first();
-        if($jawaban == $jawab->kunci_jawaban) {
+        $jawab = Soal::where('kode_soal', $kode_soal)
+            ->where('nomor_soal', $nomor_soal)
+            ->first();
+        if ($jawaban == $jawab->kunci_jawaban) {
             $status_jawaban = 'Benar';
-        } elseif ($jawaban == NULL) {
+        } elseif ($jawaban == null) {
             $status_jawaban = '';
         } else {
             $status_jawaban = 'Salah';
         }
 
-        $checkJawaban = Jawaban::where('kode_soal' , $kode_soal)
-                                    ->where('kode_pendaftaran' , $kode_pendaftaran)
-                                    ->where('nomor_soal' , $nomor_soal)
-                                    ->first();
-        if($checkJawaban) {
+        $checkJawaban = Jawaban::where('kode_soal', $kode_soal)
+            ->where('kode_pendaftaran', $kode_pendaftaran)
+            ->where('nomor_soal', $nomor_soal)
+            ->first();
+        if ($checkJawaban) {
             $checkJawaban->update([
-                'kode_soal'         => $kode_soal,
-                'kode_pendaftaran'  => $kode_pendaftaran,
-                'nomor_soal'        => $nomor_soal,
-                'jawaban'           => $jawaban,
-                'status_jawaban'    => $status_jawaban,
-                'tgl_cat'           => Carbon::now()
+                'kode_soal' => $kode_soal,
+                'kode_pendaftaran' => $kode_pendaftaran,
+                'nomor_soal' => $nomor_soal,
+                'jawaban' => $jawaban,
+                'status_jawaban' => $status_jawaban,
+                'tgl_cat' => Carbon::now(),
             ]);
         } else {
-            $store   = Jawaban::create([
-                                    'uuid'              => Str::uuid(),
-                                    'kode_soal'         => $kode_soal,
-                                    'kode_pendaftaran'  => $kode_pendaftaran,
-                                    'nomor_soal'        => $nomor_soal,
-                                    'jawaban'           => $jawaban,
-                                    'status_jawaban'    => $status_jawaban,
-                                    'tgl_cat'           => Carbon::now()
-                                ]);
+            $store = Jawaban::create([
+                'uuid' => Str::uuid(),
+                'kode_soal' => $kode_soal,
+                'kode_pendaftaran' => $kode_pendaftaran,
+                'nomor_soal' => $nomor_soal,
+                'jawaban' => $jawaban,
+                'status_jawaban' => $status_jawaban,
+                'tgl_cat' => Carbon::now(),
+            ]);
         }
 
-        
-        if ($checkJawaban OR $store) {
+        if ($checkJawaban or $store) {
             return response()->json([
                 'status' => true,
             ], 200);
@@ -139,7 +145,7 @@ class CATController extends Controller
             ->get();
 
         if ($pendaftaran->status_pendaftaran != 'Lolos Tahap Dokumen') {
-            toast('Gagal memasuki halaman ujian, Status Pendaftaran kamu ' . $pendaftaran->status_pendaftaran, 'error');
+            toast('Gagal memasuki halaman ujian, Status Pendaftaran Anda ' . $pendaftaran->status_pendaftaran, 'error');
             return redirect()->route('cat.index');
         }
 
@@ -151,14 +157,14 @@ class CATController extends Controller
         if ($bank_soal->crash_session == 'No') {
 
             // if ($jawaban->count() >= $soal->count()) {
-            //     toast('Gagal memasuki halaman ujian, Kamu sudah mengikuti ujian ini','error');
+            //     toast('Gagal memasuki halaman ujian, Anda sudah mengikuti ujian ini','error');
             //     return redirect()->route('cat.index');
             // }
         }
 
         $minutes = $bank_soal->timer_cat;
 
-        return redirect()->route('cat.ujian' , Dits::encodeDits($request->kode_soal));
+        return redirect()->route('cat.ujian', Dits::encodeDits($request->kode_soal));
     }
 
     public function start($no = 1)
@@ -205,29 +211,28 @@ class CATController extends Controller
 
         $bank_soal = BankSoal::where('kode_soal', $cookie_value)->first();
         $uuid_peserta = Auth::user()->uuid_login;
-        $madrasah    = Madrasah::where('uuid' , $bank_soal->uuid_madrasah)->first();
-        $pembukaan   = Pembukaan::where('uuid_madrasah' , $madrasah->uuid)
-                                    ->where('status_pembukaan' , 'Dibuka')
-                                    ->first();
-        $pendaftaran = Pendaftaran::where('uuid_peserta' , $uuid_peserta)
-                                    ->where('uuid_pembukaan' , $pembukaan->uuid)
-                                    ->first();
-        
+        $madrasah = Madrasah::where('uuid', $bank_soal->uuid_madrasah)->first();
+        $pembukaan = Pembukaan::where('uuid_madrasah', $madrasah->uuid)
+            ->where('status_pembukaan', 'Dibuka')
+            ->first();
+        $pendaftaran = Pendaftaran::where('uuid_peserta', $uuid_peserta)
+            ->where('uuid_pembukaan', $pembukaan->uuid)
+            ->first();
 
-        $jawaban  = Jawaban::where('kode_soal' , $cookie_value)
-                                ->where('kode_pendaftaran' , $pendaftaran->kode_pendaftaran)
-                                ->where('nomor_soal' , $no)
-                                ->orderBy('nomor_soal' , 'ASC')
-                                ->get();
-        
-        $jawaban_peserta  = Jawaban::where('kode_soal' , $cookie_value)
-                                ->where('kode_pendaftaran' , $pendaftaran->kode_pendaftaran)
-                                ->where('nomor_soal' , $no)
-                                ->first();
+        $jawaban = Jawaban::where('kode_soal', $cookie_value)
+            ->where('kode_pendaftaran', $pendaftaran->kode_pendaftaran)
+            ->where('nomor_soal', $no)
+            ->orderBy('nomor_soal', 'ASC')
+            ->get();
 
-                                // return $jawaban_peserta;
-                            
-        return view('pages.CAT.soal' , compact('no' , 'soal' , 'navigasi' , 'finish' , 'jawaban' , 'bank_soal' , 'waktu_mulai', 'jawaban_peserta'));
+        $jawaban_peserta = Jawaban::where('kode_soal', $cookie_value)
+            ->where('kode_pendaftaran', $pendaftaran->kode_pendaftaran)
+            ->where('nomor_soal', $no)
+            ->first();
+
+        // return $jawaban_peserta;
+
+        return view('pages.CAT.soal', compact('no', 'soal', 'navigasi', 'finish', 'jawaban', 'bank_soal', 'waktu_mulai', 'jawaban_peserta'));
     }
 
     public function storeJawaban(Request $request, $no)
@@ -339,7 +344,7 @@ class CATController extends Controller
     {
         // Validation
         $request->validate([
-            'nama_madrasah' => 'required|string|max:100'
+            'nama_madrasah' => 'required|string|max:100',
         ]);
 
         $uuid_operator = Auth::user()->uuid_login;
@@ -421,9 +426,19 @@ class CATController extends Controller
         $data = BankSoal::where('uuid', $uuid)->first();
 
         if ($data) {
-            $data->delete();
-            toast('Berhasil Menghapus Bank Soal', 'success');
-            return redirect()->route('bank-soal.index');
+            // CEK DULU JAWABANS, JIKA ADA JAWABAN, GAK BOLEH DIHAPUS
+            $jawaban = Jawaban::whereKodeSoal($data->kode_soal)->first();
+            if ($jawaban === null) {
+                // Hapus Soal
+                Soal::whereKodeSoal($data->kode_soal)->delete();
+                // Hapus Bank Soal
+                $data->delete();
+                toast('Berhasil Menghapus Bank Soal', 'success');
+                return redirect()->route('bank-soal.index');
+            } else {
+                toast('Gagal Menghapus Bank Soal, Sudah Ada Ujian CAT!', 'error');
+                return redirect()->route('bank-soal.index');
+            }
         }
         toast('Gagal Menghapus Bank Soal', 'error');
         return redirect()->route('bank-soal.index');
@@ -518,22 +533,22 @@ class CATController extends Controller
     {
         $data = BankSoal::with('madrasah')->get();
 
-         return DataTables::of($data)
-                            ->addIndexColumn()
-                            ->addColumn('action' , function($item) {
-                                return '<a href="' . \env('APP_URL') . '/CAT/Bank/Soal/detail/'.Dits::encodeDits($item->uuid).'" class="btn btn-dark btn-sm"><i class="fas fa-cogs"></i> Opsi Lanjutan</a>';
-                            })
-                            ->escapeColumns([])
-                            ->make(true);
-     }
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('action', function ($item) {
+                return '<a href="' . \env('APP_URL') . 'CAT/Bank/Soal/detail/' . Dits::encodeDits($item->uuid) . '" class="btn btn-dark btn-sm"><i class="fas fa-cogs"></i> Opsi Lanjutan</a>';
+            })
+            ->escapeColumns([])
+            ->make(true);
+    }
 
-     public function detailData($id)
-     {
+    public function detailData($id)
+    {
         $id = Dits::decodeDits($id);
-        $data = Jawaban::where('kode_soal' , $id)
-                            ->groupBy('kode_pendaftaran')
-                            ->get();
-                        // return $data;
+        $data = Jawaban::where('kode_soal', $id)
+            ->groupBy('kode_pendaftaran')
+            ->get();
+        // return $data;
         return DataTables::of($data)
             ->addIndexColumn()
             ->addColumn('nama_peserta', function ($item) {
@@ -575,13 +590,13 @@ class CATController extends Controller
     {
         $id = Dits::decodeDits($id);
         $data = Soal::where('kode_soal', $id)
-            ->orderBy('created_at','ASC')->get();
+            ->orderBy('nomor_soal', 'ASC')->get();
         return DataTables::of($data)
             ->addIndexColumn()
             ->addColumn('action', function ($item) {
                 $btn = '<a href="' . route('bank-soal.edit-soal', Dits::encodeDits($item->uuid)) . '" class="btn btn-info btn-sm m-1"><i class="fa fa-edit"></i></a>';
                 $btn .= '<a href="' . route('bank-soal.lihat.soal', Dits::encodeDits($item->uuid)) . '" target="_blank" class="btn btn-warning btn-sm m-1"><i class="fa fa-eye"></i></a>';
-                $btn .= '<a href="' . route('bank-soal.hapus.soal', Dits::encodeDits($item->uuid)) . '" onclick="return confirm_delete()" class="btn btn-danger btn-sm m-1"><i class="fa fa-trash"></i></a>';
+                $btn .= '<a href="' . route('bank-soal.hapus.soal', Dits::encodeDits($item->uuid)) . '" onclick="return confirm(\'Anda Yakin Untuk Hapus Data Ini?\');" class="btn btn-danger btn-sm m-1"><i class="fa fa-trash"></i></a>';
                 return $btn;
             })
             ->escapeColumns([])

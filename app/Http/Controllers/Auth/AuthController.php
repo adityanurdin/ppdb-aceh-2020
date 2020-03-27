@@ -56,9 +56,9 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'NIK' => 'required|integer|unique:pesertas,NIK|max:16',
+            'NIK' => 'required|string|unique:pesertas,NIK|max:16',
             'email'    => 'required|email|unique:users,email|max:100',
-            'password' => 'required|confirmed|min:6'
+            'password' => 'required|confirmed|min:4'
         ]);
         
         $uuid_peserta = Str::uuid();
@@ -72,7 +72,7 @@ class AuthController extends Controller
             'uuid'          => Str::uuid(),
             'uuid_login'    => $uuid_peserta,
             'username'      => $request->NIK,
-            'email'         => $request->email,
+            'email'         => strtolower($request->email),
             'password'      => bcrypt($request->password),
             'status_aktif'  => 'yes',
             'role'          => 'Peserta',

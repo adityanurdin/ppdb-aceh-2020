@@ -10,7 +10,6 @@ use Carbon\Carbon;
 use DataTables;
 use Dits;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Validator;
 
 class PesertaController extends Controller
@@ -125,7 +124,7 @@ class PesertaController extends Controller
             'tgl_ibu' => 'required',
             'pekerjaan_ibu' => 'required',
             'kontak_peserta' => 'required',
-            'pas_foto' => Rule::requiredIf(Dits::DataPeserta()->pas_foto == null) . '|image|mimes:jpeg,jpg,png|max:300',
+            'email' => 'required',
         );
 
         $valid = Validator::make($request->all(), $rule);
@@ -135,6 +134,9 @@ class PesertaController extends Controller
         }
 
         if ($request->pas_foto) {
+            $request->validate([
+                'pas_foto' => 'required|image|mimes:jpeg,jpg,png|max:1000',
+            ]);
             $image = Dits::UploadImage($request, 'pas_foto', 'pas_foto');
             $input['pas_foto'] = $image;
         }
@@ -142,9 +144,9 @@ class PesertaController extends Controller
         $input['tgl_registrasi'] = Carbon::now();
         $input['nama'] = strtoupper($request->nama);
 
-        $input['tgl'] = Dits::ReplaceDate($request->tgl);
-        $input['tgl_ayah'] = Dits::ReplaceDate($request->tgl_ayah);
-        $input['tgl_ibu'] = Dits::ReplaceDate($request->tgl_ibu);
+        $input['tgl'] = date('Y-m-d', strtotime($request->tgl));
+        $input['tgl_ayah'] = date('Y-m-d', strtotime($request->tgl_ayah));
+        $input['tgl_ibu'] = date('Y-m-d', strtotime($request->tgl_ibu));
 
         $peserta = Peserta::whereUuid($uid)->first();
         if ($peserta->status_aktif == 'yes') {
@@ -153,7 +155,18 @@ class PesertaController extends Controller
                 return back();
             }
         }
+
+        // Cek Jika Email Ganti
+        if ($request->email != $peserta->email) {
+            $request->validate([
+                'email' => 'required|email|unique:users,email|max:100',
+            ]);
+        }
+        $input['email'] = strtolower($request->email);
+        $login['email'] = $input['email'];
+
         $peserta->update($input);
+        User::whereUuidLogin($uid)->update($login);
         toast('Berhasil memperbaharui data peserta', 'success');
         return redirect()->route('dashboard');
     }
@@ -174,21 +187,32 @@ class PesertaController extends Controller
     public function dataPesertaPPDB($id)
     {
         $uuid_pembukaan = Dits::decodeDits($id);
-        $data = Pendaftaran::with('peserta')
-            ->whereUuidPembukaan($uuid_pembukaan)
-        // ->whereStatusPendaftaran('Baru')
+        $data = Pendaftaran::whereUuidPembukaan($uuid_pembukaan)
+            ->orderBy('created_at', 'ASC')
             ->get();
         return DataTables::of($data)
             ->addIndexColumn()
+            ->addColumn('nik', function ($item) {
+                return $item->peserta->NIK;
+            })
+            ->addColumn('nama', function ($item) {
+                return $item->peserta->nama;
+            })
+            ->addColumn('jkl', function ($item) {
+                return $item->peserta->jkl;
+            })
+            ->addColumn('alamat_rumah', function ($item) {
+                return $item->peserta->alamat_rumah;
+            })
             ->addColumn('action', function ($item) {
-                $btn = '<a href="' . route('print.data', [$item->peserta['NIK'], Dits::encodeDits($item->uuid)]) . '" target="_blank" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
+                $btn = '<a href="' . route('print.data', [$item->peserta->NIK, Dits::encodeDits($item->uuid)]) . '" target="_blank" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
                 if ($item->status_pendaftaran == 'Lolos Tahap Dokumen') {
-                    $btn .= '<a href="/buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
+                    $btn .= '<a href="' . \env('APP_URL') . 'buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
                 } else if ($item->status_pendaftaran == 'Tidak Lolos Tahap Dokumen') {
-                    $btn .= '<a href="/buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/lolos" class="btn btn-sm btn-info btn-block"><i class="fas fa-check"></i> Lolos Dokumen</a>';
+                    $btn .= '<a href="' . \env('APP_URL') . 'buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/lolos" class="btn btn-sm btn-info btn-block"><i class="fas fa-check"></i> Lolos Dokumen</a>';
                 } else {
-                    $btn .= '<a href="/buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/lolos" class="btn btn-sm btn-info btn-block"><i class="fas fa-check"></i> Lolos Dokumen</a>';
-                    $btn .= '<a href="/buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
+                    $btn .= '<a href="' . \env('APP_URL') . 'buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/lolos" class="btn btn-sm btn-info btn-block"><i class="fas fa-check"></i> Lolos Dokumen</a>';
+                    $btn .= '<a href="' . \env('APP_URL') . 'buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
                 }
                 if ($item->peserta['rapot_1'] != null) {
                     $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['rapot_1'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 1</a>';
@@ -200,10 +224,10 @@ class PesertaController extends Controller
                     $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['rapot_3'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 3</a>';
                 }
                 if ($item->peserta['akte'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['akte'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-times"></i> Lihat File</a>';
+                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['akte'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat Akte</a>';
                 }
                 if ($item->peserta['kk'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['kk'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-times"></i> Lihat File</a>';
+                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['kk'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat KK</a>';
                 }
                 return $btn;
             })
@@ -214,16 +238,28 @@ class PesertaController extends Controller
     public function dataVerifikasi($id)
     {
         $uuid_pembukaan = Dits::decodeDits($id);
-        $data = Pendaftaran::with('peserta')
-            ->whereUuidPembukaan($uuid_pembukaan)
+        $data = Pendaftaran::whereUuidPembukaan($uuid_pembukaan)
             ->whereStatusPendaftaran('Baru')
+            ->orderBy('created_at', 'ASC')
             ->get();
         return DataTables::of($data)
             ->addIndexColumn()
+            ->addColumn('nik', function ($item) {
+                return $item->peserta->NIK;
+            })
+            ->addColumn('nama', function ($item) {
+                return $item->peserta->nama;
+            })
+            ->addColumn('jkl', function ($item) {
+                return $item->peserta->jkl;
+            })
+            ->addColumn('alamat_rumah', function ($item) {
+                return $item->peserta->alamat_rumah;
+            })
             ->addColumn('action', function ($item) {
-                $btn = '<a href="' . route('print.data', [$item->peserta['NIK'], Dits::encodeDits($item->uuid)]) . '" target="_blank" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
-                $btn .= '<a href="/buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/lolos" class="btn btn-sm btn-info btn-block"><i class="fas fa-check"></i> Lolos Dokumen</a>';
-                $btn .= '<a href="/buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
+                $btn = '<a href="' . route('print.data', [$item->peserta->NIK, Dits::encodeDits($item->uuid)]) . '" target="_blank" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
+                $btn .= '<a href="' . \env('APP_URL') . 'buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/lolos" class="btn btn-sm btn-info btn-block"><i class="fas fa-check"></i> Lolos Dokumen</a>';
+                $btn .= '<a href="' . \env('APP_URL') . 'buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
                 if ($item->peserta['rapot_1'] != null) {
                     $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['rapot_1'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 1</a>';
                 }
@@ -234,10 +270,10 @@ class PesertaController extends Controller
                     $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['rapot_3'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 3</a>';
                 }
                 if ($item->peserta['akte'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['akte'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-times"></i> Lihat File</a>';
+                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['akte'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat Akte</a>';
                 }
                 if ($item->peserta['kk'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['kk'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-times"></i> Lihat File</a>';
+                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['kk'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat KK</a>';
                 }
                 return $btn;
             })
@@ -248,16 +284,26 @@ class PesertaController extends Controller
     public function dataDiterima($id)
     {
         $uuid_pembukaan = Dits::decodeDits($id);
-        $data = Pendaftaran::with('peserta')
-            ->whereUuidPembukaan($uuid_pembukaan)
+        $data = Pendaftaran::whereUuidPembukaan($uuid_pembukaan)
             ->whereStatusDiterima('Diterima')
             ->get();
         return DataTables::of($data)
             ->addIndexColumn()
+            ->addColumn('nik', function ($item) {
+                return $item->peserta->NIK;
+            })
+            ->addColumn('nama', function ($item) {
+                return $item->peserta->nama;
+            })
+            ->addColumn('jkl', function ($item) {
+                return $item->peserta->jkl;
+            })
+            ->addColumn('alamat_rumah', function ($item) {
+                return $item->peserta->alamat_rumah;
+            })
             ->addColumn('action', function ($item) {
-                $btn = '<a href="' . route('print.data', [$item->peserta['NIK'], Dits::encodeDits($item->uuid)]) . '" target="_blank" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
-                $btn .= '<a href="/buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/pengumuman/' . $item->kode_pendaftaran . '" class="btn btn-sm btn-info btn-block"><i class="fas fa-pencil-alt"></i> Edit Status</a>';
-                // $btn .= '<a href="/buka-ppdb/detail/'.Dits::encodeDits($item->uuid).'/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
+                $btn = '<a href="' . route('print.data', [$item->peserta->NIK, Dits::encodeDits($item->uuid)]) . '" target="_blank" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
+                $btn .= '<a href="' . \env('APP_URL') . 'buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/pengumuman/' . $item->kode_pendaftaran . '" class="btn btn-sm btn-info btn-block"><i class="fas fa-pencil-alt"></i> Edit Status</a>';
                 return $btn;
             })
             ->escapeColumns([])
@@ -266,15 +312,26 @@ class PesertaController extends Controller
     public function dataDitolak($id)
     {
         $uuid_pembukaan = Dits::decodeDits($id);
-        $data = Pendaftaran::with('peserta')
-            ->whereUuidPembukaan($uuid_pembukaan)
+        $data = Pendaftaran::whereUuidPembukaan($uuid_pembukaan)
             ->whereStatusDiterima('Ditolak')
             ->get();
         return DataTables::of($data)
             ->addIndexColumn()
+            ->addColumn('nik', function ($item) {
+                return $item->peserta->NIK;
+            })
+            ->addColumn('nama', function ($item) {
+                return $item->peserta->nama;
+            })
+            ->addColumn('jkl', function ($item) {
+                return $item->peserta->jkl;
+            })
+            ->addColumn('alamat_rumah', function ($item) {
+                return $item->peserta->alamat_rumah;
+            })
             ->addColumn('action', function ($item) {
-                $btn = '<a href="' . route('print.data', [$item->peserta['NIK'], Dits::encodeDits($item->uuid)]) . '" target="_blank" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
-                $btn .= '<a href="/buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/pengumuman/' . $item->kode_pendaftaran . '" class="btn btn-sm btn-info btn-block"><i class="fas fa-pencil-alt"></i> Edit Status</a>';
+                $btn = '<a href="' . route('print.data', [$item->peserta->NIK, Dits::encodeDits($item->uuid)]) . '" target="_blank" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
+                $btn .= '<a href="' . \env('APP_URL') . 'buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/pengumuman/' . $item->kode_pendaftaran . '" class="btn btn-sm btn-info btn-block"><i class="fas fa-pencil-alt"></i> Edit Status</a>';
                 return $btn;
             })
             ->escapeColumns([])
@@ -308,24 +365,34 @@ class PesertaController extends Controller
 
     public function dataDaftarUlang($id)
     {
-        $uuid = Dits::decodeDits($id);
-        $data = Pendaftaran::with('peserta')
-            ->where('uuid_pembukaan', $uuid)->get();
+        // $uuid = Dits::decodeDits($id);
+        // $data = Pendaftaran::with('peserta')
+        //     ->where('uuid_pembukaan', $uuid)->get();
+        $uuid_pembukaan = Dits::decodeDits($id);
+        $data = Pendaftaran::whereUuidPembukaan($uuid_pembukaan)
+            ->whereStatusDiterima('Diterima')
+            ->get();
         return DataTables::of($data)
             ->addIndexColumn()
+            ->addColumn('nama', function ($item) {
+                return $item->peserta->nama;
+            })
             ->addColumn('action', function ($item) {
                 if ($item->url_transfer == '' || $item->url_transfer == null) {
-                    $btn = '<a href="#" data-toggle="modal" data-target="#opsi-' . $item->uuid . '" class="btn btn-secondary disabled btn-sm btn-block" disabled>Verifikasi Pembayaran</a>';
+                    $btn = '<a href="#" data-toggle="modal" data-target="#opsi-' . $item->uuid . '" class="btn btn-secondary disabled btn-sm btn-block" disabled><i class=" fa fa-bullhorn"></i> Verifikasi Pembayaran</a>';
                 } else {
-                    $btn = '<a href="#" data-toggle="modal" data-target="#opsi-' . $item->uuid . '" class="btn btn-success btn-sm btn-block">Verifikasi Pembayaran</a>';
+                    // $btn = '<a href="#" data-toggle="modal" data-target="#opsi-' . $item->uuid . '" class="btn btn-success btn-sm btn-block"><i class=" fa fa-bullhorn"></i> Verifikasi Pembayaran</a>';
+                    $btn = '
+                    <a class="btn btn-sm btn-success btn-block" href="javascript:void(0);" data-toggle="modal" onclick="vervalData(\'' . Dits::encodeDits($item->uuid) . '\',\'' . $item->peserta->nama . '\')"
+                    data-target="#VervalModal" ><i class="fa fa-bullhorn"></i> Verifikasi Pembayaran</a>';
                 }
                 return $btn;
             })
             ->addColumn('file_transfer', function ($item) {
                 if ($item->url_transfer == '' || $item->url_transfer == null) {
-                    $btn = '<a href="' . Dits::pdfViewer(asset($item->url_transfer)) . '" target="_blink" class="btn btn-secondary btn-sm btn-block disabled" disabled>Buka File</a>';
+                    $btn = '<a href="' . Dits::pdfViewer(asset($item->url_transfer)) . '" target="_blink" class="btn btn-secondary btn-sm btn-block disabled" disabled><i class=" fa fa-eye"></i> Buka File</a>';
                 } else {
-                    $btn = '<a href="' . Dits::pdfViewer(asset($item->url_transfer)) . '" target="_blink" class="btn btn-warning btn-sm btn-block">Buka File</a>';
+                    $btn = '<a href="' . Dits::pdfViewer(asset($item->url_transfer)) . '" target="_blink" class="btn btn-warning btn-sm btn-block"><i class=" fa fa-eye"></i> Buka File</a>';
                 }
                 return $btn;
             })

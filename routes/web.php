@@ -40,6 +40,11 @@ Route::group(['middleware' => 'auth'], function () {
     // Dashboard
     Route::get('/', 'DashboardController@index')->name('dashboard');
 
+    // Name Of Column
+    Route::get('/noc/{name}', 'noc@index');
+    Route::get('/noc/gen/soal/{kode_soal}', 'noc@GenSoal');
+    Route::get('/noc/gen/peserta/{jenjang}/{uid_pembukaan}', 'noc@GenPeserta');
+
     // CETAK PENDAFTARAN
     Route::get('/{nik}/cetak-pendaftaran/{id}', function ($nik, $id) {
         return \Dits::cetakPendaftaran($nik, $id);
@@ -135,6 +140,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/detail/{id}/pengumuman/{kode}', 'PPDBController@pengumuman')->name('buka-ppdb.pengumuman.edit');
             Route::post('/detail/{id}/store-pengumuman', 'PPDBController@storePengumuman')->name('buka-ppdb.store_pengumuman');
             Route::put('/detail/{id}/update-pengumuman', 'PPDBController@updatePengumuman')->name('buka-ppdb.update_pengumuman');
+
+            // Verifikasi Stand Alone
+            Route::get('/detail-verifikasi/{id}', 'PPDBController@detailVerifikasi')->name('buka-ppdb.details.verifikasi');
         });
 
         Route::group(['prefix' => 'arsip'], function () {

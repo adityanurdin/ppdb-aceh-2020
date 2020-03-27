@@ -17,7 +17,7 @@ class CreatePesertasTable extends Migration
             $table->string('uuid')->primary();
             $table->string('nama')->nullable();
             $table->string('NIK')->unique()->nullable();
-            $table->string('nisn')->unique()->nullable();
+            $table->string('nisn')->nullable();
             $table->string('tmp')->nullable();
             $table->date('tgl')->nullable();
             $table->string('jkl')->nullable();

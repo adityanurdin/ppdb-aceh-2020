@@ -263,8 +263,8 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'kode_pendaftaran', name: 'kode_pendaftaran'},
-                {data: 'peserta.nama', name: 'peserta.nama'},
-                {data: 'peserta.alamat_rumah', name: 'peserta.alamat_rumah'},
+                {data: 'nama', name: 'nama'},
+                {data: 'alamat_rumah', name: 'alamat_rumah'},
                 {data: 'status_pendaftaran', name: 'status_pendaftaran'},
                 {data: 'status_diterima', name: 'status_diterima'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
@@ -283,9 +283,9 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'kode_pendaftaran', name: 'kode_pendaftaran'},
-                {data: 'peserta.nama', name: 'peserta.nama'},
-                {data: 'peserta.jkl', name: 'peserta.jkl'},
-                {data: 'peserta.alamat_rumah', name: 'peserta.alamat_rumah'},
+                {data: 'nama', name: 'nama'},
+                {data: 'jkl', name: 'jkl'},
+                {data: 'alamat_rumah', name: 'alamat_rumah'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ],
             "columnDefs": [
@@ -302,8 +302,8 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'kode_pendaftaran', name: 'kode_pendaftaran'},
-                {data: 'peserta.nama', name: 'peserta.nama'},
-                {data: 'peserta.alamat_rumah', name: 'peserta.alamat_rumah'},
+                {data: 'nama', name: 'nama'},
+                {data: 'alamat_rumah', name: 'alamat_rumah'},
                 {data: 'status_diterima', name: 'status_diterima'},
                 {data: 'jalur_diterima', name: 'jalur_diterima'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
@@ -322,8 +322,8 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'kode_pendaftaran', name: 'kode_pendaftaran'},
-                {data: 'peserta.nama', name: 'peserta.nama'},
-                {data: 'peserta.alamat_rumah', name: 'peserta.alamat_rumah'},
+                {data: 'nama', name: 'nama'},
+                {data: 'alamat_rumah', name: 'alamat_rumah'},
                 {data: 'status_diterima', name: 'status_diterima'},
                 {data: 'jalur_diterima', name: 'jalur_diterima'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
@@ -342,7 +342,7 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'kode_pendaftaran', name: 'kode_pendaftaran'},
-                {data: 'peserta.nama', name: 'peserta.nama'},
+                {data: 'nama', name: 'nama'},
                 {data: 'file_transfer', name: 'file_transfer'},
                 {data: 'status_transfer', name: 'status_transfer'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
@@ -356,45 +356,59 @@
 
     });
 </script>
+{{-- Daftar Ulang --}}
+<script type="text/javascript">
+    function vervalData(id,nama)
+    {
+        var id = id;
+        var url = '{!! url("buka-ppdb/detail") !!}/'+id+'/update-daftar-ulang';
+        $("#vervalForm").attr('action', url);
+        $("#nama").html(nama);
+    }
+    function vervalSubmit()
+    {
+        $("#vervalForm").submit();
+    }
+</script>
 @endpush
 
 @section('modal')
 
-@foreach ($pendaftaran as $item)
-{{-- Modal --}}
-<div class="modal fade" id="opsi-{{$item->uuid}}" tabindex="-1" role="dialog"
-    aria-labelledby="opsi-{{$item->uuid}}Label" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="opsi-{{$item->uuid}}Label">{{$item->peserta['nama']}}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="{{route('buka-ppdb.update.daftar.ulang' , Dits::encodeDits($item->uuid))}}" method="POST"
-                    enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
+{{--  MODALS  --}}
+<div class="modal fade" id="VervalModal">
+    <div class="modal-dialog">
+        <form action="" id="vervalForm" method="POST">
+            @csrf
+            @method('put')
+            <div class="modal-content bg-success">
+                <div class="modal-header text-white">
+                    <h5 class="modal-title"><i class="fa fa-user"></i> <label id="nama"></label></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-left bg-white">
                     <div class="form-group">
-                        <label for="">Status Daftar Ulang</label>
-                        <select class="form-control" name="status_transfer" id="exampleFormControlSelect1">
-                            <option selected disabled>-Pilih Status</option>
+                        <label for="">Status Daftar Ulang *</label>
+                        <select class="form-control" name="status_transfer">
+                            <option value="" selected disabled>-Pilih Status</option>
+                            <option value="">Belum Transfer</option>
                             <option value="Lunas">Lunas</option>
                             <option value="Pembayaran Kurang">Pembayaran Kurang</option>
                         </select>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-outline-light" data-dismiss="modal"><i
+                            class="fa fa-times-circle"></i> Tutup</button>
+                    <button type="submit" name="" class="btn btn-sm btn-outline-light" data-dismiss="modal"
+                        onclick="vervalSubmit()"><i class="fa fa-save"></i> Simpan</button>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="sumbit" class="btn btn-primary">Simpan</button>
-            </div>
-            </form>
-        </div>
+        </form>
     </div>
 </div>
-@endforeach
+{{--  MODALS  --}}
 
 {{-- Modal --}}
 <div class="modal fade" id="addPeserta" tabindex="-1" role="dialog" aria-labelledby="addPesertaLabel"
@@ -407,20 +421,26 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body bg-white text-dark">
-                <form action="{{route('import.jalur-khusus' , $data->uuid)}}" method="POST"
-                    enctype="multipart/form-data">
-                    @csrf
+            <form action="{{route('import.jalur-khusus' , Dits::encodeDits($data->uuid))}}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body bg-white text-dark">
                     <div class="form-group">
                         <label for="">Upload *</label>
-                        <input type="file" name="file_import" class="form-control">
+                        <input type="file" name="file_import"
+                            class="form-control @error('file_import') is-invalid @enderror" required>
+                        <small>File : .CSV (MS-Dos/Comma Delimited) | Ukuran Maksimal : 1000KB/1MB</small>
+                        @error('file_import')
+                        <div class="invalid-feedback text-left">
+                            <label>{{ $message }}</label>
+                        </div>
+                        @enderror
                     </div>
-            </div>
-            <div class="modal-footer">
-                <a href="{{route('download.file' , ['Documents' , 'format_jalur_khusus.xlsx'])}}"
-                    class="btn btn-secondary btn-sm"><i class="fas fa-download"></i> Format Jalur Khusus</a>
-                <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> SIMPAN</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{route('download.file' , ['Documents' , 'format_jalur_khusus.xlsx'])}}"
+                        class="btn btn-secondary btn-sm"><i class="fas fa-download"></i> Format Jalur Khusus</a>
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-upload"></i> UPLOAD</button>
+                </div>
             </form>
         </div>
     </div>

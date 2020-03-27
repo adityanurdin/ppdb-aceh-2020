@@ -85,11 +85,12 @@
                     class="fas fa-upload"></i> Upload Soal</a>
             <a href="{{route('bank-soal.status-bank' , Dits::encodeDits($data->uuid))}}"
                 class="btn btn-warning btn-sm"><i class="fas fa-power-off"></i> Ubah Bank Status</a>
-            <a href="{{route('bank-soal.hapus-bank' , Dits::encodeDits($data->uuid))}}" class="btn btn-danger btn-sm"><i
+            <a href="{{route('bank-soal.hapus-bank' , Dits::encodeDits($data->uuid))}}"
+                onclick="return confirm('Anda Yakin Hapus Bank Soal Ini?');" class="btn btn-danger btn-sm"><i
                     class="fas fa-trash"></i> Hapus Bank Soal</a>
             <a href="{{route('export.peserta-ujian' , $data->kode_soal)}}" class="btn btn-success btn-sm"><i
                     class="fas fa-file-excel"></i> Export Peserta CAT</a>
-            {{-- <a href="#" class="btn btn-info btn-sm"><i class="fas fa-cloud-upload-alt"></i> Import Jawaban CAT</a> --}}
+            <a href="#" class="btn btn-info btn-sm"><i class="fas fa-cloud-upload-alt"></i> Import Jawaban CAT</a>
             <a href="{{route('bank-soal.crash' , Dits::encodeDits($data->uuid))}}" class="btn btn-danger btn-sm"><i
                     class="fas fa-user-slash"></i> Crash CAT</a>
         </div>
@@ -99,7 +100,7 @@
 
 <div class="card mt-5 shadow rounded">
     <div class="card-header text-white bg-secondary">
-        <h4 class="text-center"><i class="fa fa-list-ol"></i> Daftar Soal</h4>
+        <h5 class="text-center"><i class="fa fa-list-ol"></i> Daftar Soal</h5>
     </div>
     <div class="card-body text-dark bg-white">
         <div class="table-responsive-sm">
@@ -108,8 +109,9 @@
                     <tr class="text-center">
                         <th>ID</th>
                         <th>Kode Soal</th>
+                        <th>Nomor Soal</th>
                         <th>Jenis Soal</th>
-                        <th width="50%">Soal</th>
+                        <th width="40%">Soal</th>
                         <th width="150px">Opsi</th>
                     </tr>
                 </thead>
@@ -123,7 +125,7 @@
 
 <div class="card mt-5 shadow rounded">
     <div class="card-header text-white bg-success">
-        <h4 class="text-center"><i class="fa fa-desktop"></i> Peserta Ujian</h4>
+        <h5 class="text-center"><i class="fa fa-desktop"></i> Peserta Ujian</h5>
     </div>
     <div class="card-body text-dark bg-white">
         <div class="table-responsive-sm">
@@ -154,28 +156,34 @@
 <div class="modal fade" id="uploadSoal" tabindex="-1" role="dialog" aria-labelledby="uploadSoalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-info text-white">
             <div class="modal-header">
-                <h5 class="modal-title" id="uploadSoalLabel">Upload Soal</h5>
+                <h5 class="modal-title" id="uploadSoalLabel"><i class="fa fa-upload"></i> Upload Soal</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <form action="{{route('import.soal')}}" method="POST" enctype="multipart/form-data">
-                    @csrf
+            <form action="{{route('import.soal')}}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body bg-white text-dark">
                     <div class="form-group">
-                        <label for="">Upload</label>
-                        <input type="file" name="file_import" class="form-control">
+                        <label for="">Upload *</label>
+                        <input type="file" name="file_import"
+                            class="form-control @error('file_import') is-invalid @enderror" required>
                         <input type="hidden" name="kode_soal" value="{{$data->kode_soal}}" id="">
                         <small>File : .CSV (MS-Dos/Comma Delimited) | Ukuran Maksimal : 1000KB/1MB</small>
+                        @error('file_import')
+                        <div class="invalid-feedback text-left">
+                            <label>{{ $message }}</label>
+                        </div>
+                        @enderror
                     </div>
-            </div>
-            <div class="modal-footer">
-                <a href="{{route('download.file' , ['Documents' , 'format_upload_soal_cat.xlsx'])}}"
-                    class="btn btn-secondary btn-sm"><i class="fas fa-download"></i> Format Soal</a>
-                <button type="submit" class="btn btn-primary btn-sm">Upload</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{route('download.file' , ['Documents' , 'format_upload_soal_cat.xlsx'])}}"
+                        class="btn btn-secondary btn-sm"><i class="fas fa-download"></i> Format Soal</a>
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-upload"></i> UPLOAD</button>
+                </div>
             </form>
         </div>
     </div>
@@ -185,27 +193,27 @@
 <div class="modal fade" id="updateTimer" tabindex="-1" role="dialog" aria-labelledby="updateTimerLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-content bg-secondary text-white">
             <div class="modal-header">
-                <h5 class="modal-title" id="updateTimerLabel">Ubah Waktu CAT</h5>
+                <h5 class="modal-title" id="updateTimerLabel"><i class="fa fa-clock"></i> Ubah Waktu CAT</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <form action="{{route('bank-soal.update-timer' , Dits::encodeDits($data->uuid))}}" method="POST"
-                    enctype="multipart/form-data">
-                    @csrf
+            <form action="{{route('bank-soal.update-timer' , Dits::encodeDits($data->uuid))}}" method="POST"
+                enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body bg-white text-dark">
                     <div class="form-group">
-                        <label for="">Waktu CAT</label>
-                        <input type="number" name="timer_cat" class="form-control">
+                        <label for="">Waktu CAT *</label>
+                        <input type="number" name="timer_cat" class="form-control" min="60" autocomplete="off" required>
                         <label for="">Dalam Menit</label>
                     </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
-                </form>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> SIMPAN</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -243,6 +251,7 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                 {data: 'kode_soal', name: 'kode_soal'},
+                {data: 'nomor_soal', name: 'nomor_soal'},
                 {data: 'jenis_soal', name: 'jenis_soal'},
                 {data: 'soal', name: 'soal'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
@@ -250,7 +259,7 @@
             "columnDefs": [
               { className: "min_id text-center", "targets": [0] },
               { className: "text-center", "targets": [1,2] },
-              { className: "min_action text-center", "targets": [4] }
+              { className: "min_action text-center", "targets": [5] }
             ],
         })
     });

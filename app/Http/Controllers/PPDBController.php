@@ -10,6 +10,7 @@ use App\Models\Peserta;
 use Auth;
 use Carbon\Carbon;
 use DataTables;
+use DateTime;
 use Dits;
 use Illuminate\Http\Request;
 use Str;
@@ -92,7 +93,7 @@ class PPDBController extends Controller
         }
 
         $valid = Validator::make($request->all(), [
-            'url_brosur' => 'file|mimes:pdf|max:300',
+            'url_brosur' => 'file|mimes:pdf|max:1000',
         ]);
 
         if ($valid->fails()) {
@@ -196,7 +197,7 @@ class PPDBController extends Controller
         }
 
         $valid = Validator::make($request->all(), [
-            'url_brosur' => 'file|mimes:pdf|max:300',
+            'url_brosur' => 'file|mimes:pdf|max:1000',
         ]);
 
         if ($valid->fails()) {
@@ -245,6 +246,19 @@ class PPDBController extends Controller
             ->where('uuid_pembukaan', $uuid)->get();
 
         return view('pages.ppdb.detail', compact('data', 'pendaftaran'));
+    }
+
+    public function detailVerifikasi($id)
+    {
+        $uuid = Dits::decodeDits($id);
+        $data = Pembukaan::with('madrasah', 'operator')
+            ->whereUuid($uuid)
+            ->first();
+        // return $data->madrasah;
+        $pendaftaran = Pendaftaran::with('peserta')
+            ->where('uuid_pembukaan', $uuid)->get();
+
+        return view('pages.ppdb.detail_verifikasi', compact('data', 'pendaftaran'));
     }
 
     public function delete($id)
@@ -310,11 +324,28 @@ class PPDBController extends Controller
         $uuid_peserta = Auth::user()->uuid_login;
 
         $cekUmur = Dits::hitungUmur($peserta->NIK, $peserta->jkl);
-        $dateNow = date('Ymd');
-        $cekUmur = $dateNow - str_replace('-', '', $cekUmur);
-        $umur = substr($cekUmur, 0, 2);
 
+        // CEK KECOCOKAN TANGGAL LAHIR DENGAN NIK
+        if($cekUmur!=$peserta->tgl){
+            toast('Gagal Mendaftar, Tanggal Lahir Tidak Sesuai Dengan Tanggal Lahir di NIK/KK!', 'error');
+            return back();
+        }
+
+        // $dateNow = date('Ymd'); Diubah Ke 1 Juli Tahun Berjalan Sesuai Juknis PPDB 2020
+        // $cekUmur = $dateNow - str_replace('-', '', $cekUmur);
+        // $umur = substr($cekUmur, 0, 2);
+        $dateNow = date('Y') . "-07-01";
+        $dateNow = date('Y-m-d', strtotime($dateNow));
+        $date = new DateTime($cekUmur);
+        $now = new DateTime($dateNow);
+        $interval = $now->diff($date);
+        $umur = $interval->y;
         $cekLayak = Dits::cekLayak($umur);
+
+        if($umur=="5"){
+            toast('Gagal Mendaftar, Umur Tidak Mencukupi Untuk Mendaftar Jenjang MI, Hubungi Pihak Madrasah.', 'error');
+            return back();
+        }
 
         if ($cekLayak != $madrasah->jenjang) {
             toast('Gagal Mendaftar, Silahkan pilih jenjang yang setara dengan umur anda', 'error');
@@ -327,14 +358,14 @@ class PPDBController extends Controller
             ->where('uuid_pembukaan', $pembukaan->uuid)
             ->get();
         if ($check_pendaftaran->count() >= 3) {
-            toast('Gagal, Kamu Sudah Mendaftar ke 3 Sekolah', 'error');
+            toast('Gagal, Anda Sudah Mendaftar ke 3 Madrasah', 'error');
             return back();
         } else if ($check_pendaftaran_2->count() >= 1) {
-            toast('Gagal, Kamu Sudah Mendaftar di madrasah ini', 'error');
+            toast('Gagal, Anda Sudah Mendaftar di madrasah ini', 'error');
             return back();
         }
 
-        $nomor_pendaftaran = Dits::interval('pendaftarans', 'nomor_pendaftaran');
+        $nomor_pendaftaran = Dits::interval('pendaftarans', $pembukaan->uuid ,'nomor_pendaftaran');
         $input = array(
             'uuid' => Str::uuid(),
             'uuid_pembukaan' => $uuid,
@@ -352,10 +383,10 @@ class PPDBController extends Controller
         $pendaftaran = Pendaftaran::create($input);
 
         if ($pendaftaran) {
-            toast('Berhasil Mendaftarkan Ke Sekolah yang Di Tuju', 'success');
+            toast('Berhasil Mendaftarkan Ke Madrasah yang Di Tuju', 'success');
             return back();
         }
-        toast('Gagal Mendaftarkan Ke Sekolah yang Di Tuju', 'error');
+        toast('Gagal Mendaftarkan Ke Madrasah yang Di Tuju', 'error');
         return back();
     }
 
@@ -376,11 +407,11 @@ class PPDBController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($item) {
                 $btn = '<a href="' . Dits::PdfViewer(asset($item->url_brosur)) . '" target="_blank" class="btn btn-danger btn-sm btn-block"><i class="fas fa-file-pdf"></i> Brosur</a>';
-                $btn .= '<a href="/ppdb/' . Dits::encodeDits($item->uuid_madrasah) . '/' . $item->kode_pendaftaran . '/lihat" class="btn btn-info btn-sm btn-block" ><i class="fas fa-eye"></i> Lihat</a>';
-                $btn .= '<a href="/ppdb/' . Dits::encodeDits($item->uuid_pembukaan) . '/hapus" onclick="return confirm(\'Anda Yakin Untuk Hapus Data Ini?\');" class="btn btn-danger btn-sm btn-block"><i class="fas fa-trash"></i> Hapus</a>';
+                $btn .= '<a href="' . \env('APP_URL') . 'ppdb/' . Dits::encodeDits($item->uuid_madrasah) . '/' . $item->kode_pendaftaran . '/lihat" class="btn btn-info btn-sm btn-block" ><i class="fas fa-eye"></i> Lihat</a>';
+                $btn .= '<a href="' . \env('APP_URL') . 'ppdb/' . Dits::encodeDits($item->uuid_pembukaan) . '/hapus" onclick="return confirm(\'Anda Yakin Untuk Hapus Data Ini?\');" class="btn btn-danger btn-sm btn-block"><i class="fas fa-trash"></i> Hapus</a>';
                 $btn .= '<a href="' . route('print.data', [Dits::DataPeserta()->NIK, Dits::encodeDits($item->kode_pendaftaran)]) . '" class="btn btn-success btn-sm btn-block" target="_blank"><i class="fas fa-print"></i> Cetak</a>';
                 if ($item->status_diterima == 'Diterima') {
-                    $btn .= '<a href="/ppdb/sub/daftar-ulang/' . Dits::encodeDits($item->kode_pendaftaran) . '/" class="btn btn-dark btn-sm btn-block"><i class="fas fa-coins"></i> Daftar Ulang</a>';
+                    $btn .= '<a href="' . \env('APP_URL') . 'ppdb/sub/daftar-ulang/' . Dits::encodeDits($item->kode_pendaftaran) . '/" class="btn btn-dark btn-sm btn-block"><i class="fas fa-coins"></i> Daftar Ulang</a>';
                 }
                 return $btn;
             })
@@ -397,8 +428,8 @@ class PPDBController extends Controller
         $pendaftaran = Pendaftaran::whereUuidPembukaan($uuid_pembukaan)
             ->whereUuidPeserta($uuid_peserta)
             ->first();
-        if ($pendaftaran->status_pendaftaran != 'Baru' || $pendaftaran->status_pendaftaran != 'baru') {
-            toast('Gagal Menghapus, Status Pendaftaran kamu bukan "Baru"', 'error');
+        if ($pendaftaran->status_pendaftaran != 'Baru') {
+            toast('Gagal Menghapus, Status Pendaftaran Anda bukan "Baru"', 'error');
             return back();
         }
 
@@ -442,6 +473,7 @@ class PPDBController extends Controller
         $uuid = Dits::decodeDits($id);
         // return $uuid;
         $pendaftaran = Pendaftaran::where('kode_pendaftaran', $request->kode_pendaftaran)
+            ->whereStatusPendaftaran('Lolos Tahap Dokumen')
             ->first();
         // return $pendaftaran;
         if ($pendaftaran) {
@@ -452,7 +484,7 @@ class PPDBController extends Controller
             toast('Berhasil Membuat Pengumuman', 'success');
             return back();
         }
-        toast('Gagal Membuat Pengumuman', 'error');
+        toast('Gagal Membuat Pengumuman, Peserta Tidak Ada/Tidak Lolos Tahap Dokumen.', 'error');
         return back();
     }
 
@@ -472,6 +504,7 @@ class PPDBController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($item) {
                 $btn = '<a href="' . \env('APP_URL') . 'buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '" class="btn btn-dark btn-sm btn-block"><i class="fas fa-cogs"></i> Opsi Lanjutan</a>';
+                $btn .= '<a href="' . \env('APP_URL') . 'buka-ppdb/detail-verifikasi/' . Dits::encodeDits($item->uuid) . '" class="btn btn-info btn-sm btn-block"><i class="fa fa-bullhorn"></i> Verifikasi Peserta</a>';
                 return $btn;
             })
             ->escapeColumns([])
@@ -487,10 +520,22 @@ class PPDBController extends Controller
             ->get();
         return DataTables::of($data)
             ->addIndexColumn()
+            ->addColumn('tgl_pembukaan', function ($item) {
+                $tgl_pembukaan = date('d-m-Y', strtotime($item->tgl_pembukaan));
+                return $tgl_pembukaan;
+            })
+            ->addColumn('tgl_penutupan', function ($item) {
+                $tgl_penutupan = date('d-m-Y', strtotime($item->tgl_penutupan));
+                return $tgl_penutupan;
+            })
+            ->addColumn('tgl_pengumuman', function ($item) {
+                $tgl_pengumuman = date('d-m-Y', strtotime($item->tgl_pengumuman));
+                return $tgl_pengumuman;
+            })
             ->addColumn('action', function ($item) {
                 $btn = '<a href="' . Dits::PdfViewer(asset($item->url_brosur)) . '" target="_blank" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf"></i> Brosur</a> ';
-                $btn .= '<a href="/ppdb/' . Dits::encodeDits($item->uuid_madrasah) . '/lihat" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Lihat</a> ';
-                $btn .= '<a href="/ppdb/' . Dits::encodeDits($item->uuid) . '/daftar/' . $item->uuid_madrasah . '" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Daftar</a>';
+                $btn .= '<a href="' . \env('APP_URL') . 'ppdb/' . Dits::encodeDits($item->uuid_madrasah) . '/lihat" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Lihat</a> ';
+                $btn .= '<a href="' . \env('APP_URL') . 'ppdb/' . Dits::encodeDits($item->uuid) . '/daftar/' . $item->uuid_madrasah . '" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Daftar</a>';
                 return $btn;
             })
             ->escapeColumns([])
@@ -526,6 +571,10 @@ class PPDBController extends Controller
         $nik = Dits::DataPeserta()->NIK;
 
         if ($request->hasFile('url_transfer')) {
+
+            $request->validate([
+                "url_transfer" => "required|file|mimes:png,jpg,jpeg,pdf|max:1000"
+            ]);
 
             $fileName = Carbon::now()->timestamp . '.' .
             $request->file('url_transfer')->getClientOriginalExtension();
@@ -573,11 +622,11 @@ class PPDBController extends Controller
         $peserta = Peserta::whereUuid($uuid_peserta)->first();
 
         $valid = Validator::make($request->all(), [
-            $field => 'file|mimes:pdf,jpeg,jpg,png|max:300',
+            $field => 'file|mimes:pdf,jpeg,jpg,png|max:1000',
         ]);
 
         if ($valid->fails()) {
-            toast('Gagal, File brosur tidak sesuai', 'error');
+            toast('Gagal, File brosur tidak sesuai/file terlalu besar!', 'error');
             return back();
         }
 

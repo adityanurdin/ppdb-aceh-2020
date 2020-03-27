@@ -40,14 +40,14 @@ class KemenagController extends Controller
             'uuid' => $uuid,
             'nama_operator' => $request->nama_operator,
             'kontak_operator' => $request->kontak_operator,
-            'email_operator' => $request->email_operator,
+            'email_operator' => strtolower($request->email_operator),
         ]);
 
         $user = User::create([
             'uuid' => Str::uuid(),
             'uuid_login' => $uuid,
             'username' => $OP_NAME,
-            'email' => $request->email_operator,
+            'email' => strtolower($request->email_operator),
             'password' => bcrypt($password),
             'role' => 'Operator Kemenag',
             'status_aktif' => 'yes',

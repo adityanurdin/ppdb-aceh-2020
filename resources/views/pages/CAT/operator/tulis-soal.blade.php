@@ -179,13 +179,13 @@
                     <select class="col-md-9 col-sm-12 form-control  @error('kunci_jawaban') is-invalid @enderror"
                         name="kunci_jawaban" id="" required>
                         <option disabled selected>-Pilih Kunci Jawaban</option>
-                        <option {{isset($edit) ? Dits::selected($data->kunci_jawaban, 'a') : ''}} value="a">A
+                        <option {{isset($edit) ? Dits::selected($data->kunci_jawaban, 'A') : ''}} value="A">A
                         </option>
-                        <option {{isset($edit) ? Dits::selected($data->kunci_jawaban, 'b') : ''}} value="b">B
+                        <option {{isset($edit) ? Dits::selected($data->kunci_jawaban, 'B') : ''}} value="B">B
                         </option>
-                        <option {{isset($edit) ? Dits::selected($data->kunci_jawaban, 'c') : ''}} value="c">C
+                        <option {{isset($edit) ? Dits::selected($data->kunci_jawaban, 'C') : ''}} value="C">C
                         </option>
-                        <option {{isset($edit) ? Dits::selected($data->kunci_jawaban, 'd') : ''}} value="d">D
+                        <option {{isset($edit) ? Dits::selected($data->kunci_jawaban, 'D') : ''}} value="D">D
                         </option>
                     </select>
                     @error('kunci_jawaban')

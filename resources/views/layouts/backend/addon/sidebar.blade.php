@@ -35,7 +35,8 @@
 
         @if (Auth::user()->role == 'Operator Kemenag' || Auth::user()->role == 'Operator Madrasah')
         <li class="">
-            <a href="#dataWeb" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Web Informasi</a>
+            <a href="#dataWeb" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i
+                    class="fab fa-chrome"></i> Web Informasi</a>
             <ul class="collapse list-unstyled" id="dataWeb">
                 <li>
                     <a href="{{route('video.list')}}">Video</a>
@@ -70,9 +71,17 @@
         <li>
             <a href="{{route('buka-ppdb.madrasah-terpilih')}}"><i class="fas fa-check"></i> Madrasah Terpilih</a>
         </li>
+        @php
+        $tahun = date('Y');
+        $pendaftaran =
+        \App\Models\Pendaftaran::whereUuidPeserta($uuid_peserta)->whereYear('created_at',$tahun)->first();
+        $jenjang = $pendaftaran->pembukaan->madrasah->jenjang;
+        @endphp
+        @if ($jenjang!="MI")
         <li>
             <a href="{{route('cat.index')}}"><i class="fas fa-tv"></i> Ujian CAT</a>
         </li>
+        @endif
         @endisset
         @endif
         @if(Auth::user()->role != 'Peserta')

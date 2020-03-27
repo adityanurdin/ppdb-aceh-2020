@@ -12,6 +12,7 @@
         "browner12/helpers": "^3.0",
         "fideloper/proxy": "^4.0",
         "fruitcake/laravel-cors": "^1.0",
+        "htmlmin/htmlmin": "^7.0",
         "intervention/image": "^2.5",
         "laravel/framework": "^6.2",
         "laravel/passport": "^8.4",

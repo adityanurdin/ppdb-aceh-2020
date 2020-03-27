@@ -89,7 +89,6 @@
             $('#summernote').summernote({
                 placeholder: '',
                 tabsize: 2,
-                // height: 100,
                 minHeight: 500,
                 toolbar: [
                 ['style', ['style']],

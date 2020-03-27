@@ -28,7 +28,7 @@ class HomeController extends Controller
                         'uuid'     => \Str::uuid(),
                         'uuid_login' => '',
                         'username' => $username,
-                        'email'    => 'aditya@litecloud.id',
+                        'email'    => 'admin@simppdbmadrasah.com',
                         'password' => $password,
                         'img'      => '',
                         'role'     => 'Admin System'
