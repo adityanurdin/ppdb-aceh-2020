@@ -35,11 +35,47 @@ class CATController extends Controller
     public function create(Request $request) 
     {
         $bank_soal      = BankSoal::where('kode_soal' , $request->kode_soal)->first();
-        $uuid_peserta   = $request->uuid_login;
+        $uuid_peserta   = $request->uuid_peserta;
         $soal           = Soal::where('kode_soal' , $request->kode_soal)->get();
         $bank_soal      = BankSoal::where('kode_soal' , $request->kode_soal)->first();
-        if (!$bank_soal) {
-            return Dits::sendResponse('error' , '' , 500 , 'set-ujian');
+
+        // Cek Bank Soal
+        if ($bank_soal === NULL) {
+            return Dits::sendResponse('error' , ['pesan' => 'Akses Ditolak, Kode Soal Tidak Valid!'] , 500 , 'set-ujian');
+        }else if ($bank_soal->status_bank_soal == 'Tidak Aktif') {
+            return Dits::sendResponse('error' , ['pesan' => 'Gagal memasuki halaman ujian, Status soal tidak aktif'] , 500 , 'set-ujian');
+        }
+
+        // Cek Kebenaran Pendaftaran
+        $madrasah = Madrasah::where('uuid', $bank_soal->uuid_madrasah)->first();
+        $pembukaan = Pembukaan::where('uuid_madrasah', $madrasah->uuid)
+            ->where('status_pembukaan', 'Dibuka')
+            ->first();
+        $pendaftaran = Pendaftaran::where('uuid_peserta', $uuid_peserta)
+            ->where('uuid_pembukaan', $pembukaan->uuid)
+            ->first();
+        if ($pendaftaran === null) {
+            return Dits::sendResponse('error' , ['pesan' => 'Akses Ditolak, Anda Tidak Terdaftar Pada Kode Soal Tersebut!'] , 500 , 'set-ujian');
+        }
+
+         // Cek Lolos Tahap Dokumen
+        if ($pendaftaran->status_pendaftaran != 'Lolos Tahap Dokumen') {
+            return Dits::sendResponse('error' , ['pesan' => 'Gagal memasuki halaman ujian, Status Pendaftaran Anda'.$pendaftaran->status_pendaftaran] , 500 , 'set-ujian');
+        }
+
+         // Cek Soal
+        if ($soal === null) {
+            return Dits::sendResponse('error' , ['pesan' => 'Akses Ditolak, Soal Tidak Valid!'] , 500 , 'set-ujian');
+        }
+
+        $jawaban = Jawaban::where('kode_soal', $request->kode_soal)
+            ->where('kode_pendaftaran', $pendaftaran->kode_pendaftaran)
+            ->get();
+
+        if ($bank_soal->crash_session == 'No') {
+            if ($jawaban->count() >= $soal->count()) {
+                return Dits::sendResponse('error' , ['pesan' => 'Gagal memasuki halaman ujian, Kamu sudah mengikuti ujian ini'] , 500 , 'set-ujian');
+            }
         }
 
         $data = [
