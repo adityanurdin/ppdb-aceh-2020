@@ -14,4 +14,10 @@ class Soal extends Model
     {
         return \Dits::imageUrl($this->attributes['gambar']);
     }
+
+    public function banksoal()
+    {
+        return $this->belongsTo('App\Models\BankSoal' , 'kode_soal', 'kode_soal');
+    }
+
 }

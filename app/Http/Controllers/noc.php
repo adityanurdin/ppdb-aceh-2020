@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Madrasah;
+use App\Models\Operator;
+use App\Models\Pembukaan;
 use App\Models\Pendaftaran;
 use App\Models\Peserta;
 use App\Models\Soal;
@@ -17,6 +20,17 @@ class noc extends Controller
         $name = strtolower($name);
         $columns = \DB::getSchemaBuilder()->getColumnListing($name);
         return $columns;
+    }
+
+    public function GenUuidMadrasah()
+    {
+        // GENERATE UUID MDRASAHS
+        $mdr = Madrasah::all();
+        foreach($mdr as $data){
+            Madrasah::whereNsm($data->nsm)->update([
+                'uuid' => \Str::uuid(),
+            ]);
+        }
     }
 
     public function GenPeserta($jenjang, $uid_pembukaan)
@@ -99,7 +113,7 @@ class noc extends Controller
             $user = [
                 "uuid" => Str::uuid(),
                 "uuid_login" => $uid_peserta,
-                "username" => $nik . $i,
+                "username" => $nik . sprintf("%04d", $i),
                 "email" => $email . $i . "@gmail.com",
                 "password" => \bcrypt('1234'),
                 "remember_token" => Str::random('60'),
@@ -124,6 +138,59 @@ class noc extends Controller
             Peserta::create($peserta);
             User::create($user);
             Pendaftaran::create($pendaftaran);
+        }
+    }
+
+    public function GenOpPembukaan()
+    {
+
+        // GENERATE OPERATOR MADRASAH DAN PEMBUKAANS
+        $mdr = Madrasah::all();
+        foreach($mdr as $data){
+            // Operators
+            $uid_operator = Str::uuid();
+            $username = 'OP-' . rand(1, 5000);
+            $email = strtolower($username)."@gmail.com";
+            $operator = [
+                "uuid" => $uid_operator,
+                "uuid_madrasah" => $data->uuid,
+                "satker" => $data->kode_satker,
+                "nama_operator" => "OP ".strtoupper($data->nama_madrasah),
+                "kontak_operator" => "081510679515",
+                "email_operator" => $email,
+                "img" => "",
+            ];
+
+            // User
+            $user = [
+                "uuid" => Str::uuid(),
+                "uuid_login" => $uid_operator,
+                "username" => $username,
+                "email" => $email,
+                "password" => \bcrypt('1234'),
+                "remember_token" => Str::random('60'),
+                "role" => "Operator Madrasah",
+                "status_aktif" => "yes",
+                "img" => "",
+            ];
+
+            // Pembukaans
+            $pembukaan = [
+                "uuid" => Str::uuid(),
+                "uuid_madrasah" => $data->uuid,
+                "uuid_operator" => $uid_operator,
+                "tgl_pembukaan" => \date('Y-m-d'),
+                "tgl_penutupan" => \date('Y-m-d', strtotime('+1 month')),
+                "tgl_pengumuman" => \date('Y-m-d', strtotime('+2 month')),
+                "url_brosur" => "",
+                "status_pembukaan" => "Dibuka",
+                "tahun_akademik" => "2019/2020",
+                "status_nomor" => "Aktif",
+                "tgl_post" => Carbon::now(),
+            ];
+            Operator::create($operator);
+            User::create($user);
+            Pembukaan::create($pembukaan);
         }
     }
 

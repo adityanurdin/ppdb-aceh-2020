@@ -7,6 +7,9 @@
     Developer Aditya Nurdin
     You Can Change Anything, But You Not Allowed Remove This Credit
 --}}
+@if (\session('cat_ujian')=="start")
+<script>document.location="{!! route('cat.ujian', \session('kode_soal')) !!}"</script>
+@endif
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -95,7 +98,7 @@
                 <p>Website Untuk Melakukan Pendaftaran Peserta Didik Baru<br />
                     Pada Madrasah Di Kota Banda Aceh Secara ONLINE
                 </p>
-                <a href="{{ route('auth.register') }}"><i class="fa fa-desktop"></i> DAFTAR
+                <a href="{{ route('auth.register') }}#tag-register"><i class="fa fa-desktop"></i> DAFTAR
                     SEKARANG</a>
             </div>
         </div>
@@ -156,7 +159,7 @@
     <script type="text/javascript" src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('plugins/scrollIt/scrollIt.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('plugins/owlcarousel/owl.carousel.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/frandikasepta.js?v=170320') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/frandikasepta.js?v=280320') }}"></script>
     @include('sweetalert::alert')
 </body>
 

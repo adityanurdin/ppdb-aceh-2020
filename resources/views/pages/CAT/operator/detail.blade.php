@@ -90,9 +90,12 @@
                     class="fas fa-trash"></i> Hapus Bank Soal</a>
             <a href="{{route('export.peserta-ujian' , $data->kode_soal)}}" class="btn btn-success btn-sm"><i
                     class="fas fa-file-excel"></i> Export Peserta CAT</a>
-            <a href="" data-toggle="modal" data-target="#importJawaban" class="btn btn-info btn-sm"><i class="fas fa-cloud-upload-alt"></i> Import Jawaban CAT</a>
+            <a href="" data-toggle="modal" data-target="#importJawaban" class="btn btn-info btn-sm"><i
+                    class="fas fa-cloud-upload-alt"></i> Import Jawaban CAT</a>
             <a href="{{route('bank-soal.crash' , Dits::encodeDits($data->uuid))}}" class="btn btn-danger btn-sm"><i
                     class="fas fa-user-slash"></i> Crash CAT</a>
+            <a href="" data-toggle="modal" data-target="#ResetAkun" class="btn btn-dark btn-sm"><i
+                    class="fas fa-user-clock"></i> Reset Akun Peserta</a>
         </div>
 
     </div>
@@ -103,6 +106,13 @@
         <h5 class="text-center"><i class="fa fa-list-ol"></i> Daftar Soal</h5>
     </div>
     <div class="card-body text-dark bg-white">
+        @if (count($soal)>0)
+        <div class="pb-4 clearfix">
+            <a href="{{ route('bank-soal.lihat.soal', Dits::encodeDits($data->kode_soal)) }}" target="_BLANK"
+                class="btn btn-warning float-right"><i class="fa fa-desktop"></i> Demo CAT (Lihat Semua Soal)</a>
+        </div>
+        @endif
+        <div class="clearfix"></div>
         <div class="table-responsive-sm">
             <table class="table table-striped table-hover" id="daftar-soal">
                 <thead>
@@ -110,7 +120,7 @@
                         <th>ID</th>
                         <th>Kode Soal</th>
                         <th>Nomor Soal</th>
-                        <th>Jenis Soal</th>
+                        <th width="20%">Jenis Soal</th>
                         <th width="40%">Soal</th>
                         <th width="150px">Opsi</th>
                     </tr>
@@ -189,34 +199,42 @@
     </div>
 </div>
 
-<!-- Modal Import jawaban -->
-<div class="modal fade" id="importJawaban" tabindex="-1" role="dialog" aria-labelledby="importJawabanLabel" aria-hidden="true">
+{{-- Modal Import Jawaban CAT --}}
+<div class="modal fade" id="importJawaban" tabindex="-1" role="dialog" aria-labelledby="importJawabanLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="importJawabanLabel">Import Jawaban</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class="modal-content bg-info text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importJawabanLabel"><i class="fa fa-upload"></i> Import Jawaban CAT Peserta
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{route('import.jawaban')}}" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <div class="modal-body bg-white text-dark">
+                    <div class="form-group">
+                        <label for="">File Import Jawaban *</label>
+                        <input type="file" name="file_upload" id=""
+                            class="form-control @error('file_import') is-invalid @enderror" required>
+                        <small>File : .CSV (MS-Dos/Comma Delimited) | Ukuran Maksimal : 1000KB/1MB</small>
+                        @error('file_import')
+                        <div class="invalid-feedback text-left">
+                            <label>{{ $message }}</label>
+                        </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-upload"></i> IMPORT</button>
+                </div>
+
+            </form>
         </div>
-        <form action="{{route('import.jawaban')}}" method="POST" enctype="multipart/form-data">
-            @csrf
-
-            <div class="modal-body">
-              <div class="form-group">
-                  <label for="">File Import Jawaban</label>
-                  <input type="file" name="file_upload" id="" class="form-control">
-                  <small style="color: red;">File harus berformat CSV | Max 300kb</small>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary">Import</button>
-            </div>
-
-        </form>
-      </div>
     </div>
-  </div>
+</div>
 
 {{-- Modal update timer --}}
 <div class="modal fade" id="updateTimer" tabindex="-1" role="dialog" aria-labelledby="updateTimerLabel"
@@ -242,6 +260,45 @@
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> SIMPAN</button>
                 </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Modal Reset Akun Peserta --}}
+<div class="modal fade" id="ResetAkun" tabindex="-1" role="dialog" aria-labelledby="ResetAkunLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ResetAkunLabel"><i class="fa fa-user-clock"></i> Reset Akun Peserta
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{route('import.reset')}}" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <div class="modal-body bg-white text-dark">
+                    <div class="form-group">
+                        <label for="">File Reset Akun *</label>
+                        <input type="file" name="file_upload" id=""
+                            class="form-control @error('file_import') is-invalid @enderror" required>
+                        <small>File : .CSV (MS-Dos/Comma Delimited) | Ukuran Maksimal : 1000KB/1MB</small>
+                        @error('file_import')
+                        <div class="invalid-feedback text-left">
+                            <label>{{ $message }}</label>
+                        </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{route('download.file' , ['Documents' , 'format_reset_akun_peserta.xlsx'])}}"
+                        class="btn btn-secondary btn-sm"><i class="fas fa-download"></i> Format Reset Akun</a>
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-upload"></i> UPLOAD</button>
+                </div>
+
             </form>
         </div>
     </div>

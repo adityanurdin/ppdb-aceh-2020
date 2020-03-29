@@ -1,0 +1,547 @@
+/* 
+    Design CAT By Frandika Septa
+    Copyright By Frandika Septa | https://codingers.id/
+    Build Date : 28 Maret 2020
+    Font : Open Sans, Oswald, Raleway
+*/
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Oswald&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Raleway:400,600,900&display=swap');
+
+/* body */
+html,body{
+    width: 100%;
+    height: auto;
+    background: #eeeeee;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    display: block;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #333333;
+}
+/* body */
+/* Wrapper */
+.wrapper{
+    width: auto;
+    height: auto;
+    padding: auto;
+    margin: auto;
+    position: relative;
+    padding-top: 90px;
+    padding-bottom: 20px;
+}
+/* Wrapper */
+/* footer */
+footer{
+    width: 100%;
+    height: 40px;
+    padding: 5px 10px;
+    margin: auto;
+    text-align: center;
+    background: #222222;
+    position: relative;
+    bottom: 0;
+    left: 0;
+}
+footer h6{
+    font-size: 10px;
+    font-family: 'Open Sans',cursive;
+    font-weight: 400;
+    line-height: 15px;
+    color: #ffffff;
+    margin: 1px 0px;
+}
+footer h6 i{
+    margin-left: 2px;
+    margin-right: 2px;
+    color: #FE0034;
+}
+footer h6 a{
+    text-decoration: none;
+    color: #ffffff;
+}
+footer h6 a:hover{
+    font-weight: 900;
+    color: #ffffff;
+    text-decoration: none;
+}
+/* footer */
+
+/*-------------------------------------------------------------------------------------
+    Element
+---------------------------------------------------------------------------------------*/
+.sparator{
+    display: inline-block;
+    border-right: 1px solid #cccccc;
+    margin: 0px 15px 0px 10px;
+}
+.tombol{
+    width: auto;
+    height: auto;
+    padding: 5px;
+    margin: auto;
+    position: relative;
+    text-align: center;
+}
+.tombol .nomor{
+    width: auto;
+    height: auto;
+    padding: 5px;
+    margin: auto;
+    font-size: 12px;
+    font-family: 'Open Sans',cursive;
+    font-weight: 900;
+    line-height: 22px;
+    color: #ffffff;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    background: #333333;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+}
+.tombol .nomor:hover{
+    opacity: 0.5;
+    color: #ffffff;
+    cursor: pointer;
+}
+.tombol .active{
+    background: rgba(0, 206, 34, 1);
+    color: #ffffff;
+}
+.tombol .in-active{
+    background: rgb(130, 0, 206);
+    color: #ffffff;
+}
+.notifikasi{
+    width: auto;
+    height: auto;
+    padding: 5px 10px;
+    margin: 5px 0px;
+    position: relative;
+    background: #5674ba;
+    color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+}
+/*-------------------------------------------------------------------------------------
+    Header
+---------------------------------------------------------------------------------------*/
+#header{
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    margin: auto;
+    /* background: rgba(3,3,3, 0.8); */
+    background-image: linear-gradient(to top, rgba(0, 206, 34, 0.534) , #5674ba);
+    -webkit-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+#header .judul{
+    width: auto;
+    height: auto;
+    padding: 0px 100px 0px 100px;
+    margin: auto;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+#header .judul h1{
+    font-size: 20px;
+    font-family: 'Open Sans',cursive;
+    font-weight: 900;
+    line-height: 26px;
+    color: #ffffff;
+    text-transform: uppercase;
+    text-shadow: 1px 1px #333333;
+    text-decoration: underline;
+    text-decoration-style: double;
+    -moz-text-decoration-style: double;
+}
+#header .judul h2{
+    font-size: 16px;
+    font-family: 'Open Sans',cursive;
+    font-weight: 900;
+    line-height: 22px;
+    color: rgb(32, 31, 26);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+#header .logo{
+    width: 55px;
+    height: 55px;
+    position: absolute;
+    left: 10px;
+    margin-top: -60px;
+}
+#header .logo img{
+    width: 100%;
+}
+#header .timer{
+    width: auto;
+    height: auto;
+    position: absolute;
+    right: 15px;
+    margin-top: -55px;
+}
+#header .timer h1{
+    font-size: 12px;
+    font-family: 'Open Sans',cursive;
+    font-weight: 600;
+    line-height: 16px;
+    color: #ffffff;
+    margin: 1px 0px;
+    text-decoration: underline;
+}
+#header .timer h2{
+    font-size: 20px;
+    font-family: 'Open Sans',cursive;
+    font-weight: 900;
+    line-height: 24px;
+    color: gold;
+    text-shadow: 1px 1px #333333;
+}
+
+/*-------------------------------------------------------------------------------------
+    Content
+---------------------------------------------------------------------------------------*/
+#content{
+    width: auto;
+    height: auto;
+    padding: auto;
+    margin: auto;
+}
+/* Informasi Ujian */
+#content .data_diri{
+    width: auto;
+    height: auto;
+    padding: 10px;
+    margin: 10px 0px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+#content .data_diri .judul{
+    width: auto;
+    height: auto;
+    padding: 10px;
+    margin: auto;
+    text-align: center;
+    background-image: linear-gradient(to top, rgba(0, 206, 34, 0.534) , #5674ba);
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+#content .data_diri .judul h1{
+    font-size: 18px;
+    font-family: 'Open Sans',cursive;
+    font-weight: 900;
+    line-height: 24px;
+    color: #ffffff;
+    margin: 1px 0px;
+    text-shadow: 1px 1px #333333;
+}
+#content .data_diri .data{
+    width: auto;
+    height: auto;
+    padding: 10px 10px;
+    margin: auto;
+}
+#content .data_diri .data label{
+    font-size: 14px;
+    font-family: 'Open Sans',cursive;
+    font-weight: 400;
+    line-height: 16px;
+    color: #333333;
+    margin-bottom: 0px;
+}
+#content .data_diri .data p{
+    font-size: 16px;
+    font-family: 'Open Sans',cursive;
+    font-weight: 900;
+    line-height: 20px;
+    color: #333333;
+    padding: 0px;
+    margin: 0px;
+    padding-left: 10px;
+}
+
+/* Soal Ujian */
+#content .soal{
+    width: auto;
+    height: auto;
+    padding: 10px;
+    margin: 10px 0px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+#content .soal .judul{
+    width: auto;
+    height: auto;
+    padding: 10px;
+    margin: auto;
+    text-align: center;
+    background-image: linear-gradient(to top, rgba(0, 206, 34, 0.534) , #5674ba);
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    margin-bottom: 10px;
+}
+#content .soal .judul h1{
+    font-size: 18px;
+    font-family: 'Open Sans',cursive;
+    font-weight: 900;
+    line-height: 24px;
+    color: #ffffff;
+    margin: 1px 0px;
+    text-shadow: 1px 1px #333333;
+}
+#content .soal .data{
+    width: auto;
+    height: auto;
+    padding: auto;
+    margin: auto;
+    position: relative;
+    display: none;
+}
+
+/* NOMOR SOAL */
+#content .soal .data .nomor{
+    width: auto;
+    height: auto;
+    padding: 10px 0px 0px 0px;
+    margin: auto;
+    margin-bottom: 10px;
+    text-align: center;
+}
+#content .soal .data .nomor label{
+    font-size: 16px;
+    font-family: 'Open Sans',cursive;
+    font-weight: 400;
+    line-height: 24px;
+    color: #333333;
+}
+#content .soal .data .nomor label span{
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-left: 10px;
+    color: darkorange;
+    text-shadow: 1px 1px #000000;
+}
+
+/* TEXT SOAL */
+#content .soal .data .text{
+    width: auto;
+    height: auto;
+    padding: 10px;
+    margin: auto;
+}
+#content .soal .data .text,
+#content .soal .data .text p,
+#content .soal .data .text div{
+    font-size: 16px;
+    font-family: 'Open Sans',cursive;
+    font-weight: 400;
+    line-height: 24px;
+    color: #333333;
+    margin-bottom: 5px;
+}
+#content .soal .data .text img{
+    width: 100%;
+    height: auto;
+    padding: 10px 5px;
+    margin: auto;
+}
+
+/* PILIHAN JAWABAN */
+#content .soal .data .jawaban{
+    width: auto;
+    height: auto;
+    padding: 10px;
+    margin: auto;
+    margin-bottom: 10px;
+}
+#content .soal .data .jawaban .pilihan{
+    width: auto;
+    height: auto;
+    padding: auto;
+    margin: auto;
+    margin-bottom: 15px;
+    padding-left: 20px;
+}
+
+/* Footer */
+#content .soal .footer{
+    width: auto;
+    height: auto;
+    padding: auto;
+    margin: auto;
+}
+
+/* Keterangan */
+#content .keterangan_cat{
+    width: auto;
+    height: auto;
+    padding: 10px;
+    margin: 10px 0px;
+    background: #ffffff;
+    background-image: linear-gradient(to top, rgba(0, 206, 34, 0.534) , #5674ba);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+#content .keterangan_cat h1{
+    font-size: 25px;
+    font-family: 'Open Sans',cursive;
+    font-weight: 900;
+    line-height: 24px;
+    color: #ffffff;
+    margin-bottom: 5px;
+    text-shadow: 1px 1px #000000;
+}
+#content .keterangan_cat p{
+    font-size: 16px;
+    font-family: 'Open Sans',cursive;
+    font-weight: 900;
+    line-height: 20px;
+    color: #ffffff;
+    padding-left: 25px;
+    margin: 0px;
+    text-shadow: 1px 1px #000000;
+}
+
+/* Navigasi Ujian */
+#content .navigasi{
+    width: auto;
+    height: auto;
+    padding: 10px;
+    margin: 10px 0px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+#content .navigasi .judul{
+    width: auto;
+    height: auto;
+    padding: 10px;
+    margin: auto;
+    text-align: center;
+    background-image: linear-gradient(to top, rgba(0, 206, 34, 0.534) , #5674ba);
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    margin-bottom: 10px;
+}
+#content .navigasi .judul h1{
+    font-size: 18px;
+    font-family: 'Open Sans',cursive;
+    font-weight: 900;
+    line-height: 24px;
+    color: #ffffff;
+    margin: 1px 0px;
+    text-shadow: 1px 1px #333333;
+}
+#content .navigasi .data{
+    width: auto;
+    height: auto;
+    padding: auto;
+    margin: auto;
+    position: relative;
+}
+/* Footer */
+#content .navigasi .footer{
+    width: auto;
+    height: auto;
+    padding: auto;
+    margin: auto;
+    position: relative;
+}
+#content .navigasi .footer h6{
+    font-size: 16px;
+    font-family: 'Open Sans',cursive;
+    font-weight: 400;
+    line-height: 18px;
+    color: #333333;
+}
+#content .navigasi .footer h6 span.non-active{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: #333333;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    margin-right: 5px;
+}
+#content .navigasi .footer h6 span.active{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: rgba(0, 206, 34, 1);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    margin-right: 5px;
+}
+#content .navigasi .footer h6 span.in-active{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: rgb(130, 0, 206);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    margin-right: 5px;
+}

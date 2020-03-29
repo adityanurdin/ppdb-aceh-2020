@@ -43,6 +43,8 @@ Route::group(['middleware' => 'auth'], function () {
     // Name Of Column
     Route::get('/noc/{name}', 'noc@index');
     Route::get('/noc/gen/soal/{kode_soal}', 'noc@GenSoal');
+    Route::get('/noc/gen/uuid/madrasah', 'noc@GenUuidMadrasah');
+    Route::get('/noc/gen/operator/pembukaan', 'noc@GenOpPembukaan');
     Route::get('/noc/gen/peserta/{jenjang}/{uid_pembukaan}', 'noc@GenPeserta');
 
     // CETAK PENDAFTARAN
@@ -85,6 +87,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/start/{no}' , 'CATController@start')->name('cat.start');
             Route::post('/store/{no}' , 'CATController@storeJawaban')->name('cat.store.jawaban');
             Route::get('/end' , 'CATController@end')->name('cat.end');
+            Route::get('/end-js' , 'CATController@endJS')->name('cat.end.js');
             Route::post('save-ujian' , 'CATController@saveUjian')->name('save-ujian');
         });
     });
@@ -222,6 +225,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/import/soal', 'ImportExportController@soalImport')->name('import.soal');
         Route::post('/import/jalur-khusus/{id}', 'ImportExportController@jalurKhusus')->name('import.jalur-khusus');
         Route::post('/import/jawaban' , 'ImportExportController@jawabanImport')->name('import.jawaban');
+        Route::post('/import/reset-akun' , 'ImportExportController@resetImport')->name('import.reset');
     });
 });
 Route::get('/export/peserta/{kode_pendaftaran}/{kode_soal}/CAT', 'ImportExportController@pesertaUjianDetailExport')->name('export.peserta-ujian.detail');

@@ -16,8 +16,12 @@
         <td style="background: #d6d6d6; text-align: center; width: 75px;">{{$kode_pendaftaran}}</td>
     </tr>
     <tr>
-        <td style="font-weight:bold; text-align: center; width: 35px;">Kode Pendaftaran</td>
+        <td style="font-weight:bold; text-align: center; width: 35px;">Nama Peserta</td>
         <td style="background: #d6d6d6; text-align: center; width: 75px;">{{$peserta->nama}}</td>
+    </tr>
+    <tr>
+        <td style="font-weight:bold; text-align: center; width: 35px;">NIK Peserta</td>
+        <td style="background: #d6d6d6; text-align: center; width: 75px;">({{ $peserta->NIK}})</td>
     </tr>
     <tr>
         <td style="font-weight:bold; text-align: center; width: 35px;">Tempat Lahir</td>
@@ -49,7 +53,7 @@
     </tr>
     <tr>
         <td style="font-weight:bold; text-align: center; width: 35px;">Bukti Pendaftaran</td>
-        <td style="background: #d6d6d6; text-align: center; width: 75px;"><a href="{{route('print.data' , [$peserta->NIK , Dits::encodeDits($pendaftaran->uuid) ])}}" target="_blank" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a></td>
+        <td style="background: #d6d6d6; text-align: center; width: 75px;"><a href="{{route('print.data' , [$peserta->NIK , Dits::encodeDits($kode_pendaftaran) ])}}" target="_blank" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a></td>
     </tr>
 
     <tr>

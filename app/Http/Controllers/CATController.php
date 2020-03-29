@@ -17,7 +17,9 @@ use Cookie;
 use DataTables;
 use Dits;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Str;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Validator;
 
 class CATController extends Controller
@@ -41,11 +43,9 @@ class CATController extends Controller
         $kode_soal = Dits::decodeDits($kode_soal);
         $bank_soal = BankSoal::where('kode_soal', $kode_soal)->first();
         $uuid_peserta = Auth::user()->uuid_login;
-
         $soal = Soal::where('kode_soal', $kode_soal)
             ->orderBy('nomor_soal', 'ASC')
             ->get();
-
         $madrasah = Madrasah::where('uuid', $bank_soal->uuid_madrasah)->first();
         $pembukaan = Pembukaan::where('uuid_madrasah', $madrasah->uuid)
             ->where('status_pembukaan', 'Dibuka')
@@ -53,12 +53,16 @@ class CATController extends Controller
         $pendaftaran = Pendaftaran::where('uuid_peserta', $uuid_peserta)
             ->where('uuid_pembukaan', $pembukaan->uuid)
             ->first();
-        return view('pages.CAT.ujian.ikut_ujian', compact('soal', 'pendaftaran', 'bank_soal'));
+        $jawaban = Jawaban::where('kode_soal' , $kode_soal)
+            ->where('kode_pendaftaran' , $pendaftaran->kode_pendaftaran)
+            ->get();
+        
+        // session()->forget(['cat_ujian','kode_soal']);
+        return view('pages.CAT.ujian.ikut_ujian', compact('soal', 'pendaftaran', 'bank_soal', 'jawaban'));
     }
 
     public function saveUjian(Request $request)
     {
-
         $uuid_jawaban = Dits::decodeDits($request->uuid_jawaban);
         $nomor_soal = Dits::decodeDits($request->nomor_soal);
         $kode_soal = Dits::decodeDits($request->kode_soal);
@@ -86,28 +90,29 @@ class CATController extends Controller
             ->where('kode_pendaftaran', $kode_pendaftaran)
             ->where('nomor_soal', $nomor_soal)
             ->first();
-        if ($checkJawaban) {
-            $checkJawaban->update([
-                'kode_soal'         => $kode_soal,
-                'kode_pendaftaran'  => $kode_pendaftaran,
-                'nomor_soal'        => $nomor_soal,
-                'jawaban'           => strtoupper($jawaban),
-                'status_jawaban'    => $status_jawaban,
-                'tgl_cat'           => Carbon::now()
+        if ($checkJawaban===NULL) {
+            $store = Jawaban::create([
+                'uuid' => Str::uuid(),
+                'kode_soal' => $kode_soal,
+                'kode_pendaftaran' => $kode_pendaftaran,
+                'nomor_soal' => $nomor_soal,
+                'jawaban' => strtoupper($jawaban),
+                'status_jawaban' => $status_jawaban,
+                'tgl_cat' => Carbon::now(),
+                "updated_at" => Carbon::now(),
             ]);
         } else {
-            $store   = Jawaban::create([
-                                    'uuid'              => Str::uuid(),
-                                    'kode_soal'         => $kode_soal,
-                                    'kode_pendaftaran'  => $kode_pendaftaran,
-                                    'nomor_soal'        => $nomor_soal,
-                                    'jawaban'           => strtoupper($jawaban),
-                                    'status_jawaban'    => $status_jawaban,
-                                    'tgl_cat'           => Carbon::now()
-                                ]);
+            $update = Jawaban::whereUuid($uuid_jawaban)->update([
+                'kode_soal' => $kode_soal,
+                'kode_pendaftaran' => $kode_pendaftaran,
+                'nomor_soal' => $nomor_soal,
+                'jawaban' => strtoupper($jawaban),
+                'status_jawaban' => $status_jawaban,
+                'tgl_cat' => Carbon::now(),
+                "updated_at" => Carbon::now(),
+            ]);
         }
-
-        if ($checkJawaban or $store) {
+        if ($update||$store) {
             return response()->json([
                 'status' => true,
             ], 200);
@@ -116,22 +121,25 @@ class CATController extends Controller
                 'status' => false,
             ], 500);
         }
-
     }
 
     public function store(Request $request)
     {
 
-        $bank_soal = BankSoal::where('kode_soal', $request->kode_soal)->first();
+        $kode_soal = $request->kode_soal;
         $uuid_peserta = Auth::user()->uuid_login;
-
-        if (!$bank_soal) {
-            toast('Gagal memasuki halaman ujian, Kode tidak valid', 'error');
+        // Cek Bank Soal
+        $bank_soal = BankSoal::where('kode_soal', $kode_soal)->first();
+        if ($bank_soal === null) {
+            toast('Akses Ditolak, Kode Soal Tidak Valid!', 'error');
+            return redirect()->route('cat.index');
+        }
+        if ($bank_soal->status_bank_soal == 'Tidak Aktif') {
+            toast('Gagal memasuki halaman ujian, Status soal tidak aktif', 'error');
             return redirect()->route('cat.index');
         }
 
-        $soal = Soal::where('kode_soal', $request->kode_soal)->get();
-
+        // Cek Kebenaran Pendaftaran
         $madrasah = Madrasah::where('uuid', $bank_soal->uuid_madrasah)->first();
         $pembukaan = Pembukaan::where('uuid_madrasah', $madrasah->uuid)
             ->where('status_pembukaan', 'Dibuka')
@@ -139,32 +147,54 @@ class CATController extends Controller
         $pendaftaran = Pendaftaran::where('uuid_peserta', $uuid_peserta)
             ->where('uuid_pembukaan', $pembukaan->uuid)
             ->first();
+        if ($pendaftaran === null) {
+            toast('Akses Ditolak, Anda Tidak Terdaftar Pada Kode Soal Tersebut!', 'error');
+            return redirect()->route('cat.index');
+        }
 
-        $jawaban = Jawaban::where('kode_soal', $request->kode_soal)
-            ->where('kode_pendaftaran', $pendaftaran->kode_pendaftaran)
-            ->get();
-
+        // Cek Lolos Tahap Dokumen
         if ($pendaftaran->status_pendaftaran != 'Lolos Tahap Dokumen') {
             toast('Gagal memasuki halaman ujian, Status Pendaftaran Anda ' . $pendaftaran->status_pendaftaran, 'error');
             return redirect()->route('cat.index');
         }
 
-        if ($bank_soal->status_bank_soal == 'Tidak Aktif') {
-            toast('Gagal memasuki halaman ujian, Status soal tidak aktif', 'error');
+        // Cek Soal
+        $soal = Soal::where('kode_soal', $kode_soal)->get();
+        if ($soal === null) {
+            toast('Akses Ditolak, Soal Tidak Valid!', 'error');
             return redirect()->route('cat.index');
         }
 
-        if ($bank_soal->crash_session == 'No') {
+        $jawaban = Jawaban::where('kode_soal', $kode_soal)
+            ->where('kode_pendaftaran', $pendaftaran->kode_pendaftaran)
+            ->get();
 
+        if ($bank_soal->crash_session == 'No') {
             if ($jawaban->count() >= $soal->count()) {
-                toast('Gagal memasuki halaman ujian, Kamu sudah mengikuti ujian ini','error');
+                toast('Gagal memasuki halaman ujian, Kamu sudah mengikuti ujian ini', 'error');
                 return redirect()->route('cat.index');
             }
         }
 
-        $minutes = $bank_soal->timer_cat;
+        if(\count($jawaban)==0){
+            foreach($soal as $data){
+                Jawaban::create(
+                    [
+                        "uuid" => \Str::uuid(),
+                        "kode_soal" => $kode_soal,
+                        "kode_pendaftaran" => $pendaftaran->kode_pendaftaran,
+                        "nomor_soal" => $data->nomor_soal,
+                        "tgl_cat" => Carbon::now(),
+                        "created_at" => Carbon::now(),
+                        "updated_at" => Carbon::now(),
+                    ]
+                );
+            }
+        }
 
-        return redirect()->route('cat.ujian', Dits::encodeDits($request->kode_soal));
+        // Session Ujian Dimulai
+        \session(['cat_ujian' => 'start', 'kode_soal' => Dits::encodeDits($kode_soal)]);
+        return redirect()->route('cat.ujian', Dits::encodeDits($kode_soal));
     }
 
     public function start($no = 1)
@@ -300,23 +330,59 @@ class CATController extends Controller
         return redirect()->route('cat.start', Dits::encodeDits($next));
     }
 
+    // public function end()
+    // {
+    //     $minutes = 0.001;
+    //     $cookie_name = Dits::encodeDits('DitsUjian');
+    //     $get_cookie = Cookie::get($cookie_name);
+    //     $cookie_value = json_decode($get_cookie, true);
+
+    //     if ($cookie_value) {
+    //         $unset_cookie = Cookie::queue(Cookie::make($cookie_name, $cookie_value, $minutes));
+    //         if ($unset_cookie) {
+    //             return redirect()->route('cat.index');
+    //         }
+    //         return redirect()->route('cat.end');
+    //     }
+    //     toast('Terimakasih, Ujian Cat Anda Telah Selesai!', 'success');
+    //     return redirect()->route('cat.index');
+
+    // }
+
     public function end()
     {
-        $minutes = 0.001;
-        $cookie_name = Dits::encodeDits('DitsUjian');
-        $get_cookie = Cookie::get($cookie_name);
-        $cookie_value = json_decode($get_cookie, true);
-
-        if ($cookie_value) {
-            $unset_cookie = Cookie::queue(Cookie::make($cookie_name, $cookie_value, $minutes));
-            if ($unset_cookie) {
-                return redirect()->route('cat.index');
-            }
-            return redirect()->route('cat.end');
+        // Matikan Session
+        if(\session()->has('cat_ujian')){
+            \session()->flush();
+            \Artisan::call('config:clear');
+            \Artisan::call('cache:clear');
+            toast('Terimakasih, Ujian Cat Anda Telah Selesai!', 'success');
+            return redirect()->route('cat.index');
+        }else{
+            \session()->flush();
+            \Artisan::call('config:clear');
+            \Artisan::call('cache:clear');
+            toast('Terimakasih, Ujian Cat Anda Telah Selesai!', 'success');
+            return redirect()->route('cat.index');
         }
-        toast('Berhasil keluar dari halaman ujian', 'success');
-        return redirect()->route('cat.index');
+    }
 
+    public function endJS()
+    {
+        // Matikan Session
+        if(\session()->has('cat_ujian')){
+            \session()->flush();
+            \Artisan::call('config:clear');
+            \Artisan::call('cache:clear');
+            toast('Waktu Ujian Telah Habis!', 'success');
+            return redirect()->route('cat.index');
+        }else{
+            \session()->flush();
+            \Artisan::call('config:clear');
+            \Artisan::call('cache:clear');
+            toast('Waktu Ujian Telah Habis!', 'success');
+            return redirect()->route('cat.index');
+        }
     }
 
     /**
@@ -450,7 +516,8 @@ class CATController extends Controller
         $data = BankSoal::with('madrasah')
             ->whereUuid($uuid)
             ->first();
-        return view('pages.CAT.operator.detail', compact('data'));
+        $soal = Soal::whereKodeSoal($data->kode_soal)->get();
+        return view('pages.CAT.operator.detail', compact('data','soal'));
     }
 
     public function tulisSoal($id)
@@ -531,7 +598,15 @@ class CATController extends Controller
 
     public function data()
     {
-        $data = BankSoal::with('madrasah')->get();
+        $uuid_operator = Auth::user()->uuid_login;
+        $madrasah = Operator::whereUuid($uuid_operator)->first();
+        if (Auth::user()->role == 'Operator Madrasah') {
+            $data = BankSoal::with('madrasah')
+            ->where('uuid_madrasah', $madrasah->uuid_madrasah)
+            ->get();
+        } else {
+            $data = BankSoal::with('madrasah')->get();
+        }
 
         return DataTables::of($data)
             ->addIndexColumn()
@@ -595,7 +670,7 @@ class CATController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($item) {
                 $btn = '<a href="' . route('bank-soal.edit-soal', Dits::encodeDits($item->uuid)) . '" class="btn btn-info btn-sm m-1"><i class="fa fa-edit"></i></a>';
-                $btn .= '<a href="' . route('bank-soal.lihat.soal', Dits::encodeDits($item->uuid)) . '" target="_blank" class="btn btn-warning btn-sm m-1"><i class="fa fa-eye"></i></a>';
+                // $btn .= '<a href="' . route('bank-soal.lihat.soal', Dits::encodeDits($item->kode_soal)) . '" target="_blank" class="btn btn-warning btn-sm m-1"><i class="fa fa-eye"></i></a>';
                 $btn .= '<a href="' . route('bank-soal.hapus.soal', Dits::encodeDits($item->uuid)) . '" onclick="return confirm(\'Anda Yakin Untuk Hapus Data Ini?\');" class="btn btn-danger btn-sm m-1"><i class="fa fa-trash"></i></a>';
                 return $btn;
             })
@@ -623,7 +698,7 @@ class CATController extends Controller
         $valid = Validator::make($request->all(), [
             'gambar' => 'image|mimes:jpeg,jpg,png|max:300',
         ]);
- 
+
         if ($valid->fails()) {
             toast('Gagal menambah soal, Gambar tidak sesuai', 'error');
             return back();
@@ -666,8 +741,9 @@ class CATController extends Controller
 
     public function lihatSoal($id)
     {
-        $uuid = Dits::decodeDits($id);
-        $data = Soal::whereUuid($uuid)->first();
-        return view('pages.CAT.operator.preview-soal', compact('data'));
+        $kode_soal = Dits::decodeDits($id);
+        $soal = Soal::whereKodeSoal($kode_soal)->get();
+        $data = Soal::whereKodeSoal($kode_soal)->first();
+        return view('pages.CAT.operator.preview-soal', compact('soal','data'));
     }
 }

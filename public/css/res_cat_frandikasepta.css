@@ -1,0 +1,49 @@
+/* 
+    Design By Frandika Septa
+    Copyright By Frandika Septa | https://codingers.id/
+    Build Date : 28 Maret 2020
+    Font : Open Sans, Oswald, Raleway
+*/
+
+/* 
+// Large devices (desktops, less than 1200px)
+@media (max-width: 1199.98px) { ... }
+
+// Medium devices (tablets, less than 992px)
+@media (max-width: 991.98px) { ... }
+
+// Small devices (landscape phones, less than 768px)
+@media (max-width: 767.98px) { ... }
+
+// Extra small devices (portrait phones, less than 576px)
+@media (max-width: 575.98px) { ... }
+
+// Galaxy S5
+@media (max-width: 360.98px) { ... }
+*/
+
+@media (max-width: 1199.98px) {
+    
+}
+
+@media (max-width: 991.98px) {
+    
+}
+
+@media (max-width: 767.98px) {
+    #header .judul{
+        height: 60px;
+    }
+    #header .judul > h1,
+    #header .judul > h2{
+        display: none;
+    }
+}
+
+@media (max-width: 575.98px) {
+
+}
+
+@media (max-width: 360.98px) {
+    
+}

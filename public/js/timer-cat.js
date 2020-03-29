@@ -1,8 +1,8 @@
 var timeoutHandle;
 function countdown(minutes,stat,url) {
     var seconds = 60;
-    var mins = minutes;
-    var url = url;
+    var mins = minutes*1;
+    // var url = url;
 	 
 	if(getCookie("minutes")&&getCookie("seconds")&&stat)
 	{
@@ -18,22 +18,44 @@ function countdown(minutes,stat,url) {
         seconds--;
         counter.innerHTML = current_minutes.toString() + " Menit : " + (seconds < 10 ? "0" : "") + String(seconds) + " Detik";
 		//save the time in cookie
-		
         if(seconds > 0) {
             timeoutHandle=setTimeout(tick, 1000);
         }else{
             if(mins > 1){
-               // countdown(mins-1);   never reach “00″ issue solved:Contributed by Victor Streithorst    
-               setTimeout(function () { countdown(parseInt(mins)-1,false); }, 1000);
+               setTimeout(function () { countdown(parseInt(mins)-1,true); }, 1000);
             }
         }
-        if((mins=="1")&&(seconds=="00")){
-            $(".navbar").show();
-            KirimSemuaJawaban();
+        if((current_minutes==0)&&(seconds==00)){
+            UpdateSemuaJawaban();
+            var i;
+            var cookies = document.cookie.split(";");
+            for(var i=1; i <= 10; i++){
+                deleteAllCookies();
+            }
+            for (
+                var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i];
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            }
+            document.cookie = 'minutes=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            document.cookie = 'seconds=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            for (var c = 0; c < cookies.length; c++) {
+                var d = window.location.hostname.split(".");
+                while (d.length > 0) {
+                    var cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
+                    var p = location.pathname.split('/');
+                    document.cookie = cookieBase + '/';
+                    while (p.length > 0) {
+                        document.cookie = cookieBase + p.join('/');
+                        p.pop();
+                    };
+                    d.shift();
+                }
+            }
             ExportJawaban('frans_table');
-            alert('Sesi Ujian Anda Telah Selesai!');
-            deleteAllCookies();
-			document.location=url;
+            return document.location=url;
         }
     }
     tick();

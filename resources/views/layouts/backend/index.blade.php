@@ -1,3 +1,6 @@
+@if (\session('cat_ujian')=="start")
+<script>document.location="{!! route('cat.ujian', \session('kode_soal')) !!}"</script>
+@endif
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -30,8 +33,10 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/dist/css/bootstrap-custom-new.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/fontawesome/css/all.min.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap/dist/css/style-new.css') }}?v={{ date('ymdHis') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css') }}">
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('bootstrap/dist/css/style-new.css') }}?v={{ date('ymdHis') }}" />
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('plugins/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css') }}">
     @yield('css')
 </head>
 
@@ -71,7 +76,8 @@
     <script type="text/javascript" src="{{ asset('plugins/datatables/jquery.dataTables.js') }}"></script>
     <script type="text/javascript" src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.js') }}"></script>
     <script type="text/javascript" src="{{ asset('plugins/moment/moment.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('plugins/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script type="text/javascript"
+        src="{{ asset('plugins/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/admin.js') }}"></script>
     @stack('script')
 </body>

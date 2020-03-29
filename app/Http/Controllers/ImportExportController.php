@@ -11,17 +11,10 @@ use \App\Exports\PendaftaranExport;
 use \App\Exports\PesertaUjianDetailExport;
 use \App\Exports\pesertaUjianExport;
 use \App\Imports\JalurKhususImport;
-use \App\Imports\PengumumanImport;
-use \App\Imports\SoalImport;
 use \App\Imports\JawabanImport;
-use Validator;
-
-use App\User;
-use App\Models\Operator;
-use App\Models\Peserta;
-use App\Models\Madrasah;
-use App\Models\Pendaftaran;
-
+use \App\Imports\PengumumanImport;
+use \App\Imports\ResetAkunImport;
+use \App\Imports\SoalImport;
 
 class ImportExportController extends Controller
 {
@@ -70,14 +63,14 @@ class ImportExportController extends Controller
     public function jawabanImport(Request $request)
     {
         $request->validate([
-            // 'file_upload' => 'required|max:300|file|mimes:csv,xls'
+            'file_upload' => 'required|file|mimes:csv,txt|max:1000',
         ]);
 
-         if($request->hasFile('file_upload')) {
-             Excel::import(new jawabanImport() , request()->file('file_upload'));
-             toast('Berhasil Upload Jawaban','success');
-             return back();
-         }
+        if ($request->hasFile('file_upload')) {
+            Excel::import(new jawabanImport(), request()->file('file_upload'));
+            toast('Berhasil Upload Jawaban', 'success');
+            return back();
+        }
     }
 
     public function soalImport(Request $request)
@@ -103,11 +96,24 @@ class ImportExportController extends Controller
         $request->validate([
             'file_import' => 'required|file|mimes:csv,txt|max:1000',
         ]);
-        
+
         $id = Dits::decodeDits($id);
         if ($request->hasFile('file_import')) {
             Excel::import(new JalurKhususImport($id), request()->file('file_import'), null, \Maatwebsite\Excel\Excel::CSV);
             toast('Berhasil Import Jalur Khusus!', 'success');
+            return back();
+        }
+    }
+
+    public function resetImport(Request $request)
+    {
+        $request->validate([
+            'file_upload' => 'required|file|mimes:csv,txt|max:1000',
+        ]);
+
+        if ($request->hasFile('file_upload')) {
+            Excel::import(new ResetAkunImport(), request()->file('file_upload'));
+            toast('Berhasil Reset Akun Peserta', 'success');
             return back();
         }
     }
