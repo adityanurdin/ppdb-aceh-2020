@@ -1,7 +1,7 @@
 @extends('layouts.frontend.index')
 
 @push('title')
-<title>KATEGRI VIDEO | SIM PPDB Madrasah Kota Banda Aceh</title>
+<title>KATEGORI VIDEO | SIM PPDB Madrasah Kota Banda Aceh</title>
 <meta name="description"
 content="SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Informasi Manajamen Penerimaan Peserta Didik Baru Madrasah Kota Banda Aceh" />
 <meta name="keywords"
