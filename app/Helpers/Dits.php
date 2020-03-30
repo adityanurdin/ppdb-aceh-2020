@@ -40,7 +40,7 @@ class Dits
     public static function UploadImage(Request $request, $field, $path)
     {
         $file = $request->file($field);
-        $path = $path . '/' . date('FY') . '/';
+        $path = $path . '/'. date('Y') . '/' . date('F') . '/';
         $full_path = Self::ImageName($path, $file->getClientOriginalExtension());
 
         $image = Image::make($file)->encode($file->getClientOriginalExtension(), 75);
@@ -101,16 +101,22 @@ class Dits
         return ucfirst($result);
     }
 
-    public static function uploadFile(Request $request, $field, $path)
+    public static function uploadFile(Request $request, $field, $path , $optionalPath = '')
     {
-        $file = $request->file($field);
+        /* $file = $request->file($field);
 
         $path = $path . '/' . date('FY') . '/';
         $full_path = Self::ImageName($path, $file->getClientOriginalExtension());
 
         $request->file($field)->move($full_path);
 
-        return $full_path;
+        return $full_path; */
+        $fileName = Carbon::now()->timestamp . '.' .
+        $request->file($field)->getClientOriginalExtension();
+        $uploadPdf = $request->file($field)->move(
+            base_path() . '/public/document/'.$path.'/'.date('Y') . '/' . $optionalPath , $fileName
+        );
+        return $uploadPdf;
     }
 
     public static function PdfViewer($pdf)

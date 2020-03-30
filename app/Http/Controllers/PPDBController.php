@@ -120,7 +120,7 @@ class PPDBController extends Controller
             $fileName = Carbon::now()->timestamp . '.' .
             $request->file('url_brosur')->getClientOriginalExtension();
             $uploadPdf = $request->file('url_brosur')->move(
-                base_path() . '/public/document/brosur', $fileName
+                base_path() . '/public/document/brosur/'.date('Y'), $fileName
             );
             $input['url_brosur'] = $uploadPdf;
         }
@@ -220,7 +220,7 @@ class PPDBController extends Controller
             $fileName = Carbon::now()->timestamp . '.' .
             $request->file('url_brosur')->getClientOriginalExtension();
             $uploadPdf = $request->file('url_brosur')->move(
-                base_path() . '/public/document/brosur', $fileName
+                base_path() . '/public/document/brosur'.date('Y'), $fileName
             );
             $input['url_brosur'] = $uploadPdf;
         }
@@ -580,7 +580,7 @@ class PPDBController extends Controller
             $fileName = Carbon::now()->timestamp . '.' .
             $request->file('url_transfer')->getClientOriginalExtension();
             $upload = $request->file('url_transfer')->move(
-                base_path() . '/public/document/peserta/' . $nik . '/bukti_transfer/', $fileName
+                base_path() . '/public/document/peserta/'.date('Y'). '/' . $nik . '/bukti_transfer/', $fileName
             );
 
             $pendaftaran = Pendaftaran::where('kode_pendaftaran', $kode_pendaftaran)
@@ -635,7 +635,7 @@ class PPDBController extends Controller
             $fileName = Carbon::now()->timestamp . '.' .
             $request->file($field)->getClientOriginalExtension();
             $uploadPdf = $request->file($field)->move(
-                base_path() . '/public/document/peserta/' . $nik . '/' . $field . '/', $fileName
+                base_path() . '/public/document/peserta/'.date('Y') . '/' . $nik . '/' . $field . '/', $fileName
             );
             $peserta->update([
                 $field => $uploadPdf,

@@ -138,6 +138,7 @@ class PesertaController extends Controller
                 'pas_foto' => 'required|image|mimes:jpeg,jpg,png|max:1000',
             ]);
             $image = Dits::UploadImage($request, 'pas_foto', 'pas_foto');
+            Dits::uploadFile($request , 'pas_foto' , 'peserta' , $request->NIK.'/pas_foto');
             $input['pas_foto'] = $image;
         }
         $input['status_aktif'] = 'yes';
