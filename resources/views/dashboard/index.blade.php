@@ -459,7 +459,7 @@ $isUpdate = Dits::checkJenjang();
                     Scan Akte Kelahiran
                 </label>
                 <div class="py-2">
-                    <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->akte))}}" target="_blank"
+                    <a href="{{asset('storage/'.Dits::DataPeserta()->akte)}}" target="_blank"
                         class="btn btn-info btn-sm float-right mt-2 mb-3"><i class="fa fa-eye"></i> Lihat File</a>
                     <a href="{{route('delete-document' , ['akte' , Dits::DataPeserta()->NIK])}}"
                         onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2"><i
@@ -487,7 +487,7 @@ $isUpdate = Dits::checkJenjang();
                     Scan Kartu Keluarga
                 </label>
                 <div class="py-2">
-                    <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->kk))}}" target="_blank"
+                    <a href="{{asset('storage/'.Dits::DataPeserta()->kk)}}" target="_blank"
                         class="btn btn-info btn-sm float-right mt-2 mb-3"><i class="fa fa-eye"></i> Lihat File</a>
                     <a href="{{route('delete-document' , ['kk' , Dits::DataPeserta()->NIK])}}"
                         onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2"><i
@@ -527,7 +527,7 @@ $isUpdate = Dits::checkJenjang();
                     Scan Raport Kelas 5 smt 1
                 </label>
                 <div class="py-2">
-                    <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_1))}}" target="_blank"
+                    <a href="{{asset('storage/'.Dits::DataPeserta()->rapot_1)}}" target="_blank"
                         class="btn btn-info btn-sm float-right mt-2 mb-3"><i class="fa fa-eye"></i> Lihat File</a>
                     <a href="{{route('delete-document' , ['rapot_1' , Dits::DataPeserta()->NIK])}}"
                         onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2"><i
@@ -555,7 +555,7 @@ $isUpdate = Dits::checkJenjang();
                     Scan Raport Kelas 5 smt 1
                 </label>
                 <div class="py-2">
-                    <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_2))}}" target="_blank"
+                    <a href="{{asset('storage/'.Dits::DataPeserta()->rapot_2)}}" target="_blank"
                         class="btn btn-info btn-sm float-right mt-2 mb-3"><i class="fa fa-eye"></i> Lihat File</a>
                     <a href="{{route('delete-document' , ['rapot_2' , Dits::DataPeserta()->NIK])}}"
                         onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2"><i
@@ -583,7 +583,7 @@ $isUpdate = Dits::checkJenjang();
                     Scan Raport Kelas 6 smt 1
                 </label>
                 <div class="py-2">
-                    <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_3))}}" target="_blank"
+                    <a href="{{asset('storage/'.Dits::DataPeserta()->rapot_3)}}" target="_blank"
                         class="btn btn-info btn-sm float-right mt-2 mb-3"><i class="fa fa-eye"></i> Lihat File</a>
                     <a href="{{route('delete-document' , ['rapot_3' , Dits::DataPeserta()->NIK])}}"
                         onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2"><i
@@ -622,7 +622,7 @@ $isUpdate = Dits::checkJenjang();
                     Scan Raport Kelas 8 smt 1
                 </label>
                 <div class="py-2">
-                    <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_1))}}" target="_blank"
+                    <a href="{{asset('storage/'.Dits::DataPeserta()->rapot_1)}}" target="_blank"
                         class="btn btn-info btn-sm float-right mt-2 mb-3"><i class="fa fa-eye"></i> Lihat File</a>
                     <a href="{{route('delete-document' , ['rapot_1' , Dits::DataPeserta()->NIK])}}"
                         onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2"><i
@@ -650,7 +650,7 @@ $isUpdate = Dits::checkJenjang();
                     Scan Raport Kelas 8 smt 2
                 </label>
                 <div class="py-2">
-                    <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_2))}}" target="_blank"
+                    <a href="{{asset('storage/'.Dits::DataPeserta()->rapot_2)}}" target="_blank"
                         class="btn btn-info btn-sm float-right mt-2 mb-3"><i class="fa fa-eye"></i> Lihat File</a>
                     <a href="{{route('delete-document' , ['rapot_2' , Dits::DataPeserta()->NIK])}}"
                         onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2"><i
@@ -678,7 +678,7 @@ $isUpdate = Dits::checkJenjang();
                     Scan Raport Kelas 9 smt 1
                 </label>
                 <div class="py-2">
-                    <a href="{{Dits::pdfViewer(asset(Dits::DataPeserta()->rapot_3))}}" target="_blank"
+                    <a href="{{asset('storage/'.Dits::DataPeserta()->rapot_3)}}" target="_blank"
                         class="btn btn-info btn-sm float-right mt-2 mb-3"><i class="fa fa-eye"></i> Lihat File</a>
                     <a href="{{route('delete-document' , ['rapot_3' , Dits::DataPeserta()->NIK])}}"
                         onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2"><i

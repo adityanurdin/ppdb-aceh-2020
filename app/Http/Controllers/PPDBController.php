@@ -15,6 +15,8 @@ use Dits;
 use Illuminate\Http\Request;
 use Str;
 use Validator;
+use Storage;
+use Image;
 
 class PPDBController extends Controller
 {
@@ -39,11 +41,8 @@ class PPDBController extends Controller
 
     public function store(Request $request)
     {
-
-
         // Validation
         $request->validate([
-            // 'uuid_madrasah' => 'required|string|max:100',
             'tgl_pembukaan' => 'required|string|max:10',
             'tgl_penutupan' => 'required|string|max:10',
             'tgl_pengumuman' => 'required|string|max:10',
@@ -117,12 +116,24 @@ class PPDBController extends Controller
         ];
 
         if ($request->hasFile('url_brosur')) {
-            $fileName = Carbon::now()->timestamp . '.' .
-            $request->file('url_brosur')->getClientOriginalExtension();
-            $uploadPdf = $request->file('url_brosur')->move(
-                base_path() . '/public/document/brosur/'.date('Y'), $fileName
-            );
-            $input['url_brosur'] = $uploadPdf;
+            // Upload File
+            $ext = strtolower($request->file('url_brosur')->extension());
+            $ext_array = Array('pdf');
+            if (in_array($ext, $ext_array)){
+                $file = $request->file('url_brosur');
+                $pat_brosur = 'brosur/'.date('Y').'/';
+                $file_name = Str::slug($madrasah->nama_madrasah,'-');
+                $file_name = $file_name."-".rand(1000,9999999999).".".$ext;
+                $file_save = $pat_brosur.$file_name;
+                if(!is_dir(storage_path('app/public/'.$pat_brosur))){
+                    Storage::disk('public')->makeDirectory($pat_brosur);
+                }
+                Storage::disk('public')->putFileAs($pat_brosur,$file,$file_name);
+            } else {
+                toast('Gagal Upload Foto, Format File Tidak Diizinkan!', 'success');
+                return back();
+            }
+            $input['url_brosur'] = $file_save;
         }
 
         $create = Pembukaan::create($input);
@@ -216,13 +227,34 @@ class PPDBController extends Controller
             'tahun_akademik' => $request->tahun_akademik,
         ];
 
+        $pembukaan = Pembukaan::where('uuid', $uuid)->first();
+
         if ($request->hasFile('url_brosur')) {
-            $fileName = Carbon::now()->timestamp . '.' .
-            $request->file('url_brosur')->getClientOriginalExtension();
-            $uploadPdf = $request->file('url_brosur')->move(
-                base_path() . '/public/document/brosur'.date('Y'), $fileName
-            );
-            $input['url_brosur'] = $uploadPdf;
+            // Cek url_brosur
+            if($pembukaan->url_brosur!=""){
+                if(Storage::disk('public')->exists($pembukaan->url_brosur)){
+                    // Hapus Pas Foto
+                    Storage::disk('public')->delete($pembukaan->url_brosur);
+                }
+            }
+            // Upload File
+            $ext = strtolower($request->file('url_brosur')->extension());
+            $ext_array = Array('pdf');
+            if (in_array($ext, $ext_array)){
+                $file = $request->file('url_brosur');
+                $pat_brosur = 'brosur/'.date('Y').'/';
+                $file_name = Str::slug($pembukaan->madrasah->nama_madrasah,'-');
+                $file_name = $file_name."-".rand(1000,9999999999).".".$ext;
+                $file_save = $pat_brosur.$file_name;
+                if(!is_dir(storage_path('app/public/'.$pat_brosur))){
+                    Storage::disk('public')->makeDirectory($pat_brosur);
+                }
+                Storage::disk('public')->putFileAs($pat_brosur,$file,$file_name);
+            } else {
+                toast('Gagal Upload Foto, Format File Tidak Diizinkan!', 'success');
+                return back();
+            }
+            $input['url_brosur'] = $file_save;
         }
 
         $create = Pembukaan::where('uuid', $uuid)->first();
@@ -276,6 +308,13 @@ class PPDBController extends Controller
         }
 
         if ($data) {
+            // Cek url_brosur
+            if($data->url_brosur!=""){
+                if(Storage::disk('public')->exists($data->url_brosur)){
+                    // Hapus Pas Foto
+                    Storage::disk('public')->delete($data->url_brosur);
+                }
+            }
             $data->delete();
             toast('Berhasil Menghapus PPDB', 'success');
             return redirect()->route('buka-ppdb');
@@ -407,7 +446,7 @@ class PPDBController extends Controller
         return DataTables::of($data)
             ->addIndexColumn()
             ->addColumn('action', function ($item) {
-                $btn = '<a href="' . Dits::PdfViewer(asset($item->url_brosur)) . '" target="_blank" class="btn btn-danger btn-sm btn-block"><i class="fas fa-file-pdf"></i> Brosur</a>';
+                $btn = '<a href="' . Dits::PdfViewer($item->url_brosur) . '" target="_blank" class="btn btn-danger btn-sm btn-block"><i class="fas fa-file-pdf"></i> Brosur</a>';
                 $btn .= '<a href="' . \env('APP_URL') . 'ppdb/' . Dits::encodeDits($item->uuid_madrasah) . '/' . $item->kode_pendaftaran . '/lihat" class="btn btn-info btn-sm btn-block" ><i class="fas fa-eye"></i> Lihat</a>';
                 $btn .= '<a href="' . \env('APP_URL') . 'ppdb/' . Dits::encodeDits($item->uuid_pembukaan) . '/hapus" onclick="return confirm(\'Anda Yakin Untuk Hapus Data Ini?\');" class="btn btn-danger btn-sm btn-block"><i class="fas fa-trash"></i> Hapus</a>';
                 $btn .= '<a href="' . route('print.data', [Dits::DataPeserta()->NIK, Dits::encodeDits($item->kode_pendaftaran)]) . '" class="btn btn-success btn-sm btn-block" target="_blank"><i class="fas fa-print"></i> Cetak</a>';
@@ -534,7 +573,7 @@ class PPDBController extends Controller
                 return $tgl_pengumuman;
             })
             ->addColumn('action', function ($item) {
-                $btn = '<a href="' . Dits::PdfViewer(asset($item->url_brosur)) . '" target="_blank" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf"></i> Brosur</a> ';
+                $btn = '<a href="' . Dits::PdfViewer($item->url_brosur) . '" target="_blank" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf"></i> Brosur</a> ';
                 $btn .= '<a href="' . \env('APP_URL') . 'ppdb/' . Dits::encodeDits($item->uuid_madrasah) . '/lihat" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> Lihat</a> ';
                 $btn .= '<a href="' . \env('APP_URL') . 'ppdb/' . Dits::encodeDits($item->uuid) . '/daftar/' . $item->uuid_madrasah . '" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Daftar</a>';
                 return $btn;
@@ -570,24 +609,43 @@ class PPDBController extends Controller
         $kode_pendaftaran = Dits::decodeDits($kode);
 
         $nik = Dits::DataPeserta()->NIK;
+        $pendaftaran = Pendaftaran::where('kode_pendaftaran', $kode_pendaftaran)
+            ->first();
 
         if ($request->hasFile('url_transfer')) {
 
             $request->validate([
-                "url_transfer" => "required|file|mimes:png,jpg,jpeg,pdf|max:1000"
+                "url_transfer" => "required|file|mimes:png,jpg,jpeg|max:1000"
             ]);
 
-            $fileName = Carbon::now()->timestamp . '.' .
-            $request->file('url_transfer')->getClientOriginalExtension();
-            $upload = $request->file('url_transfer')->move(
-                base_path() . '/public/document/peserta/'.date('Y'). '/' . $nik . '/bukti_transfer/', $fileName
-            );
+            // Cek url_transfer
+            if($pendaftaran->url_transfer!=""){
+                if(Storage::disk('public')->exists($pendaftaran->url_transfer)){
+                    // Hapus Pas Foto
+                    Storage::disk('public')->delete($pendaftaran->url_transfer);
+                }
+            }
+            // Upload File
+            $ext = strtolower($request->file('url_transfer')->extension());
+            $ext_array = Array('jpg','jpeg','png');
+            if (in_array($ext, $ext_array)){
+                $file = $request->file('url_transfer');
+                $path_PasFoto = 'peserta/'.date('Y').'/'.$pendaftaran->peserta->NIK.'/daftar-ulang/';
+                $file_name = Str::slug(strtoupper($pendaftaran->peserta->nama),'-');
+                $file_name = $file_name."-".rand(1000,9999999999).".jpg";
+                $file_save = $path_PasFoto.$file_name;
+                if(!is_dir(storage_path('app/public/'.$path_PasFoto))){
+                    Storage::disk('public')->makeDirectory($path_PasFoto);
+                }
+                Storage::disk('public')->putFileAs($path_PasFoto,$file,$file_name);
+            } else {
+                toast('Gagal Upload Foto, Format File Tidak Diizinkan!', 'success');
+                return back();
+            }
 
-            $pendaftaran = Pendaftaran::where('kode_pendaftaran', $kode_pendaftaran)
-                ->first();
             if ($pendaftaran) {
                 $pendaftaran->update([
-                    'url_transfer' => $upload,
+                    'url_transfer' => $file_save,
                 ]);
                 toast('Berhasil Upload', 'success');
                 return back();
@@ -603,9 +661,14 @@ class PPDBController extends Controller
         $kode_pendaftaran = Dits::decodeDits($kode);
         $data = Pendaftaran::where('kode_pendaftaran', $kode_pendaftaran)
             ->first();
-        // return $data->url_transfer;
         if ($data) {
-            unlink($data->url_transfer);
+            // Cek url_transfer
+            if($data->url_transfer!=""){
+                if(Storage::disk('public')->exists($data->url_transfer)){
+                    // Hapus Pas Foto
+                    Storage::disk('public')->delete($data->url_transfer);
+                }
+            }
             $data->update([
                 'url_transfer' => '',
             ]);
@@ -632,13 +695,33 @@ class PPDBController extends Controller
         }
 
         if ($request->hasFile($field)) {
-            $fileName = Carbon::now()->timestamp . '.' .
-            $request->file($field)->getClientOriginalExtension();
-            $uploadPdf = $request->file($field)->move(
-                base_path() . '/public/document/peserta/'.date('Y') . '/' . $nik . '/' . $field . '/', $fileName
-            );
+            if($peserta->$field!=""){
+                if(Storage::disk('public')->exists($peserta->$field)){
+                    // Hapus $field
+                    Storage::disk('public')->delete($peserta->$field);
+                }
+            }
+            // Upload Pas Foto
+            $ext = strtolower($request->file($field)->extension());
+            $ext_array = Array('pdf','jpg','jpeg','png');
+            if (in_array($ext, $ext_array)){
+                $file = $request->file($field);
+                $change_field = Str::slug($field,'-');
+                $path_file = 'peserta/'.date('Y').'/'.$peserta->NIK.'/'.$change_field.'/';
+                $file_name = Str::slug($peserta->nama,'-');
+                $file_name = $change_field."-".$file_name."-".rand(1000,9999999999).".".$ext;
+                $file_save = $path_file.$file_name;
+                if(!is_dir(storage_path('app/public/'.$path_file))){
+                    Storage::disk('public')->makeDirectory($path_file);
+                }
+                Storage::disk('public')->putFileAs($path_file,$file,$file_name);
+            } else {
+                toast('Gagal Upload Foto, Format File Tidak Diizinkan!', 'success');
+                return back();
+            }
+
             $peserta->update([
-                $field => $uploadPdf,
+                $field => $file_save,
             ]);
             if ($peserta) {
                 toast('Berhasil Upload File', 'success');
@@ -655,7 +738,12 @@ class PPDBController extends Controller
     {
         $data = Peserta::where('NIK', $nik)->first();
         if ($data) {
-            unlink($data->$field);
+            if($data->$field!=""){
+                if(Storage::disk('public')->exists($data->$field)){
+                    // Hapus $field
+                    Storage::disk('public')->delete($data->$field);
+                }
+            }
             $data->update([
                 $field => '',
             ]);

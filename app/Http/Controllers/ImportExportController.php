@@ -10,10 +10,12 @@ use Illuminate\Http\Request;
 use \App\Exports\PendaftaranExport;
 use \App\Exports\PesertaUjianDetailExport;
 use \App\Exports\pesertaUjianExport;
+use \App\Exports\OperatorMadrasahExport;
 use \App\Imports\JalurKhususImport;
 use \App\Imports\JawabanImport;
 use \App\Imports\PengumumanImport;
 use \App\Imports\ResetAkunImport;
+use App\Imports\ResetAkunOpImport;
 use \App\Imports\SoalImport;
 
 class ImportExportController extends Controller
@@ -32,6 +34,12 @@ class ImportExportController extends Controller
     {
         $date = Carbon::now()->toDateTimeString();
         return Excel::download(new PesertaUjianExport($id), 'export_ppdb_' . $id . $date . '.xlsx');
+    }
+
+    public function operatorExport()
+    {
+        $date = Carbon::now()->toDateTimeString();
+        return Excel::download(new OperatorMadrasahExport(), 'export_op_madrasah_'. $date . '.xlsx');
     }
 
     public function pesertaUjianDetailExport($kode_pendaftaran, $kode_soal)
@@ -113,6 +121,19 @@ class ImportExportController extends Controller
 
         if ($request->hasFile('file_upload')) {
             Excel::import(new ResetAkunImport(), request()->file('file_upload'));
+            toast('Berhasil Reset Akun Peserta', 'success');
+            return back();
+        }
+    }
+
+    public function resetOpImport(Request $request)
+    {
+        $request->validate([
+            'file_upload' => 'required|file|mimes:csv,txt|max:1000',
+        ]);
+
+        if ($request->hasFile('file_upload')) {
+            Excel::import(new ResetAkunOpImport(), request()->file('file_upload'));
             toast('Berhasil Reset Akun Peserta', 'success');
             return back();
         }

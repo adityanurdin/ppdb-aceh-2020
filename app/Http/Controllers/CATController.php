@@ -18,6 +18,7 @@ use DataTables;
 use Dits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Storage;
 use Str;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Validator;
@@ -495,6 +496,16 @@ class CATController extends Controller
             // CEK DULU JAWABANS, JIKA ADA JAWABAN, GAK BOLEH DIHAPUS
             $jawaban = Jawaban::whereKodeSoal($data->kode_soal)->first();
             if ($jawaban === null) {
+                // Hapus Gambar Soal
+                $soal = Soal::whereKodeSoal($data->kode_soal)->where('gambar','!=','')->first();
+                // Hapus Folder File Soal
+                if($soal->gambar!=""){
+                    $exp = \explode('/',$soal->gambar);
+                    $dir = storage_path('app/public/').$exp[0].'/'.$exp[1].'/'.$exp[2];
+                    if(is_dir($dir)){
+                        Storage::disk('public')->deleteDirectory($exp[0].'/'.$exp[1].'/'.$exp[2]);
+                    }
+                }
                 // Hapus Soal
                 Soal::whereKodeSoal($data->kode_soal)->delete();
                 // Hapus Bank Soal
@@ -554,7 +565,24 @@ class CATController extends Controller
         }
 
         if ($request->hasFile('gambar')) {
-            $gambar = Dits::uploadImage($request, 'gambar', 'Soal/' . $kode_soal);
+            // Upload File
+            $ext = strtolower($request->file('gambar')->extension());
+            $ext_array = Array('jpg','jpeg','png');
+            if (in_array($ext, $ext_array)){
+                $file = $request->file('gambar');
+                $path_soal = 'soal/'.date('Y').'/'.$kode_soal.'/';
+                $file_name = $kode_soal."-".$request->jenis_soal."-".$request->nomor_soal."-".rand(1000,9999999999).".jpg";
+                $file_name = strtolower($file_name);
+                $file_save = $path_soal.$file_name;
+                if(!is_dir(storage_path('app/public/'.$path_soal))){
+                    Storage::disk('public')->makeDirectory($path_soal);
+                }
+                Storage::disk('public')->putFileAs($path_soal,$file,$file_name);
+            } else {
+                toast('Gagal Upload Foto, Format File Tidak Diizinkan!', 'success');
+                return back();
+            }
+            $gambar = $file_save;
         } else {
             $gambar = null;
         }
@@ -705,7 +733,30 @@ class CATController extends Controller
         }
 
         if ($request->hasFile('gambar')) {
-            $gambar = Dits::uploadImage($request, 'gambar', 'Soal/' . $kode_soal);
+            if($soal->gambar!=""){
+                if(Storage::disk('public')->exists($soal->gambar)){
+                    // Hapus gambar
+                    Storage::disk('public')->delete($soal->gambar);
+                }
+            }
+            // Upload File
+            $ext = strtolower($request->file('gambar')->extension());
+            $ext_array = Array('jpg','jpeg','png');
+            if (in_array($ext, $ext_array)){
+                $file = $request->file('gambar');
+                $path_soal = 'soal/'.date('Y').'/'.$kode_soal.'/';
+                $file_name = $kode_soal."-".$request->jenis_soal."-".$request->nomor_soal."-".rand(1000,9999999999).".jpg";
+                $file_name = strtolower($file_name);
+                $file_save = $path_soal.$file_name;
+                if(!is_dir(storage_path('app/public/'.$path_soal))){
+                    Storage::disk('public')->makeDirectory($path_soal);
+                }
+                Storage::disk('public')->putFileAs($path_soal,$file,$file_name);
+            } else {
+                toast('Gagal Upload Foto, Format File Tidak Diizinkan!', 'success');
+                return back();
+            }
+            $gambar = $file_save;
             $input['gambar'] = $gambar;
         }
 
@@ -727,6 +778,12 @@ class CATController extends Controller
         $uuid = Dits::decodeDits($id);
         $soal = Soal::whereUuid($uuid)->first();
         if ($soal) {
+            if($soal->gambar!=""){
+                if(Storage::disk('public')->exists($soal->gambar)){
+                    // Hapus gambar
+                    Storage::disk('public')->delete($soal->gambar);
+                }
+            }
             $soal->delete();
             if ($soal) {
                 toast('Berhasil Menghapus Soal', 'success');

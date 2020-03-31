@@ -141,19 +141,19 @@ onpaste="return false">
                                         <div class="pilihan">
                                             <div class="icheck-success d-inline">
                                                 <input type="radio" name="jawaban[]" id="jawaban_B_{{ $data->nomor_soal}}">
-                                                <label for="jawaban_B_{{ $data->nomor_soal}}">{{ $data->a }}</label>
+                                                <label for="jawaban_B_{{ $data->nomor_soal}}">{{ $data->b }}</label>
                                             </div>
                                         </div>
                                         <div class="pilihan">
                                             <div class="icheck-success d-inline">
                                                 <input type="radio" name="jawaban[]" id="jawaban_C_{{ $data->nomor_soal}}">
-                                                <label for="jawaban_C_{{ $data->nomor_soal}}">{{ $data->a }}</label>
+                                                <label for="jawaban_C_{{ $data->nomor_soal}}">{{ $data->c }}</label>
                                             </div>
                                         </div>
                                         <div class="pilihan">
                                             <div class="icheck-success d-inline">
                                                 <input type="radio" name="jawaban[]" id="jawaban_D_{{ $data->nomor_soal}}">
-                                                <label for="jawaban_D_{{ $data->nomor_soal}}">{{ $data->a }}</label>
+                                                <label for="jawaban_D_{{ $data->nomor_soal}}">{{ $data->d }}</label>
                                             </div>
                                         </div>
                                         {{--  Pilihan Jawaban  --}}

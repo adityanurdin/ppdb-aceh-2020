@@ -12,8 +12,13 @@
 @section('content')
 <div class="card">
     <div class="card-body">
-        <a href="{{route('madrasah.create')}}" class="btn btn-info mb-3 float-right"><i class="fa fa-plus"></i> Tambah Madrasah</a>
-        <div class="clearfix"></div>
+        <a href="{{route('export.operator')}}" class="btn btn-success m-1 float-left"><i class="fa fa-file-excel"></i>
+            Export Operator</a>
+        <a href="" data-toggle="modal" data-target="#ResetAkun" class="btn btn-dark m-1 float-left"><i
+                class="fas fa-user-clock"></i> Reset Akun Operator</a>
+        <a href="{{route('madrasah.create')}}" class="btn btn-info m-1 float-right"><i class="fa fa-plus"></i> Tambah
+            Madrasah</a>
+        <div class="clearfix mb-3"></div>
         <div class="table-responsive-sm">
             <table class="table table-bordered table-hover" id="myTable">
                 <thead>
@@ -31,6 +36,44 @@
                 <tbody>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+{{-- Modal Reset Akun Peserta --}}
+<div class="modal fade" id="ResetAkun" tabindex="-1" role="dialog" aria-labelledby="ResetAkunLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ResetAkunLabel"><i class="fa fa-user-clock"></i> Reset Akun Peserta
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{route('import.reset.op')}}" method="POST" enctype="multipart/form-data">
+                @csrf
+
+                <div class="modal-body bg-white text-dark">
+                    <div class="form-group">
+                        <label for="">File Reset Akun *</label>
+                        <input type="file" name="file_upload" id=""
+                            class="form-control @error('file_import') is-invalid @enderror" required>
+                        <small>File : .CSV (MS-Dos/Comma Delimited) | Ukuran Maksimal : 1000KB/1MB</small>
+                        @error('file_import')
+                        <div class="invalid-feedback text-left">
+                            <label>{{ $message }}</label>
+                        </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="{{route('download.file' , ['Documents' , 'format_reset_akun_operator.xlsx'])}}"
+                        class="btn btn-secondary btn-sm"><i class="fas fa-download"></i> Format Reset Akun</a>
+                    <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-upload"></i> UPLOAD</button>
+                </div>
+
+            </form>
         </div>
     </div>
 </div>

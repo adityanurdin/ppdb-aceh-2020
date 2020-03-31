@@ -6725,13 +6725,21 @@
                   ' ' + ' KMGTP'[unit] + 'B';
               imageLimitation = "<small>" + (this.lang.image.maximumFileSize + ' : ' + readableSize) + "</small>";
           }
+        //   Hanya Untuk URL Image Saja
+        //   var body = [
+        //       '<div class="form-group note-form-group note-group-select-from-files">',
+        //       '<label class="note-form-label">' + this.lang.image.selectFromFiles + '</label>',
+        //       '<input class="note-image-input form-control-file note-form-control note-input" ',
+        //       ' type="file" name="files" accept="image/*" multiple="multiple" />',
+        //       imageLimitation,
+        //       '</div>',
+        //       '<div class="form-group note-group-image-url" style="overflow:auto;">',
+        //       '<label class="note-form-label">' + this.lang.image.url + '</label>',
+        //       '<input class="note-image-url form-control note-form-control note-input ',
+        //       ' col-md-12" type="text" />',
+        //       '</div>',
+        //   ].join('');
           var body = [
-              '<div class="form-group note-form-group note-group-select-from-files">',
-              '<label class="note-form-label">' + this.lang.image.selectFromFiles + '</label>',
-              '<input class="note-image-input form-control-file note-form-control note-input" ',
-              ' type="file" name="files" accept="image/*" multiple="multiple" />',
-              imageLimitation,
-              '</div>',
               '<div class="form-group note-group-image-url" style="overflow:auto;">',
               '<label class="note-form-label">' + this.lang.image.url + '</label>',
               '<input class="note-image-url form-control note-form-control note-input ',

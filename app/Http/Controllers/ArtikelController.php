@@ -11,6 +11,8 @@ use Dits;
 use Illuminate\Http\Request;
 use Str;
 use Validator;
+use Image;
+use Storage;
 
 class ArtikelController extends Controller
 {
@@ -75,15 +77,32 @@ class ArtikelController extends Controller
         $slug = Str::slug($request->judul_video, '-');
 
         $input = $request->all();
-        if ($request->hasFile('thumbnail_video')) {
-            $input['thumbnail_video'] = Dits::UploadImage($request, 'thumbnail_video', 'thumbnail_video');
-        }
-        // $input['thumbnail_video'] = Dits::UploadImage($request , 'thumbnail_video' , 'thumbnail_video');
+        // if ($request->hasFile('thumbnail_video')) {
+        //     // Upload File
+        //     $ext = strtolower($request->file('thumbnail_video')->extension());
+        //     $ext_array = Array('jpg','jpeg','png');
+        //     if (in_array($ext, $ext_array)){
+        //         $file = $request->file('thumbnail_video');
+        //         $path_thumb = 'thumbnail/video/'.date('Y').'/'.date('F').'/';
+        //         $file_name = $slug."-".rand(1000,9999999999).".jpg";
+        //         $file_save = $path_thumb.$file_name;
+        //         $resize = Image::make($file->getRealPath())->resize(700, 470);
+        //         if(!is_dir(storage_path('app/public/'.$path_thumb))){
+        //             Storage::disk('public')->makeDirectory($path_thumb);
+        //         }
+        //         $resize->save(storage_path('app/public/').$file_save, 60);
+        //     } else {
+        //         toast('Gagal Upload Foto, Format File Tidak Diizinkan!', 'success');
+        //         return back();
+        //     }
+        //     $input['thumbnail_video'] = $file_save;
+        // }
         $input['uuid'] = Str::uuid();
         $input['status_video'] = 'Publish';
         $input['slug_video'] = $slug;
         $input['kode_user'] = $kode_operator;
         $input['kode_video'] = $kode_video;
+        $input['thumbnail_video'] = "";
         // return $input;
 
         $create = Video::create($input);
@@ -98,11 +117,6 @@ class ArtikelController extends Controller
     public function update(Request $request, $uuid)
     {
         $input = $request->all();
-
-        if ($request->hasFile('thumbnail_video')) {
-            $input['thumbnail_video'] = Dits::UploadImage($request, 'thumbnail_video', 'thumbnail_video');
-        }
-
         $video = Video::whereUuid($uuid)->first();
         if ($video) {
             $video->update($input);
@@ -169,7 +183,7 @@ class ArtikelController extends Controller
 
     public function artikelSlug($slug)
     {
-        $artikel = Artikel::where('status_artikel', 'Publish')->orderBy('created_at', 'Desc')->limit(6)->get();
+        $artikel = Artikel::where('status_artikel', 'Publish')->where('slug_artikel', "!=", $slug)->orderBy('created_at', 'Desc')->limit(6)->get();
         $data = Artikel::where('slug_artikel', $slug)->first();
         $publisher = \App\User::where('username', $data->kode_user)->first();
         if ($publisher->role == "Admin System") {
@@ -216,7 +230,24 @@ class ArtikelController extends Controller
         $slug = Str::slug($request->judul_artikel, '-');
 
         if ($request->hasFile('thumbnail_artikel')) {
-            $input['thumbnail_artikel'] = Dits::UploadImage($request, 'thumbnail_artikel', 'thumbnail_artikel');
+            // Upload File
+            $ext = strtolower($request->file('thumbnail_artikel')->extension());
+            $ext_array = Array('jpg','jpeg','png');
+            if (in_array($ext, $ext_array)){
+                $file = $request->file('thumbnail_artikel');
+                $path_thumb = 'thumbnail/artikel/'.date('Y').'/'.date('F').'/';
+                $file_name = $slug."-".rand(1000,9999999999).".jpg";
+                $file_save = $path_thumb.$file_name;
+                $resize = Image::make($file->getRealPath())->resize(700, 470);
+                if(!is_dir(storage_path('app/public/'.$path_thumb))){
+                    Storage::disk('public')->makeDirectory($path_thumb);
+                }
+                $resize->save(storage_path('app/public/').$file_save, 60);
+            } else {
+                toast('Gagal Upload Foto, Format File Tidak Diizinkan!', 'success');
+                return back();
+            }
+            $input['thumbnail_artikel'] = $file_save;
         }
 
         // $input['thumbnail_artikel'] = Dits::UploadImage($request , 'thumbnail_artikel' , 'thumbnail_artikel');
@@ -254,11 +285,35 @@ class ArtikelController extends Controller
     {
         $input = $request->all();
 
+        $artikel = Artikel::whereUuid($uuid)->first();
+
         if ($request->hasFile('thumbnail_artikel')) {
-            $input['thumbnail_artikel'] = Dits::UploadImage($request, 'thumbnail_artikel', 'thumbnail_artikel');
+            if($artikel->thumbnail_artikel!=""){
+                if(Storage::disk('public')->exists($artikel->thumbnail_artikel)){
+                    // Hapus Pas Foto
+                    Storage::disk('public')->delete($artikel->thumbnail_artikel);
+                }
+            }
+            // Upload File
+            $ext = strtolower($request->file('thumbnail_artikel')->extension());
+            $ext_array = Array('jpg','jpeg','png');
+            if (in_array($ext, $ext_array)){
+                $file = $request->file('thumbnail_artikel');
+                $path_thumb = 'thumbnail/artikel/'.date('Y').'/'.date('F').'/';
+                $file_name = $artikel->slug_artikel."-".rand(1000,9999999999).".jpg";
+                $file_save = $path_thumb.$file_name;
+                $resize = Image::make($file->getRealPath())->resize(700, 470);
+                if(!is_dir(storage_path('app/public/'.$path_thumb))){
+                    Storage::disk('public')->makeDirectory($path_thumb);
+                }
+                $resize->save(storage_path('app/public/').$file_save, 60);
+            } else {
+                toast('Gagal Upload Foto, Format File Tidak Diizinkan!', 'success');
+                return back();
+            }
+            $input['thumbnail_artikel'] = $file_save;
         }
 
-        $artikel = Artikel::whereUuid($uuid)->first();
         if ($artikel) {
             $artikel->update($input);
             toast('Berhasil memperbaharui artikel', 'success');
@@ -298,6 +353,12 @@ class ArtikelController extends Controller
     {
         $data = Artikel::whereUuid($uuid)->first();
         if ($data) {
+            if($data->thumbnail_artikel!=""){
+                if(Storage::disk('public')->exists($data->thumbnail_artikel)){
+                    // Hapus thumbnail_artikel
+                    Storage::disk('public')->delete($data->thumbnail_artikel);
+                }
+            }
             $data->delete();
             toast('Berhasil menghapus artikel', 'success');
             return redirect()->route('artikel.list');
@@ -308,6 +369,12 @@ class ArtikelController extends Controller
     {
         $data = Video::whereUuid($uuid)->first();
         if ($data) {
+            if($data->thumbnail_video!=""){
+                if(Storage::disk('public')->exists($data->thumbnail_video)){
+                    // Hapus thumbnail_video
+                    Storage::disk('public')->delete($data->thumbnail_video);
+                }
+            }
             $data->delete();
             toast('Berhasil menghapus video', 'success');
             return redirect()->route('video.list');

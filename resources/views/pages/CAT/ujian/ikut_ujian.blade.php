@@ -192,7 +192,7 @@ onpaste="return false">
                                                 <input type="radio" name="jawaban[]" id="jawaban_B_{{ $data->nomor_soal}}" value="B"
                                                     @if($jawab->jawaban=="B") checked @endif
                                                 onclick="SendTable('{{$data->nomor_soal}}','B')">
-                                                <label for="jawaban_B_{{ $data->nomor_soal}}">{{ $data->a }}</label>
+                                                <label for="jawaban_B_{{ $data->nomor_soal}}">{{ $data->b }}</label>
                                             </div>
                                         </div>
                                         <div class="pilihan">
@@ -200,7 +200,7 @@ onpaste="return false">
                                                 <input type="radio" name="jawaban[]" id="jawaban_C_{{ $data->nomor_soal}}" value="C"
                                                     @if($jawab->jawaban=="C") checked @endif
                                                 onclick="SendTable('{{$data->nomor_soal}}','C')">
-                                                <label for="jawaban_C_{{ $data->nomor_soal}}">{{ $data->a }}</label>
+                                                <label for="jawaban_C_{{ $data->nomor_soal}}">{{ $data->c }}</label>
                                             </div>
                                         </div>
                                         <div class="pilihan">
@@ -208,7 +208,7 @@ onpaste="return false">
                                                 <input type="radio" name="jawaban[]" id="jawaban_D_{{ $data->nomor_soal}}" value="D"
                                                     @if($jawab->jawaban=="D") checked @endif
                                                 onclick="SendTable('{{$data->nomor_soal}}','D')">
-                                                <label for="jawaban_D_{{ $data->nomor_soal}}">{{ $data->a }}</label>
+                                                <label for="jawaban_D_{{ $data->nomor_soal}}">{{ $data->d }}</label>
                                             </div>
                                         </div>
                                         {{--  Pilihan Jawaban  --}}

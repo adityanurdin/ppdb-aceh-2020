@@ -10,10 +10,10 @@ class Soal extends Model
     protected $primaryKey = "uuid";
     protected $guarded = [];
 
-    public function getGambarAttribute()
-    {
-        return \Dits::imageUrl($this->attributes['gambar']);
-    }
+    // public function getGambarAttribute()
+    // {
+    //     return \Dits::imageUrl($this->attributes['gambar']);
+    // }
 
     public function banksoal()
     {

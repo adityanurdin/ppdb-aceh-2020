@@ -3,9 +3,9 @@
 @push('title')
 <title>{{ $data->judul_artikel }}</title>
 <meta name="description"
-content="{{ $data->judul_artikel }}, {{ $data->deskripsi_artikel }}, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Informasi Manajamen Penerimaan Peserta Didik Baru Madrasah Kota Banda Aceh" />
+  content="{{ $data->judul_artikel }}, {{ $data->deskripsi_artikel }}, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Informasi Manajamen Penerimaan Peserta Didik Baru Madrasah Kota Banda Aceh" />
 <meta name="keywords"
-content="{{ $data->judul_artikel }}, {{ $data->deskripsi_artikel }}, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Informasi Manajamen Penerimaan Peserta Didik Baru Madrasah Kota Banda Aceh, SIMPPDB, Madrasah, Kota Banda Aceh, Kemenag Kota Banda Aceh. Madrasah Kota Banca Aceh, Penerimaan Siswa Baru Kota Banda Aceh, PPDB Kota Banda Aceh" />
+  content="{{ $data->judul_artikel }}, {{ $data->deskripsi_artikel }}, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Informasi Manajamen Penerimaan Peserta Didik Baru Madrasah Kota Banda Aceh, SIMPPDB, Madrasah, Kota Banda Aceh, Kemenag Kota Banda Aceh. Madrasah Kota Banca Aceh, Penerimaan Siswa Baru Kota Banda Aceh, PPDB Kota Banda Aceh" />
 @endpush
 
 @section('content')
@@ -32,6 +32,7 @@ content="{{ $data->judul_artikel }}, {{ $data->deskripsi_artikel }}, SIM PPDB MA
 </section>
 {{-- open_artikel --}}
 {{-- related_artikel --}}
+@if (count($artikel)>0)
 <section id="sec_related_artikel">
   <div class="container">
     {{-- title section --}}
@@ -41,7 +42,6 @@ content="{{ $data->judul_artikel }}, {{ $data->deskripsi_artikel }}, SIM PPDB MA
     {{-- title section --}}
     {{-- Item Owl Carousel --}}
     <div id="related_artikel_list" class="owl-carousel">
-      @if (count($artikel)>0)
       {{--  item  --}}
       @foreach ($artikel as $datas)
       @php
@@ -67,14 +67,10 @@ content="{{ $data->judul_artikel }}, {{ $data->deskripsi_artikel }}, SIM PPDB MA
       </div>
       @endforeach
       {{--  item  --}}
-      @else
-      <div class="col-12 alert alert-warning" role="alert">
-        <h3>Mohon Maaf, Data Artikel Tidak Ditemukan!</h3>
-      </div>
-      @endif
     </div>
     {{-- Item Owl Carousel --}}
   </div>
 </section>
+@endif
 {{-- related_artikel --}}
 @endsection

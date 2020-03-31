@@ -33,11 +33,8 @@ content="SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Informasi Manajamen Penerimaa
                 <div class="col-md-4 col-sm-12 p-2">
                     <a href="{{ route('home.video.slug',['slug'=>$data->slug_video]) }}#open">
                         <div class="list_video">
-                            <div class="thumb_video">
-                                <div class="embed-responsive embed-responsive-16by9">
-                                    <iframe class="embed-responsive-item"
-                                        src="https://www.youtube.com/embed/{{ $data->url_video }}"></iframe>
-                                </div>
+                            <div class="thumb_artikel">
+                                <img src="http://img.youtube.com/vi/{{ $data->url_video }}/0.jpg" alt="">
                             </div>
                             <div class="list_video_desc">
                                 <h1>{{ $data->judul_video }}</h1>

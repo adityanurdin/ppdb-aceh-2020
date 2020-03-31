@@ -42,10 +42,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Name Of Column
     Route::get('/noc/{name}', 'noc@index');
-    Route::get('/noc/gen/soal/{kode_soal}', 'noc@GenSoal');
+    Route::get('/noc/gen/bank-soal', 'noc@GenBankSoal');
+    Route::get('/noc/gen/data-soal', 'noc@GenDataSoal');
+    Route::get('/noc/gen/peserta/{jenjang}', 'noc@GenPeserta');
     Route::get('/noc/gen/uuid/madrasah', 'noc@GenUuidMadrasah');
     Route::get('/noc/gen/operator/pembukaan', 'noc@GenOpPembukaan');
-    Route::get('/noc/gen/peserta/{jenjang}/{uid_pembukaan}', 'noc@GenPeserta');
 
     // CETAK PENDAFTARAN
     Route::get('/{nik}/cetak-pendaftaran/{id}', function ($nik, $id) {
@@ -220,12 +221,14 @@ Route::group(['middleware' => 'auth'], function () {
         })->name('download.file');
         Route::get('/export/excel/{id}', 'ImportExportController@pendaftaranExport')->name('export.pendaftaran');
         Route::get('/export/excel/{id}/CAT', 'ImportExportController@pesertaUjianExport')->name('export.peserta-ujian');
+        Route::get('/export/excel-operator', 'ImportExportController@operatorExport')->name('export.operator');
         Route::get('/import/excel/{id}', 'ImportExportController@pengumumanImportView')->name('import.pengumuman.view');
         Route::post('/import/excel/{id}', 'ImportExportController@pengumumanImport')->name('import.pengumuman');
         Route::post('/import/soal', 'ImportExportController@soalImport')->name('import.soal');
         Route::post('/import/jalur-khusus/{id}', 'ImportExportController@jalurKhusus')->name('import.jalur-khusus');
         Route::post('/import/jawaban' , 'ImportExportController@jawabanImport')->name('import.jawaban');
         Route::post('/import/reset-akun' , 'ImportExportController@resetImport')->name('import.reset');
+        Route::post('/import/reset-akun-op' , 'ImportExportController@resetOpImport')->name('import.reset.op');
     });
 });
 Route::get('/export/peserta/{kode_pendaftaran}/{kode_soal}/CAT', 'ImportExportController@pesertaUjianDetailExport')->name('export.peserta-ujian.detail');

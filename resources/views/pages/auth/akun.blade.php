@@ -31,7 +31,7 @@
                             <label for="">Password Baru</label>
                             <input type="password" name="password_baru"id="" class="form-control">
                         </div>
-                        <button type="submit" class="btn btn-info btn-sm float-right">Simpan</button>
+                        <button type="submit" class="btn btn-info btn-sm float-right"><i class="fa fa-save"></i> SIMPAN</button>
                     </form>
                 </div>
             </div>

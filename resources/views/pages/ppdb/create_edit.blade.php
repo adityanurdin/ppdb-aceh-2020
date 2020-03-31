@@ -134,21 +134,19 @@
                     @if (isset($data))
                     <div class="form-group">
                         <label for="">File Brosur</label>
-                        <div class="row">
-                            <div class="col-md-8">
-                                <input type="file" name="url_brosur" id=""
-                                    class="form-control @error('url_brosur') is-invalid @enderror">
-                                <small>File: PDF | Ukuran Maksimal: 1000KB</small>
-                                @error('url_brosur')
-                                <div class="invalid-feedback text-left">
-                                    <label>{{ $message }}</label>
-                                </div>
-                                @enderror
+                            <input type="file" name="url_brosur" id=""
+                                class="form-control @error('url_brosur') is-invalid @enderror">
+                            <small>File: PDF | Ukuran Maksimal: 1000KB</small>
+                            @error('url_brosur')
+                            <div class="invalid-feedback text-left">
+                                <label>{{ $message }}</label>
                             </div>
-                            <div class="col-md-4">
-                                <a href="{{Dits::pdfViewer(asset($data->url_brosur))}}" target="_blank"
-                                    class="btn btn-info btn-sm btn-block"><i class="fa fa-file-pdf"></i> Lihat Brosur</a>
-                            </div>
+                            @enderror
+                            @if ($data->url_brosur!="")
+                            <div class="clearfix py-2"></div>
+                            <a href="{{Dits::pdfViewer($data->url_brosur)}}" target="_blank"
+                                class="btn btn-info btn-sm float-right"><i class="fa fa-file-pdf"></i> Lihat Brosur</a>
+                            @endif
                         </div>
                     </div>
                     @else

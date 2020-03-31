@@ -13,6 +13,8 @@ use Dits;
 use Illuminate\Http\Request;
 use Str;
 use Validator;
+use Image;
+use Storage;
 
 class MadrasahController extends Controller
 {
@@ -42,7 +44,7 @@ class MadrasahController extends Controller
             "provinsi" => "required|string|max:100",
             "email_madrasah" => "required|string|max:100",
             "kontak_madrasah" => "required|string|max:30",
-            "preview" => "required|string|max:1000",
+            "preview" => "sometimes|nullable|string|max:1000",
         ]);
 
         $uuid = Str::uuid();
@@ -61,7 +63,25 @@ class MadrasahController extends Controller
         }
 
         if ($request->hasFile('logo_madrasah')) {
-            $image = Dits::UploadImage($request, 'logo_madrasah', 'Madrasah');
+            // Upload Logo
+            $ext = strtolower($request->file('logo_madrasah')->extension());
+            $ext_array = Array('jpg','jpeg','png');
+            if (in_array($ext, $ext_array)){
+                $file = $request->file('logo_madrasah');
+                $path_logo = 'logo-madrasah/'.date('Y').'/';
+                $file_name = Str::slug(strtoupper($request->nama_madrasah),'-');
+                $file_name = $file_name."-".rand(1000,9999999999).".jpg";
+                $file_save = $path_logo.$file_name;
+                $resize = Image::make($file->getRealPath())->resize(400, 400);
+                if(!is_dir(storage_path('app/public/'.$path_logo))){
+                    Storage::disk('public')->makeDirectory($path_logo);
+                }
+                $resize->save(storage_path('app/public/').$file_save, 60);
+                $image = $file_save;
+            } else {
+                toast('Gagal Upload Foto, Format File Tidak Diizinkan!', 'success');
+                return back();
+            }
         } else {
             $image = null;
         }
@@ -117,18 +137,42 @@ class MadrasahController extends Controller
             "provinsi" => "required|string|max:100",
             "email_madrasah" => "required|string|max:100",
             "kontak_madrasah" => "required|string|max:30",
-            "preview" => "required|string|max:1000",
+            "preview" => "sometimes|nullable|string|max:1000",
         ]);
 
         $uuid = Dits::decodeDits($id);
         $input = $request->all();
+        $madrasah = Madrasah::whereUuid($uuid)->first();
 
         if ($request->hasFile('logo_madrasah')) {
-            $image = Dits::UploadImage($request, 'logo_madrasah', 'Logo_Madrasah');
+            if($madrasah->logo_madrasah!=""){
+                if(Storage::disk('public')->exists($madrasah->logo_madrasah)){
+                    // Hapus logo_madrasah
+                    Storage::disk('public')->delete($madrasah->logo_madrasah);
+                }
+            }
+            // Upload Logo
+            $ext = strtolower($request->file('logo_madrasah')->extension());
+            $ext_array = Array('jpg','jpeg','png');
+            if (in_array($ext, $ext_array)){
+                $file = $request->file('logo_madrasah');
+                $path_logo = 'logo-madrasah/'.date('Y').'/';
+                $file_name = Str::slug(strtoupper($request->nama_madrasah),'-');
+                $file_name = $file_name."-".rand(1000,9999999999).".jpg";
+                $file_save = $path_logo.$file_name;
+                $resize = Image::make($file->getRealPath())->resize(400, 400);
+                if(!is_dir(storage_path('app/public/'.$path_logo))){
+                    Storage::disk('public')->makeDirectory($path_logo);
+                }
+                $resize->save(storage_path('app/public/').$file_save, 60);
+                $image = $file_save;
+            } else {
+                toast('Gagal Upload Foto, Format File Tidak Diizinkan!', 'success');
+                return back();
+            }
             $input['logo_madrasah'] = $image;
         }
         // return $input;
-        $madrasah = Madrasah::whereUuid($uuid)->first();
         $madrasah->update($input);
         if ($madrasah) {
             toast('Berhasil Memperbaharui Data', 'success');
@@ -286,6 +330,12 @@ class MadrasahController extends Controller
             toast('Gagal menghapus Madrasah, Sudah Ada Operator!', 'error');
             return redirect()->route('madrasah.index');
         } else {
+            if($data->logo_madrasah!=""){
+                if(Storage::disk('public')->exists($data->logo_madrasah)){
+                    // Hapus logo_madrasah
+                    Storage::disk('public')->delete($data->logo_madrasah);
+                }
+            }
             $data->delete();
             toast('Berhasil menghapus Madrasah', 'success');
             return redirect()->route('madrasah.index');

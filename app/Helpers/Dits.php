@@ -49,6 +49,34 @@ class Dits
         return $full_path;
     }
 
+    public static function UploadImageSoal(Request $request, $field, $path)
+    {
+        $file = $request->file($field);
+        $path = 'Soal/'. date('Y') . '/' . $path . '/';
+        $full_path = Self::ImageName($path, $file->getClientOriginalExtension());
+
+        $image = Image::make($file)->encode($file->getClientOriginalExtension(), 75);
+        Storage::disk('public')->put($full_path, $image, 'public');
+
+        return $full_path;
+    }
+
+    public static function HapusImageSoal($path)
+    {
+        $exists = Storage::disk('public')->exists($path);
+        if($exists){
+            return Storage::disk('public')->delete($path);
+        }
+    }
+
+    public static function HapusDocument($path)
+    {
+        $exists = Storage::disk('document')->exists($path);
+        if($exists){
+            return Storage::disk('document')->delete($path);
+        }
+    }
+
     public static function ReplaceDate($tgl)
     {
         $tgl = str_replace('/', '-', $tgl);
@@ -119,12 +147,21 @@ class Dits
         return $uploadPdf;
     }
 
+    // public static function PdfViewer($pdf)
+    // {
+    //     if (empty($pdf)) {
+    //         return $pdf;
+    //     }
+    //     $file = str_replace(base_path() . '/public/', '/', $pdf);
+    //     return $file;
+    // }
+
     public static function PdfViewer($pdf)
     {
         if (empty($pdf)) {
             return $pdf;
         }
-        $file = str_replace(base_path() . '/public/', '/', $pdf);
+        $file = asset('storage/'.$pdf);
         return $file;
     }
 
@@ -139,14 +176,6 @@ class Dits
     {
         return strtoupper(bin2hex(openssl_random_pseudo_bytes($bytes)));
     }
-
-    // public static function interval($table, $field, $int = 1, $prefix = '')
-    // {
-    //     // $id = MsAccident::max('id')+1;
-    //     $id = DB::table($table)->max($field) + $int;
-    //     $code = $prefix . $id;
-    //     return $code;
-    // }
 
     public static function interval($table, $uuid_pembukaan, $field, $int = 1, $prefix = '')
     {
@@ -240,23 +269,6 @@ class Dits
             return $interval->y . " Tahun";
         }
     }
-
-    // public static function cekLayak($umur)
-    // {
-    //     if ($umur >= 6 && $umur == 7) {
-    //         //MI
-    //         return 'MI';
-    //     } else if ($umur >= 12 && $umur <= 15) {
-    //         //MTs
-    //         return 'MTs';
-    //     } else if ($umur >= 15 && $umur <= 21) {
-    //         //MA
-    //         return 'MA';
-    //     } else {
-    //         //error
-    //         return 'no';
-    //     }
-    // }
 
     public static function cekLayak($umur)
     {

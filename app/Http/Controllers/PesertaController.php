@@ -9,7 +9,10 @@ use Auth;
 use Carbon\Carbon;
 use DataTables;
 use Dits;
+use Image;
 use Illuminate\Http\Request;
+use Str;
+use Storage;
 use Validator;
 
 class PesertaController extends Controller
@@ -133,13 +136,45 @@ class PesertaController extends Controller
             return back()->withErrors($valid->errors());
         }
 
+        $peserta = Peserta::whereUuid($uid)->first();
+
+        if ($peserta->status_aktif == 'yes') {
+            if ($request->NIK != Auth::user()->username) {
+                toast('NIK tidak bisa di perbaharui !!', 'error');
+                return back();
+            }
+        }
+
         if ($request->pas_foto) {
             $request->validate([
                 'pas_foto' => 'required|image|mimes:jpeg,jpg,png|max:1000',
             ]);
-            $image = Dits::UploadImage($request, 'pas_foto', 'pas_foto');
-            Dits::uploadFile($request , 'pas_foto' , 'peserta' , $request->NIK.'/pas_foto');
-            $input['pas_foto'] = $image;
+            // Cek File Pas Foto
+            if($peserta->pas_foto!=""){
+                if(Storage::disk('public')->exists($peserta->pas_foto)){
+                    // Hapus Pas Foto
+                    Storage::disk('public')->delete($peserta->pas_foto);
+                }
+            }
+            // Upload Pas Foto
+            $ext = strtolower($request->file('pas_foto')->extension());
+            $ext_array = Array('jpg','jpeg','png');
+            if (in_array($ext, $ext_array)){
+                $file = $request->file('pas_foto');
+                $path_PasFoto = 'peserta/'.date('Y').'/'.$request->NIK.'/pas-foto/';
+                $file_name = Str::slug(strtoupper($request->nama),'-');
+                $file_name = $file_name."-".rand(1000,9999999999).".jpg";
+                $file_save = $path_PasFoto.$file_name;
+                $resize = Image::make($file->getRealPath())->resize(300, 400);
+                if(!is_dir(storage_path('app/public/'.$path_PasFoto))){
+                    Storage::disk('public')->makeDirectory($path_PasFoto);
+                }
+                $resize->save(storage_path('app/public/').$file_save, 60);
+                $input['pas_foto'] = $file_save;
+            } else {
+                toast('Gagal Upload Foto, Format File Tidak Diizinkan!', 'success');
+                return back();
+            }
         }
         $input['status_aktif'] = 'yes';
         $input['tgl_registrasi'] = Carbon::now();
@@ -148,14 +183,6 @@ class PesertaController extends Controller
         $input['tgl'] = date('Y-m-d', strtotime($request->tgl));
         $input['tgl_ayah'] = date('Y-m-d', strtotime($request->tgl_ayah));
         $input['tgl_ibu'] = date('Y-m-d', strtotime($request->tgl_ibu));
-
-        $peserta = Peserta::whereUuid($uid)->first();
-        if ($peserta->status_aktif == 'yes') {
-            if ($request->NIK != Auth::user()->username) {
-                toast('NIK tidak bisa di perbaharui !!', 'error');
-                return back();
-            }
-        }
 
         // Cek Jika Email Ganti
         if ($request->email != $peserta->email) {
@@ -177,6 +204,12 @@ class PesertaController extends Controller
         $uuid_peserta = Auth::user()->uuid_login;
         $peserta = Peserta::where('uuid', $uuid_peserta)->first();
         if ($peserta) {
+            if($peserta->pas_foto!=""){
+                if(Storage::disk('public')->exists($peserta->pas_foto)){
+                    // Hapus Pas Foto
+                    Storage::disk('public')->delete($peserta->pas_foto);
+                }
+            }
             $peserta->update([
                 'pas_foto' => null,
             ]);
@@ -216,19 +249,19 @@ class PesertaController extends Controller
                     $btn .= '<a href="' . \env('APP_URL') . 'buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
                 }
                 if ($item->peserta['rapot_1'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['rapot_1'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 1</a>';
+                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_1']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 1</a>';
                 }
                 if ($item->peserta['rapot_2'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['rapot_2'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 2</a>';
+                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_2']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 2</a>';
                 }
                 if ($item->peserta['rapot_3'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['rapot_3'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 3</a>';
+                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_3']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 3</a>';
                 }
                 if ($item->peserta['akte'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['akte'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat Akte</a>';
+                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['akte']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat Akte</a>';
                 }
                 if ($item->peserta['kk'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['kk'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat KK</a>';
+                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['kk']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat KK</a>';
                 }
                 return $btn;
             })
@@ -262,19 +295,19 @@ class PesertaController extends Controller
                 $btn .= '<a href="' . \env('APP_URL') . 'buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/lolos" class="btn btn-sm btn-info btn-block"><i class="fas fa-check"></i> Lolos Dokumen</a>';
                 $btn .= '<a href="' . \env('APP_URL') . 'buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
                 if ($item->peserta['rapot_1'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['rapot_1'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 1</a>';
+                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_1']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 1</a>';
                 }
                 if ($item->peserta['rapot_2'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['rapot_2'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 2</a>';
+                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_2']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 2</a>';
                 }
                 if ($item->peserta['rapot_3'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['rapot_3'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 3</a>';
+                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_3']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 3</a>';
                 }
                 if ($item->peserta['akte'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['akte'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat Akte</a>';
+                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['akte']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat Akte</a>';
                 }
                 if ($item->peserta['kk'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer(asset($item->peserta['kk'])) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat KK</a>';
+                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['kk']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat KK</a>';
                 }
                 return $btn;
             })
@@ -391,9 +424,9 @@ class PesertaController extends Controller
             })
             ->addColumn('file_transfer', function ($item) {
                 if ($item->url_transfer == '' || $item->url_transfer == null) {
-                    $btn = '<a href="' . Dits::pdfViewer(asset($item->url_transfer)) . '" target="_blink" class="btn btn-secondary btn-sm btn-block disabled" disabled><i class=" fa fa-eye"></i> Buka File</a>';
+                    $btn = '<a href="' . Dits::pdfViewer($item->url_transfer) . '" target="_blink" class="btn btn-secondary btn-sm btn-block disabled" disabled><i class=" fa fa-eye"></i> Buka File</a>';
                 } else {
-                    $btn = '<a href="' . Dits::pdfViewer(asset($item->url_transfer)) . '" target="_blink" class="btn btn-warning btn-sm btn-block"><i class=" fa fa-eye"></i> Buka File</a>';
+                    $btn = '<a href="' . Dits::pdfViewer($item->url_transfer) . '" target="_blink" class="btn btn-warning btn-sm btn-block"><i class=" fa fa-eye"></i> Buka File</a>';
                 }
                 return $btn;
             })

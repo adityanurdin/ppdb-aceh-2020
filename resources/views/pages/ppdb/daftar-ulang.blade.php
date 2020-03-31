@@ -31,7 +31,11 @@
             </div>
             <div class="card-body">
                 @if ($data->url_transfer != '')
-                <a href="{{Dits::PdfViewer(asset($data->url_transfer))}}" target="_blank"
+                <div class="py-3">
+                    <img src="{{Dits::imageUrl($data->url_transfer)}}" width="100%" height="auto">
+                </div>
+                <div class="clearfix"></div>
+                <a href="{{Dits::PdfViewer($data->url_transfer)}}" target="_blank"
                     class="btn btn-info btn-block"><i class="fa fa-eye"></i> Buka File</a>
                 <a href="{{route('buka-ppdb.daftar-ulang.hapus-file' , $kode)}}" class="btn btn-danger btn-block"
                     onclick="return confirm('Anda Yakin Menghapus File Ini?')"><i class="fa fa-trash"></i> Hapus
@@ -46,7 +50,7 @@
                                 <input type="file" name="url_transfer" id="url_transfer"
                                     class="form-control @error('url_transfer') is-invalid @enderror" autocomplete="off"
                                     required>
-                                <small>File Yang Diizinkan : JPG,JPEG,PNG,PDF | Maksimal Ukuran : 1000KB</small>
+                                <small>File Yang Diizinkan : JPG,JPEG,PNG | Maksimal Ukuran : 1000KB</small>
                                 @error('url_transfer')
                                 <div class="invalid-feedback text-left">
                                     <label>{{ $message }}</label>

@@ -12,9 +12,17 @@
 @endsection
 
 @section('css')
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.15/dist/summernote.min.js"></script>
+<link rel="stylesheet" href="{{ asset('plugins/summernote/summernote-bs4.css') }}">
+<script src="{{ asset('plugins/summernote/summernote-bs4.js?v=300320') }}"></script>
 @endsection
+
+@push('css')
+<style>
+    .note-group-select-from-files {
+        display: none;
+    }
+</style>
+@endpush
 
 @section('content')
 <div class="row">
@@ -85,20 +93,20 @@
 
 @push('script')
 <script>
-    $(document).ready(function() {
-            $('#summernote').summernote({
-                placeholder: '',
-                tabsize: 2,
-                minHeight: 500,
-                toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen']]
-                ]
-            });
-        });
+$(document).ready(function() {
+    $('#summernote').summernote({
+        placeholder: '',
+        tabsize: 2,
+        minHeight: 500,
+        toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'underline', 'clear']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['insert', ['link', 'picture']],
+        ['view', ['undo', 'redo', 'fullscreen', 'codeview', 'help']]
+        ]
+    });
+});
 </script>
 @endpush

@@ -3,9 +3,9 @@
 @push('title')
 <title>{{ $data->judul_video }}</title>
 <meta name="description"
-content="{{ $data->judul_video }}, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Informasi Manajamen Penerimaan Peserta Didik Baru Madrasah Kota Banda Aceh" />
+    content="{{ $data->judul_video }}, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Informasi Manajamen Penerimaan Peserta Didik Baru Madrasah Kota Banda Aceh" />
 <meta name="keywords"
-content="{{ $data->judul_video }}, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Informasi Manajamen Penerimaan Peserta Didik Baru Madrasah Kota Banda Aceh, SIMPPDB, Madrasah, Kota Banda Aceh, Kemenag Kota Banda Aceh. Madrasah Kota Banca Aceh, Penerimaan Siswa Baru Kota Banda Aceh, PPDB Kota Banda Aceh" />
+    content="{{ $data->judul_video }}, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Informasi Manajamen Penerimaan Peserta Didik Baru Madrasah Kota Banda Aceh, SIMPPDB, Madrasah, Kota Banda Aceh, Kemenag Kota Banda Aceh. Madrasah Kota Banca Aceh, Penerimaan Siswa Baru Kota Banda Aceh, PPDB Kota Banda Aceh" />
 @endpush
 
 @section('content')
@@ -27,6 +27,7 @@ content="{{ $data->judul_video }}, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Inf
 </section>
 {{-- open_video --}}
 {{-- related_video --}}
+@if (count($video)>0)
 <section id="sec_related_video">
     <div class="container">
         {{-- title section --}}
@@ -36,7 +37,6 @@ content="{{ $data->judul_video }}, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Inf
         {{-- title section --}}
         {{-- Item Owl Carousel --}}
         <div id="related_video_list" class="owl-carousel">
-            @if (count($video)>0)
             {{--  item  --}}
             @foreach ($video as $datas)
             @php
@@ -48,11 +48,8 @@ content="{{ $data->judul_video }}, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Inf
             }
             @endphp
             <div class="col-12 p-2 item">
-                <div class="thumb_video">
-                    <div class="embed-responsive embed-responsive-16by9">
-                        <iframe class="embed-responsive-item"
-                            src="https://www.youtube.com/embed/{{ $datas->url_video }}"></iframe>
-                    </div>
+                <div class="thumb_artikel">
+                    <img src="http://img.youtube.com/vi/{{ $data->url_video }}/0.jpg" alt="">
                 </div>
                 <div class="related_video_desc">
                     <a href="{{ route('home.video.slug',['slug'=>$datas->slug_video]) }}#open">
@@ -65,14 +62,10 @@ content="{{ $data->judul_video }}, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Inf
             </div>
             @endforeach
             {{--  item  --}}
-            @else
-            <div class="col-12 alert alert-warning" role="alert">
-                <h3>Mohon Maaf, Data Video Tidak Ditemukan!</h3>
-            </div>
-            @endif
         </div>
         {{-- Item Owl Carousel --}}
     </div>
 </section>
+@endif
 {{-- related_video --}}
 @endsection

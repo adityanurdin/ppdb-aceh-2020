@@ -49,17 +49,6 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="">Thumbnail Video</label>
-                        <input type="file" name="thumbnail_video" id=""
-                            class="form-control @error('thumbnail_video') is-invalid @enderror" autocomplete="off">
-                        <small>File Yang Diizinkan : JPG,JPEG,PNG | Maksimal Ukuran : 300KB</small>
-                        @error('thumbnail_video')
-                        <div class="invalid-feedback text-left">
-                            <label>{{ $message }}</label>
-                        </div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
                         <label for="">Deskripsi Video</label>
                         <textarea name="deskripsi_video" id="" cols="30" rows="10"
                             class="form-control @error('deskripsi_video') is-invalid @enderror" autocomplete="off"
