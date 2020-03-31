@@ -27,7 +27,7 @@ class ImportExportController extends Controller
             ->whereUuid($uuid)
             ->first();
         $date = Carbon::now()->toDateTimeString();
-        return Excel::download(new PendaftaranExport($uuid), 'export_ppdb_' . $pembukaan->nsm . $date . '.xlsx');
+        return Excel::download(new PendaftaranExport($uuid), 'export_ppdb_' . $pembukaan->madrasah->nsm.'_'. $date . '.xlsx');
     }
 
     public function pesertaUjianExport($id)

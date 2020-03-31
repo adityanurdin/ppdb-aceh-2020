@@ -248,20 +248,35 @@ class PesertaController extends Controller
                     $btn .= '<a href="' . \env('APP_URL') . 'buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/lolos" class="btn btn-sm btn-info btn-block"><i class="fas fa-check"></i> Lolos Dokumen</a>';
                     $btn .= '<a href="' . \env('APP_URL') . 'buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
                 }
-                if ($item->peserta['rapot_1'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_1']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 1</a>';
+                if($item->pembukaan->madrasah->jenjang="MI"){
+                    if ($item->peserta['akte'] != null) {
+                        $btn .= '<a href="' . Dits::pdfViewer($item->peserta['akte']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat Akte</a>';
+                    }
+                    if ($item->peserta['kk'] != null) {
+                        $btn .= '<a href="' . Dits::pdfViewer($item->peserta['kk']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat KK</a>';
+                    }
                 }
-                if ($item->peserta['rapot_2'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_2']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 2</a>';
+                if($item->pembukaan->madrasah->jenjang="MTs"){
+                    if ($item->peserta['rapot_1'] != null) {
+                        $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_1']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Rapot Kls V SMT 1</a>';
+                    }
+                    if ($item->peserta['rapot_2'] != null) {
+                        $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_2']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Rapot Kls V SMT 2</a>';
+                    }
+                    if ($item->peserta['rapot_3'] != null) {
+                        $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_3']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Rapot Kls VI SMT 1</a>';
+                    }
                 }
-                if ($item->peserta['rapot_3'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_3']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 3</a>';
-                }
-                if ($item->peserta['akte'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['akte']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat Akte</a>';
-                }
-                if ($item->peserta['kk'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['kk']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat KK</a>';
+                if($item->pembukaan->madrasah->jenjang="MA"){
+                    if ($item->peserta['rapot_4'] != null) {
+                        $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_4']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Rapot Kls VII SMT 1</a>';
+                    }
+                    if ($item->peserta['rapot_5'] != null) {
+                        $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_5']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Rapot Kls VII SMT 2</a>';
+                    }
+                    if ($item->peserta['rapot_6'] != null) {
+                        $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_6']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Rapot Kls IX SMT 2</a>';
+                    }
                 }
                 return $btn;
             })
@@ -294,20 +309,33 @@ class PesertaController extends Controller
                 $btn = '<a href="' . route('print.data', [$item->peserta->NIK, Dits::encodeDits($item->uuid)]) . '" target="_blank" class="btn btn-sm btn-success btn-block"><i class="fas fa-print"></i> Print / Cetak Data</a>';
                 $btn .= '<a href="' . \env('APP_URL') . 'buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/lolos" class="btn btn-sm btn-info btn-block"><i class="fas fa-check"></i> Lolos Dokumen</a>';
                 $btn .= '<a href="' . \env('APP_URL') . 'buka-ppdb/detail/' . Dits::encodeDits($item->uuid) . '/update-status-pendaftaran/tidak-lolos" class="btn btn-sm btn-danger btn-block"><i class="fas fa-times"></i> Tidak Lolos Dokumen</a>';
-                if ($item->peserta['rapot_1'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_1']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 1</a>';
-                }
-                if ($item->peserta['rapot_2'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_2']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 2</a>';
-                }
-                if ($item->peserta['rapot_3'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_3']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Lihat Rapot 3</a>';
-                }
-                if ($item->peserta['akte'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['akte']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat Akte</a>';
-                }
-                if ($item->peserta['kk'] != null) {
-                    $btn .= '<a href="' . Dits::pdfViewer($item->peserta['kk']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat KK</a>';
+                if($item->pembukaan->madrasah->jenjang=="MI"){
+                    if ($item->peserta['akte'] != null) {
+                        $btn .= '<a href="' . Dits::pdfViewer($item->peserta['akte']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat Akte</a>';
+                    }
+                    if ($item->peserta['kk'] != null) {
+                        $btn .= '<a href="' . Dits::pdfViewer($item->peserta['kk']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-eye"></i> Lihat KK</a>';
+                    }
+                }elseif($item->pembukaan->madrasah->jenjang=="MTs"){
+                    if ($item->peserta['rapot_1'] != null) {
+                        $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_1']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Rapot Kls V SMT 1</a>';
+                    }
+                    if ($item->peserta['rapot_2'] != null) {
+                        $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_2']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Rapot Kls V SMT 2</a>';
+                    }
+                    if ($item->peserta['rapot_3'] != null) {
+                        $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_3']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Rapot Kls VI SMT 1</a>';
+                    }
+                }elseif($item->pembukaan->madrasah->jenjang=="MA"){
+                    if ($item->peserta['rapot_4'] != null) {
+                        $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_4']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Rapot Kls VII SMT 1</a>';
+                    }
+                    if ($item->peserta['rapot_5'] != null) {
+                        $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_5']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Rapot Kls VII SMT 2</a>';
+                    }
+                    if ($item->peserta['rapot_6'] != null) {
+                        $btn .= '<a href="' . Dits::pdfViewer($item->peserta['rapot_6']) . '" target="_blank" class="btn btn-sm btn-dark btn-block"><i class="fas fa-link"></i> Rapot Kls IX SMT 2</a>';
+                    }
                 }
                 return $btn;
             })

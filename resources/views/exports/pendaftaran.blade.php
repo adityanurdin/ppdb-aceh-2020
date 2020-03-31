@@ -23,9 +23,12 @@
             <th style="background: #31b76b; font-weight:bold; text-align: center; width: 20px;">File Pas Foto</th>
             <th style="background: #31b76b; font-weight:bold; text-align: center; width: 20px;">File Akte</th>
             <th style="background: #31b76b; font-weight:bold; text-align: center; width: 20px;">File KK</th>
-            <th style="background: #31b76b; font-weight:bold; text-align: center; width: 20px;">File Rapot 1</th>
-            <th style="background: #31b76b; font-weight:bold; text-align: center; width: 20px;">File Rapot 2</th>
-            <th style="background: #31b76b; font-weight:bold; text-align: center; width: 20px;">File Rapot 3</th>
+            <th style="background: #31b76b; font-weight:bold; text-align: center; width: 20px;">File Rapot Kls V SMT 1</th>
+            <th style="background: #31b76b; font-weight:bold; text-align: center; width: 20px;">File Rapot Kls V SMT 2</th>
+            <th style="background: #31b76b; font-weight:bold; text-align: center; width: 20px;">File Rapot Kls VI SMT 1</th>
+            <th style="background: #31b76b; font-weight:bold; text-align: center; width: 20px;">File Rapot Kls VIII SMT 1</th>
+            <th style="background: #31b76b; font-weight:bold; text-align: center; width: 20px;">File Rapot Kls VIII SMT 2</th>
+            <th style="background: #31b76b; font-weight:bold; text-align: center; width: 20px;">File Rapot Kls IX SMT 1</th>
             <th style="background: #31b76b; font-weight:bold; text-align: center; width: 20px;">Kode Satker</th>
             <th style="background: #31b76b; font-weight:bold; text-align: center; width: 20px;">NSM</th>
             <th style="background: #31b76b; font-weight:bold; text-align: center; width: 35px;">Nama Madrasah</th>
@@ -82,12 +85,51 @@
                 <td>{{ $item->status_diterima }}</td>
                 <td>{{ $item->jalur_diterima }}</td>
                 <td>{{ $item->created_at }}</td>
+                @if ($item->pas_foto!="")
                 <td><a href="{{ Dits::imageUrl($item->pas_foto) }}" target="_blank">Lihat File</a></td>
+                @else
+                <td>No File!</td>
+                @endif
+                @if ($item->akte!="")
                 <td><a href="{{ asset(Dits::PdfViewer($item->akte)) }}" target="_blank">Lihat File</a></td>
+                @else
+                <td>No File!</td>
+                @endif
+                @if ($item->kk!="")
                 <td><a href="{{ asset(Dits::PdfViewer($item->kk)) }}" target="_blank">Lihat File</a></td>
+                @else
+                <td>No File!</td>
+                @endif
+                @if ($item->rapot_1!="")
                 <td><a href="{{ asset(Dits::PdfViewer($item->rapot_1)) }}" target="_blank">Lihat File</a></td>
+                @else
+                <td>No File!</td>
+                @endif
+                @if ($item->rapot_2!="")
                 <td><a href="{{ asset(Dits::PdfViewer($item->rapot_2)) }}" target="_blank">Lihat File</a></td>
+                @else
+                <td>No File!</td>
+                @endif
+                @if ($item->rapot_3!="")
                 <td><a href="{{ asset(Dits::PdfViewer($item->rapot_3)) }}" target="_blank">Lihat File</a></td>
+                @else
+                <td>No File!</td>
+                @endif
+                @if ($item->rapot_4!="")
+                <td><a href="{{ asset(Dits::PdfViewer($item->rapot_4)) }}" target="_blank">Lihat File</a></td>
+                @else
+                <td>No File!</td>
+                @endif
+                @if ($item->rapot_5!="")
+                <td><a href="{{ asset(Dits::PdfViewer($item->rapot_5)) }}" target="_blank">Lihat File</a></td>
+                @else
+                <td>No File!</td>
+                @endif
+                @if ($item->rapot_6!="")
+                <td><a href="{{ asset(Dits::PdfViewer($item->rapot_6)) }}" target="_blank">Lihat File</a></td>
+                @else
+                <td>No File!</td>
+                @endif
                 <td>{{ $item->kode_satker }}</td>
                 <td>'{{ $item->nsm }}</td>
                 <td>{{ $item->nama_madrasah }}</td>

@@ -617,26 +617,26 @@ $isUpdate = Dits::checkJenjang();
     <div class="card-body">
         <div class="table-responsive">
             <div class="form-group">
-                @if (Dits::DataPeserta()->rapot_1 != '')
+                @if (Dits::DataPeserta()->rapot_4 != '')
                 <label for="">
                     Scan Raport Kelas 8 smt 1
                 </label>
                 <div class="py-2">
-                    <a href="{{asset('storage/'.Dits::DataPeserta()->rapot_1)}}" target="_blank"
+                    <a href="{{asset('storage/'.Dits::DataPeserta()->rapot_4)}}" target="_blank"
                         class="btn btn-info btn-sm float-right mt-2 mb-3"><i class="fa fa-eye"></i> Lihat File</a>
-                    <a href="{{route('delete-document' , ['rapot_1' , Dits::DataPeserta()->NIK])}}"
+                    <a href="{{route('delete-document' , ['rapot_4' , Dits::DataPeserta()->NIK])}}"
                         onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2"><i
                             class="fa fa-trash"></i> Hapus
                         File</a>
                 </div>
                 @else
-                <form action="{{route('upload-document' , 'rapot_1')}}" method="POST" enctype="multipart/form-data">
+                <form action="{{route('upload-document' , 'rapot_4')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <label for="">
                         Scan Raport Kelas 8 smt 1
                     </label>
                     <div class="py-2">
-                        <input type="file" name="rapot_1" required id="" class="form-control form-control-sm">
+                        <input type="file" name="rapot_4" required id="" class="form-control form-control-sm">
                         <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3"><i
                                 class="fa fa-upload"></i>
                             UPLOAD</button>
@@ -645,26 +645,26 @@ $isUpdate = Dits::checkJenjang();
                 @endif
             </div>
             <div class="form-group">
-                @if (Dits::DataPeserta()->rapot_2 != '')
+                @if (Dits::DataPeserta()->rapot_5 != '')
                 <label for="">
                     Scan Raport Kelas 8 smt 2
                 </label>
                 <div class="py-2">
-                    <a href="{{asset('storage/'.Dits::DataPeserta()->rapot_2)}}" target="_blank"
+                    <a href="{{asset('storage/'.Dits::DataPeserta()->rapot_5)}}" target="_blank"
                         class="btn btn-info btn-sm float-right mt-2 mb-3"><i class="fa fa-eye"></i> Lihat File</a>
-                    <a href="{{route('delete-document' , ['rapot_2' , Dits::DataPeserta()->NIK])}}"
+                    <a href="{{route('delete-document' , ['rapot_5' , Dits::DataPeserta()->NIK])}}"
                         onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2"><i
                             class="fa fa-trash"></i> Hapus
                         File</a>
                 </div>
                 @else
-                <form action="{{route('upload-document' , 'rapot_2')}}" method="POST" enctype="multipart/form-data">
+                <form action="{{route('upload-document' , 'rapot_5')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <label for="">
                         Scan Raport Kelas 8 smt 2
                     </label>
                     <div class="py-2">
-                        <input type="file" name="rapot_2" required id="" class="form-control form-control-sm">
+                        <input type="file" name="rapot_5" required id="" class="form-control form-control-sm">
                         <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3"><i
                                 class="fa fa-upload"></i>
                             UPLOAD</button>
@@ -673,26 +673,26 @@ $isUpdate = Dits::checkJenjang();
                 @endif
             </div>
             <div class="form-group">
-                @if (Dits::DataPeserta()->rapot_3 != '')
+                @if (Dits::DataPeserta()->rapot_6 != '')
                 <label for="">
                     Scan Raport Kelas 9 smt 1
                 </label>
                 <div class="py-2">
-                    <a href="{{asset('storage/'.Dits::DataPeserta()->rapot_3)}}" target="_blank"
+                    <a href="{{asset('storage/'.Dits::DataPeserta()->rapot_6)}}" target="_blank"
                         class="btn btn-info btn-sm float-right mt-2 mb-3"><i class="fa fa-eye"></i> Lihat File</a>
-                    <a href="{{route('delete-document' , ['rapot_3' , Dits::DataPeserta()->NIK])}}"
+                    <a href="{{route('delete-document' , ['rapot_6' , Dits::DataPeserta()->NIK])}}"
                         onclick="return confirm_delete()" class="btn btn-danger btn-sm float-right mt-2 mb-3 mr-2"><i
                             class="fa fa-trash"></i> Hapus
                         File</a>
                 </div>
                 @else
-                <form action="{{route('upload-document' , 'rapot_3')}}" method="POST" enctype="multipart/form-data">
+                <form action="{{route('upload-document' , 'rapot_6')}}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <label for="">
                         Scan Raport Kelas 9 smt 1
                     </label>
                     <div class="py-2">
-                        <input type="file" name="rapot_3" required id="" class="form-control form-control-sm">
+                        <input type="file" name="rapot_6" required id="" class="form-control form-control-sm">
                         <button type="submit" class="btn btn-info btn-sm float-right mt-2 mb-3"><i
                                 class="fa fa-upload"></i>
                             UPLOAD</button>

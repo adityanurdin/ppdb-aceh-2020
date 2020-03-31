@@ -69,6 +69,9 @@ class noc extends Controller
                         $raport_1 = "";
                         $raport_2 = "";
                         $raport_3 = "";
+                        $raport_4 = "";
+                        $raport_5 = "";
+                        $raport_6 = "";
                         $sekolah_asal = "RA";
                     } elseif ($jenjang == "mts") {
                         $nama = "PESERTA MTS-";
@@ -80,6 +83,9 @@ class noc extends Controller
                         $raport_1 = "";
                         $raport_2 = "";
                         $raport_3 = "";
+                        $raport_4 = "";
+                        $raport_5 = "";
+                        $raport_6 = "";
                         $sekolah_asal = "MI";
                     } elseif ($jenjang == "ma") {
                         $nama = "PESERTA MA-";
@@ -91,6 +97,9 @@ class noc extends Controller
                         $raport_1 = "";
                         $raport_2 = "";
                         $raport_3 = "";
+                        $raport_4 = "";
+                        $raport_5 = "";
+                        $raport_6 = "";
                         $sekolah_asal = "MTs";
                     }
                     // GENERATE PESERTA 100
@@ -136,6 +145,9 @@ class noc extends Controller
                             "rapot_1" => $raport_1,
                             "rapot_2" => $raport_2,
                             "rapot_3" => $raport_3,
+                            "rapot_4" => $raport_4,
+                            "rapot_5" => $raport_5,
+                            "rapot_6" => $raport_6,
                         ];
                         $user = [
                             "uuid" => Str::uuid(),

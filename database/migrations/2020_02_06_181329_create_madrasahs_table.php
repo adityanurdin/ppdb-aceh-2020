@@ -16,7 +16,7 @@ class CreateMadrasahsTable extends Migration
         Schema::create('madrasahs', function (Blueprint $table) {
             $table->string('uuid')->primary();
             $table->string('kode_satker')->unique()->nullable();
-            $table->string('nsm')->nullable();
+            $table->string('nsm')->nullable()->unique();
             $table->string('npsn')->nullable()->unique();
             $table->string('status');
             $table->string('jenjang');
