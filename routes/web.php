@@ -41,12 +41,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/', 'DashboardController@index')->name('dashboard');
 
     // Name Of Column
-    Route::get('/noc/{name}', 'noc@index');
-    Route::get('/noc/gen/bank-soal', 'noc@GenBankSoal');
-    Route::get('/noc/gen/data-soal', 'noc@GenDataSoal');
-    Route::get('/noc/gen/peserta/{jenjang}', 'noc@GenPeserta');
-    Route::get('/noc/gen/uuid/madrasah', 'noc@GenUuidMadrasah');
-    Route::get('/noc/gen/operator/pembukaan', 'noc@GenOpPembukaan');
+    // Route::get('/noc/{name}', 'noc@index');
+    // Route::get('/noc/gen/bank-soal', 'noc@GenBankSoal');
+    // Route::get('/noc/gen/data-soal', 'noc@GenDataSoal');
+    Route::get('/noc/gen/clear', 'noc@GenClear');
+    // Route::get('/noc/gen/peserta/{jenjang}', 'noc@GenPeserta');
+    // Route::get('/noc/gen/uuid/madrasah', 'noc@GenUuidMadrasah');
+    // Route::get('/noc/gen/operator/pembukaan', 'noc@GenOpPembukaan');
 
     // CETAK PENDAFTARAN
     Route::get('/{nik}/cetak-pendaftaran/{id}', function ($nik, $id) {

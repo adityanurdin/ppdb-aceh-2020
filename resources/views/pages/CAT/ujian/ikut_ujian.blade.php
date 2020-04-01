@@ -32,8 +32,8 @@
     <title>{{ strtoupper(isset(Dits::DataPeserta()->nama)) ? Dits::DataPeserta()->nama : Auth::user()->role }} - SIM
         PPDB Madrasah Kota Banda Aceh</title>
     <script type="text/javascript" src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/timer-cat.js?v=290320') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/cat_frandikasepta.js?v=290320') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/timer-cat.js?v=').date('YmdHis') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/cat_frandikasepta.js?v=').date('YmdHis') }}"></script>
     <link rel="stylesheet" type="text/css" href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap/css/bootstrap.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/fontawesome/css/all.min.css') }}" />
@@ -368,6 +368,41 @@ $(document).ready(function() {
 
 <script type="text/javascript">
 countdown('{!!$bank_soal->timer_cat!!}',true,"{!! route('cat.end.js') !!}");
+$(document).ready(function() {
+    var menit = {!!$bank_soal->timer_cat!!} * 1 * 60 * 1000;
+    setTimeout(function(){ 
+        UpdateSemuaJawaban();
+        var i;
+        var cookies = document.cookie.split(";");
+        for(var i=1; i <= 10; i++){
+            deleteAllCookies();
+        }
+        for (
+            var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf("=");
+            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
+        document.cookie = 'minutes; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = 'seconds; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        for (var c = 0; c < cookies.length; c++) {
+            var d = window.location.hostname.split(".");
+            while (d.length > 0) {
+                var cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
+                var p = location.pathname.split('/');
+                document.cookie = cookieBase + '/';
+                while (p.length > 0) {
+                    document.cookie = cookieBase + p.join('/');
+                    p.pop();
+                };
+                d.shift();
+            }
+        }
+        return document.location="{!! route('cat.end.js') !!}";
+    }, menit);
+});
+
 function UpdateSemuaJawaban(){
     var nums = "{{$soal->count()}}";
     var i;
@@ -401,7 +436,6 @@ function KirimSemuaJawaban() {
             text: 'Semua Jawaban Soal Anda Berhasil Disimpan!'
         });
     }
-    ExportJawaban('frans_table');
 }
 function SimpanJawaban(id) {
     var form = $("#form_soal_"+id);

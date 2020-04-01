@@ -228,7 +228,7 @@ class noc extends Controller
                 "url_brosur" => "",
                 "status_pembukaan" => "Dibuka",
                 "tahun_akademik" => "2019/2020",
-                "status_nomor" => "Aktif",
+                "status_nomor" => "yes",
                 "tgl_post" => Carbon::now(),
             ];
             Operator::create($operator);
@@ -289,5 +289,17 @@ class noc extends Controller
                 Soal::create($soal);
             }
         }
+    }
+
+    public function GenClear()
+    {
+        $url = url('/');
+        $cc = \Artisan::call('config:cache');
+        $cc = \Artisan::call('config:clear');
+        $cc = \Artisan::call('cache:clear');
+        $cc = \Artisan::call('route:clear');
+        $cc = \Artisan::call('view:clear');
+        $cc = \Artisan::call('clear-compiled');
+        return redirect($url . '/home');
     }
 }

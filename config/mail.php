@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'driver' => env('MAIL_DRIVER', 'smtp'),
+    'driver' => env('MAIL_DRIVER', 'sendmail'),
 
     /*
     |--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    'host' => env('MAIL_HOST', 'mail.simppdbmadrasah.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'noreply@simppdbmadrasah.com'),
+        'name' => env('MAIL_FROM_NAME', 'SIM PPDB Madrasah'),
     ],
 
     /*
@@ -71,6 +71,7 @@ return [
     |
     */
 
+    // 'encryption' => env('MAIL_ENCRYPTION', 'tls'),
     'encryption' => env('MAIL_ENCRYPTION', 'tls'),
 
     /*

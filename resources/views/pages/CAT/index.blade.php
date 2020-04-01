@@ -68,3 +68,10 @@
   </div>
 </div>
 @endsection
+
+@push('script')
+<script type="text/javascript">
+document.cookie = 'minutes; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+document.cookie = 'seconds; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+</script>
+@endpush

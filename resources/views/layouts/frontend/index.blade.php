@@ -7,8 +7,8 @@
     Developer Aditya Nurdin
     You Can Change Anything, But You Not Allowed Remove This Credit
 --}}
-@if (\session('cat_ujian')=="start")
-<script>document.location="{!! route('cat.ujian', \session('kode_soal')) !!}"</script>
+@if (\session('cat_ujian')=="start"&&\session('kode_soal')!="")
+<script>document.location="{!! route('cat.ujian', session('kode_soal')) !!}"</script>
 @endif
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">

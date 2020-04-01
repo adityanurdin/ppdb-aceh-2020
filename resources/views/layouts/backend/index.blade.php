@@ -1,5 +1,14 @@
-@if (\session('cat_ujian')=="start")
-<script>document.location="{!! route('cat.ujian', \session('kode_soal')) !!}"</script>
+{{--  
+    This Template For simppdbmadrasah.com
+    Builded At March 2020
+    =====================================
+    Builded Under License CODINGERS.ID
+    Designer Frandika Septa
+    Developer Aditya Nurdin
+    You Can Change Anything, But You Not Allowed Remove This Credit
+--}}
+@if (\session('cat_ujian')=="start"&&\session('kode_soal')!="")
+<script>document.location="{!! route('cat.ujian', session('kode_soal')) !!}"</script>
 @endif
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">

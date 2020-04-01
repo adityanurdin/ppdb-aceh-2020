@@ -91,7 +91,27 @@ addEventListener("load", function() {
             el.webkitRequestFullScreen ||
             el.mozRequestFullScreen;
     rfs.call(el);
-    console.log("Fullscreen Mode On");
+    // console.log("Fullscreen Mode On");
+});
+
+// Full Screen
+$(document).mousemove(function(event) {
+    var elem = document.documentElement;
+    if( window.innerWidth != screen.width || window.innerHeight != screen.height) {
+        // Cek Full Screen
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.mozRequestFullScreen) {
+            /* Firefox */
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) {
+            /* Chrome, Safari & Opera */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+            /* IE/Edge */
+            elem.msRequestFullscreen();
+        }
+    }
 });
 
 // FUNCTION 

@@ -20,13 +20,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Storage;
 use Str;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Validator;
+use Session;
 
 class CATController extends Controller
 {
     public function index()
     {
+        // return " | CAT :". session('cat_ujian')." | KS :".session('kode_soal');
         $uuid_peserta = \Auth::user()->uuid_login;
         $data = Peserta::where('uuid', $uuid_peserta)->first();
         $tahun = date('Y');
@@ -41,6 +42,7 @@ class CATController extends Controller
 
     public function testUjian($kode_soal)
     {
+        // return $kode_soal." | CAT :". session('cat_ujian')." | KS :".session('kode_soal');
         $kode_soal = Dits::decodeDits($kode_soal);
         $bank_soal = BankSoal::where('kode_soal', $kode_soal)->first();
         $uuid_peserta = Auth::user()->uuid_login;
@@ -58,7 +60,6 @@ class CATController extends Controller
             ->where('kode_pendaftaran' , $pendaftaran->kode_pendaftaran)
             ->get();
         
-        // session()->forget(['cat_ujian','kode_soal']);
         return view('pages.CAT.ujian.ikut_ujian', compact('soal', 'pendaftaran', 'bank_soal', 'jawaban'));
     }
 
@@ -194,7 +195,7 @@ class CATController extends Controller
         }
 
         // Session Ujian Dimulai
-        \session(['cat_ujian' => 'start', 'kode_soal' => Dits::encodeDits($kode_soal)]);
+        session(['cat_ujian' => 'start', 'kode_soal' => Dits::encodeDits($kode_soal)]);
         return redirect()->route('cat.ujian', Dits::encodeDits($kode_soal));
     }
 
@@ -353,16 +354,20 @@ class CATController extends Controller
     public function end()
     {
         // Matikan Session
-        if(\session()->has('cat_ujian')){
-            \session()->flush();
+        if(session()->has('cat_ujian')){
+            session()->flush();
             \Artisan::call('config:clear');
             \Artisan::call('cache:clear');
+            session()->flush();
+            session()->forget(['cat_ujian','kode_soal']);
             toast('Terimakasih, Ujian Cat Anda Telah Selesai!', 'success');
             return redirect()->route('cat.index');
         }else{
-            \session()->flush();
+            session()->flush();
             \Artisan::call('config:clear');
             \Artisan::call('cache:clear');
+            session()->flush();
+            session()->forget(['cat_ujian','kode_soal']);
             toast('Terimakasih, Ujian Cat Anda Telah Selesai!', 'success');
             return redirect()->route('cat.index');
         }
@@ -371,16 +376,20 @@ class CATController extends Controller
     public function endJS()
     {
         // Matikan Session
-        if(\session()->has('cat_ujian')){
-            \session()->flush();
+        if(session('cat_ujian')=="start" && session('kode_soal')!=""){
+            session()->flush();
             \Artisan::call('config:clear');
             \Artisan::call('cache:clear');
+            session()->flush();
+            session()->forget(['cat_ujian','kode_soal']);
             toast('Waktu Ujian Telah Habis!', 'success');
             return redirect()->route('cat.index');
         }else{
-            \session()->flush();
+            session()->flush();
             \Artisan::call('config:clear');
             \Artisan::call('cache:clear');
+            session()->flush();
+            session()->forget(['cat_ujian','kode_soal']);
             toast('Waktu Ujian Telah Habis!', 'success');
             return redirect()->route('cat.index');
         }

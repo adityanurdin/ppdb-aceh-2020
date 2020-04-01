@@ -54,7 +54,7 @@ content="Halaman Login, SIM PPDB MADRASAH KOTA BANDA ACEH, Sistem Informasi Mana
                                     LOGIN</button>
                             </div>
                             <div class="reset_form">
-                                <p>Lupa Password Anda? <a href="{{ route('auth.lupas') }}">KLIK DISINI</a></p>
+                                <p>Lupa Password Anda? <a href="{{ route('auth.lupas') }}#tag-reset">KLIK DISINI</a></p>
                             </div>
                         </form>
                     </div>
