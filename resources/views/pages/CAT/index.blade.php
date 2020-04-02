@@ -21,6 +21,7 @@
 @endsection
 
 @section('content')
+
 <div class="container mt-3">
   <div class="table-responsive-sm">
     <div class="row">
@@ -51,7 +52,9 @@
       </div>
       <div class="col">
         <div class="alert alert-warning mt-3" role="alert">
-          <i class="fas fa-exclamation-triangle"></i> Masukkan Kode Ujian sesuai dengan yang diberikan oleh panitia
+          <i class="fas fa-exclamation-triangle"></i> <b>PERHATIAN!</b><br/>
+          Refresh Halaman Sebalum Memasukkan Kode Soal.
+          Masukkan Kode Ujian sesuai dengan yang diberikan oleh panitia
           seleksi ppdb madrasah.
         </div>
         <form action="{{route('cat.store')}}" method="POST" enctype="multipart/form-data">
@@ -68,10 +71,3 @@
   </div>
 </div>
 @endsection
-
-@push('script')
-<script type="text/javascript">
-document.cookie = 'minutes; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-document.cookie = 'seconds; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-</script>
-@endpush

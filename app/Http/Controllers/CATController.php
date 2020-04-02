@@ -59,7 +59,7 @@ class CATController extends Controller
         $jawaban = Jawaban::where('kode_soal' , $kode_soal)
             ->where('kode_pendaftaran' , $pendaftaran->kode_pendaftaran)
             ->get();
-        
+
         return view('pages.CAT.ujian.ikut_ujian', compact('soal', 'pendaftaran', 'bank_soal', 'jawaban'));
     }
 
@@ -193,9 +193,6 @@ class CATController extends Controller
                 );
             }
         }
-
-        // Session Ujian Dimulai
-        session(['cat_ujian' => 'start', 'kode_soal' => Dits::encodeDits($kode_soal)]);
         return redirect()->route('cat.ujian', Dits::encodeDits($kode_soal));
     }
 
@@ -220,8 +217,6 @@ class CATController extends Controller
         $nama_cookie = Dits::encodeDits('DitsWaktu');
         $dapat_cookie = Cookie::get($nama_cookie);
         $waktu_mulai = json_decode($dapat_cookie);
-
-        // $count_soal = str_replace('' , '"' , $count_soal);
         $no = intval($no);
 
         if ($no === $count_soal) {
@@ -261,9 +256,6 @@ class CATController extends Controller
             ->where('kode_pendaftaran', $pendaftaran->kode_pendaftaran)
             ->where('nomor_soal', $no)
             ->first();
-
-        // return $jawaban_peserta;
-
         return view('pages.CAT.soal', compact('no', 'soal', 'navigasi', 'finish', 'jawaban', 'bank_soal', 'waktu_mulai', 'jawaban_peserta'));
     }
 
@@ -332,67 +324,21 @@ class CATController extends Controller
         return redirect()->route('cat.start', Dits::encodeDits($next));
     }
 
-    // public function end()
-    // {
-    //     $minutes = 0.001;
-    //     $cookie_name = Dits::encodeDits('DitsUjian');
-    //     $get_cookie = Cookie::get($cookie_name);
-    //     $cookie_value = json_decode($get_cookie, true);
-
-    //     if ($cookie_value) {
-    //         $unset_cookie = Cookie::queue(Cookie::make($cookie_name, $cookie_value, $minutes));
-    //         if ($unset_cookie) {
-    //             return redirect()->route('cat.index');
-    //         }
-    //         return redirect()->route('cat.end');
-    //     }
-    //     toast('Terimakasih, Ujian Cat Anda Telah Selesai!', 'success');
-    //     return redirect()->route('cat.index');
-
-    // }
-
     public function end()
     {
-        // Matikan Session
-        if(session()->has('cat_ujian')){
-            session()->flush();
-            \Artisan::call('config:clear');
-            \Artisan::call('cache:clear');
-            session()->flush();
-            session()->forget(['cat_ujian','kode_soal']);
-            toast('Terimakasih, Ujian Cat Anda Telah Selesai!', 'success');
-            return redirect()->route('cat.index');
-        }else{
-            session()->flush();
-            \Artisan::call('config:clear');
-            \Artisan::call('cache:clear');
-            session()->flush();
-            session()->forget(['cat_ujian','kode_soal']);
-            toast('Terimakasih, Ujian Cat Anda Telah Selesai!', 'success');
-            return redirect()->route('cat.index');
-        }
+        toast('Terimakasih, Ujian CAT Anda Telah Selesai!', 'success');
+        return redirect()->route('cat.index');
     }
 
     public function endJS()
     {
-        // Matikan Session
-        if(session('cat_ujian')=="start" && session('kode_soal')!=""){
-            session()->flush();
-            \Artisan::call('config:clear');
-            \Artisan::call('cache:clear');
-            session()->flush();
-            session()->forget(['cat_ujian','kode_soal']);
-            toast('Waktu Ujian Telah Habis!', 'success');
-            return redirect()->route('cat.index');
-        }else{
-            session()->flush();
-            \Artisan::call('config:clear');
-            \Artisan::call('cache:clear');
-            session()->flush();
-            session()->forget(['cat_ujian','kode_soal']);
-            toast('Waktu Ujian Telah Habis!', 'success');
-            return redirect()->route('cat.index');
-        }
+        // $alert = '<script>
+        // alert(\'Waktu Ujian Telah Habis!\');
+        // document.location="'.route('cat.index').'";
+        // </script>';
+        // return $alert;
+        toast('Waktu Ujian CAT Telah Habis!', 'success');
+        return redirect()->route('cat.index');
     }
 
     /**

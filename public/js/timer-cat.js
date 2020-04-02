@@ -2,7 +2,6 @@ var timeoutHandle;
 function countdown(minutes,stat,url) {
     var seconds = 60;
     var mins = minutes*1;
-    // var url = url;
 	 
 	if(getCookie("minutes")&&getCookie("seconds")&&stat)
 	{
@@ -25,67 +24,12 @@ function countdown(minutes,stat,url) {
                setTimeout(function () { countdown(parseInt(mins)-1,false); }, 1000);
             }
         }
-        // if((current_minutes==0)&&(seconds==00)){
-        //     UpdateSemuaJawaban();
-        //     var i;
-        //     var cookies = document.cookie.split(";");
-        //     for(var i=1; i <= 10; i++){
-        //         deleteAllCookies();
-        //     }
-        //     for (
-        //         var i = 0; i < cookies.length; i++) {
-        //         var cookie = cookies[i];
-        //         var eqPos = cookie.indexOf("=");
-        //         var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        //         document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        //     }
-        //     document.cookie = 'minutes=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        //     document.cookie = 'seconds=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        //     for (var c = 0; c < cookies.length; c++) {
-        //         var d = window.location.hostname.split(".");
-        //         while (d.length > 0) {
-        //             var cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
-        //             var p = location.pathname.split('/');
-        //             document.cookie = cookieBase + '/';
-        //             while (p.length > 0) {
-        //                 document.cookie = cookieBase + p.join('/');
-        //                 p.pop();
-        //             };
-        //             d.shift();
-        //         }
-        //     }
-        //     ExportJawaban('frans_table');
-        //     return document.location=url;
-        // }
         if((current_minutes==0)&&(seconds==00)){
             UpdateSemuaJawaban();
-            var i;
-            var cookies = document.cookie.split(";");
-            for(var i=1; i <= 10; i++){
-                deleteAllCookies();
-            }
-            for (
-                var i = 0; i < cookies.length; i++) {
-                var cookie = cookies[i];
-                var eqPos = cookie.indexOf("=");
-                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            }
-            document.cookie = 'minutes; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-            document.cookie = 'seconds; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-            for (var c = 0; c < cookies.length; c++) {
-                var d = window.location.hostname.split(".");
-                while (d.length > 0) {
-                    var cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
-                    var p = location.pathname.split('/');
-                    document.cookie = cookieBase + '/';
-                    while (p.length > 0) {
-                        document.cookie = cookieBase + p.join('/');
-                        p.pop();
-                    };
-                    d.shift();
-                }
-            }
+            document.cookie = 'minutes=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/CAT/store/ujian';
+            document.cookie = 'seconds=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/CAT/store/ujian';
+            document.cookie = 'cat_ujian=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+            document.cookie = 'kode_soal=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
             ExportJawaban('frans_table');
             return document.location=url;
         }

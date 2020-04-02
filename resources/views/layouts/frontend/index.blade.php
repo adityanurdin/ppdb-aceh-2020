@@ -1,4 +1,4 @@
-{{--  
+{{--
     This Template For simppdbmadrasah.com
     Builded At March 2020
     =====================================
@@ -7,9 +7,6 @@
     Developer Aditya Nurdin
     You Can Change Anything, But You Not Allowed Remove This Credit
 --}}
-@if (\session('cat_ujian')=="start"&&\session('kode_soal')!="")
-<script>document.location="{!! route('cat.ujian', session('kode_soal')) !!}"</script>
-@endif
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -159,8 +156,22 @@
     <script type="text/javascript" src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('plugins/scrollIt/scrollIt.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('plugins/owlcarousel/owl.carousel.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/frandikasepta.js?v=280320') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/frandikasepta.js?v=020420') }}"></script>
     @include('sweetalert::alert')
+<script type="text/javascript">
+$(document).ready(function() {
+    var cat_ujian = getCookie('cat_ujian');
+    var kode_soal = getCookie('kode_soal');
+    if(cat_ujian!="" && kode_soal!=""){
+        document.location="{!! url('/') !!}/CAT/store/ujian/"+kode_soal;
+    }else{
+        document.cookie = 'minutes=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/CAT/store/ujian';
+        document.cookie = 'seconds=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/CAT/store/ujian';
+        document.cookie = 'cat_ujian=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+        document.cookie = 'kode_soal=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    }
+});
+</script>
 </body>
 
 </html>

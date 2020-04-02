@@ -1,8 +1,3 @@
-@if (\session('cat_ujian')!="start")
-<script>
-    document.location="{!! route('dashboard') !!}"
-</script>
-@endif
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -32,8 +27,8 @@
     <title>{{ strtoupper(isset(Dits::DataPeserta()->nama)) ? Dits::DataPeserta()->nama : Auth::user()->role }} - SIM
         PPDB Madrasah Kota Banda Aceh</title>
     <script type="text/javascript" src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/timer-cat.js?v=').date('YmdHis') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/cat_frandikasepta.js?v=').date('YmdHis') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/timer-cat.js?v=030420') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/cat_frandikasepta.js?v=030420') }}"></script>
     <link rel="stylesheet" type="text/css" href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/bootstrap/css/bootstrap.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('plugins/fontawesome/css/all.min.css') }}" />
@@ -42,7 +37,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/res_cat_frandikasepta.css?v=290320') }}" />
     <link rel="stylesheet" href="{{ config('sweetalert.animatecss') }}">
 <script>
-        
+
 </script>
 </head>
 
@@ -229,7 +224,7 @@ $(document).ready(function() {
             url: "{!! route('save-ujian') !!}",
             type: "POST",
             data:  form.serialize(),
-            beforeSend: function() {        
+            beforeSend: function() {
                 $('#notifikasi_{!! $data->nomor_soal !!}').html('<div class="notifikasi"><i class="fa fa-clock"></i> Sedang Menyimpan, Tunggu Sampai Berhasil.</div>');
             },
             success: function(data) {
@@ -240,7 +235,7 @@ $(document).ready(function() {
                     $('#daftar{{$data->nomor_soal}}').addClass('active');
                 } else if ( data.status == false) {
                     $('#notifikasi_{!! $data->nomor_soal !!}').html('<div class="notifikasi"><i class="fa fa-check-circle"></i> Gagal Disimpan!</div>');
-                    
+
                 }
             },
             error: function(err) {
@@ -369,36 +364,18 @@ $(document).ready(function() {
 <script type="text/javascript">
 countdown('{!!$bank_soal->timer_cat!!}',true,"{!! route('cat.end.js') !!}");
 $(document).ready(function() {
+    var d = new Date();
+    document.cookie = "cat_ujian=mulai;" + d.toGMTString() + "; path=/";
+    document.cookie = "kode_soal={!! \Dits::encodeDits($bank_soal->kode_soal) !!};" + d.toGMTString() + "; path=/";
+});
+$(document).ready(function() {
     var menit = {!!$bank_soal->timer_cat!!} * 1 * 60 * 1000;
-    setTimeout(function(){ 
+    setTimeout(function(){
         UpdateSemuaJawaban();
-        var i;
-        var cookies = document.cookie.split(";");
-        for(var i=1; i <= 10; i++){
-            deleteAllCookies();
-        }
-        for (
-            var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i];
-            var eqPos = cookie.indexOf("=");
-            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-            document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        }
-        document.cookie = 'minutes; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        document.cookie = 'seconds; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        for (var c = 0; c < cookies.length; c++) {
-            var d = window.location.hostname.split(".");
-            while (d.length > 0) {
-                var cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
-                var p = location.pathname.split('/');
-                document.cookie = cookieBase + '/';
-                while (p.length > 0) {
-                    document.cookie = cookieBase + p.join('/');
-                    p.pop();
-                };
-                d.shift();
-            }
-        }
+        document.cookie = 'minutes=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/CAT/store/ujian';
+        document.cookie = 'seconds=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/CAT/store/ujian';
+        document.cookie = 'cat_ujian=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+        document.cookie = 'kode_soal=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
         return document.location="{!! route('cat.end.js') !!}";
     }, menit);
 });
@@ -465,8 +442,8 @@ function ExportJawaban(tableID, filename = ''){
     var tableSelect = document.getElementById(tableID);
     var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
     filename = filename?filename+'.xls':'[{{Auth::user()->email}}]-[{{$pendaftaran->kode_pendaftaran}}]-[{{date('H:i:s')}}].xls';
-    downloadLink = document.createElement("a");    
-    document.body.appendChild(downloadLink);    
+    downloadLink = document.createElement("a");
+    document.body.appendChild(downloadLink);
     if(navigator.msSaveOrOpenBlob){
         var blob = new Blob(['\ufeff', tableHTML], {
             type: dataType
@@ -478,6 +455,14 @@ function ExportJawaban(tableID, filename = ''){
         downloadLink.click();
     }
 }
+$(document).ready(function() {
+    var cat_ujian = getCookie('cat_ujian');
+    var kode_soal = getCookie('kode_soal');
+    if(cat_ujian=="" && kode_soal==""){
+        document.location="{!! route('cat.index') !!}";
+    }
+});
+
 </script>
 </body>
 

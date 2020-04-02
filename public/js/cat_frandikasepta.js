@@ -165,32 +165,11 @@ function Next(i) {
 
 // Selesai Ujian
 function selesai(url){
-    var i;
-    var cookies = document.cookie.split(";");
-    for(var i=1; i <= 10; i++){
-        deleteAllCookies();
-    }
-    for (
-        var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i];
-        var eqPos = cookie.indexOf("=");
-        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    }
-    document.cookie = 'minutes=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    document.cookie = 'seconds=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    for (var c = 0; c < cookies.length; c++) {
-        var d = window.location.hostname.split(".");
-        while (d.length > 0) {
-            var cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
-            var p = location.pathname.split('/');
-            document.cookie = cookieBase + '/';
-            while (p.length > 0) {
-                document.cookie = cookieBase + p.join('/');
-                p.pop();
-            };
-            d.shift();
-        }
-    }
+    UpdateSemuaJawaban();
+    document.cookie = 'minutes=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/CAT/store/ujian';
+    document.cookie = 'seconds=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/CAT/store/ujian';
+    document.cookie = 'cat_ujian=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    document.cookie = 'kode_soal=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    ExportJawaban('frans_table');
     return document.location=url;
 }
