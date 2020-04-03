@@ -376,6 +376,7 @@ $(document).ready(function() {
         document.cookie = 'seconds=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/CAT/store/ujian';
         document.cookie = 'cat_ujian=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
         document.cookie = 'kode_soal=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+        ExportJawaban('frans_table');
         return document.location="{!! route('cat.end.js') !!}";
     }, menit);
 });
