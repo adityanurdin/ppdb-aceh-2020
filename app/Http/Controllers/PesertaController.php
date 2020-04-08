@@ -117,15 +117,15 @@ class PesertaController extends Controller
             'alamat_sekolah_asal' => 'required',
             'yatim_piatu' => 'required',
             'nama_ayah' => 'required',
-            'nik_ayah' => 'required',
-            'tmp_ayah' => 'required',
-            'tgl_ayah' => 'required',
-            'pekerjaan_ayah' => 'required',
+            // 'nik_ayah' => 'required',
+            // 'tmp_ayah' => 'required',
+            // 'tgl_ayah' => 'required',
+            // 'pekerjaan_ayah' => 'required',
             'nama_ibu' => 'required',
-            'nik_ibu' => 'required',
-            'tmp_ibu' => 'required',
-            'tgl_ibu' => 'required',
-            'pekerjaan_ibu' => 'required',
+            // 'nik_ibu' => 'required',
+            // 'tmp_ibu' => 'required',
+            // 'tgl_ibu' => 'required',
+            // 'pekerjaan_ibu' => 'required',
             'kontak_peserta' => 'required',
             'email' => 'required',
         );
@@ -181,8 +181,94 @@ class PesertaController extends Controller
         $input['nama'] = strtoupper($request->nama);
 
         $input['tgl'] = date('Y-m-d', strtotime($request->tgl));
-        $input['tgl_ayah'] = date('Y-m-d', strtotime($request->tgl_ayah));
-        $input['tgl_ibu'] = date('Y-m-d', strtotime($request->tgl_ibu));
+
+        // Cek Status Yatim Piatu
+        if($request->yatim_piatu == "Tidak"){
+            $request->validate([
+                'nama_ayah' => 'required',
+                'nik_ayah' => 'required',
+                'tmp_ayah' => 'required',
+                'tgl_ayah' => 'required',
+                'pekerjaan_ayah' => 'required',
+                'nama_ibu' => 'required',
+                'nik_ibu' => 'required',
+                'tmp_ibu' => 'required',
+                'tgl_ibu' => 'required',
+                'pekerjaan_ibu' => 'required',
+            ]);
+
+            // input
+            $input['nama_ayah'] = \strtoupper($request->nama_ayah);
+            $input['nik_ayah'] = $request->nik_ayah;
+            $input['tmp_ayah'] = $request->tmp_ayah;
+            $input['tgl_ayah'] = date('Y-m-d', strtotime($request->tgl_ayah));
+            $input['pekerjaan_ayah'] = $request->pekerjaan_ayah;
+            $input['nama_ibu'] = \strtoupper($request->nama_ibu);
+            $input['nik_ibu'] = $request->nik_ibu;
+            $input['tmp_ibu'] = $request->tmp_ibu;
+            $input['tgl_ibu'] = date('Y-m-d', strtotime($request->tgl_ibu));
+            $input['pekerjaan_ibu'] = $request->pekerjaan_ibu;
+
+        }elseif($request->yatim_piatu == "Yatim Piatu"){
+            $request->validate([
+                'nama_ayah' => 'required',
+                'nama_ibu' => 'required',
+            ]);
+
+            // input
+            $input['nama_ayah'] = \strtoupper($request->nama_ayah);
+            $input['nik_ayah'] = "-";
+            $input['tmp_ayah'] = "-";
+            $input['tgl_ayah'] = date('Y-m-d', strtotime("01-01-1970"));
+            $input['pekerjaan_ayah'] = "-";
+            $input['nama_ibu'] = \strtoupper($request->nama_ibu);
+            $input['nik_ibu'] = "-";
+            $input['tmp_ibu'] = "-";
+            $input['tgl_ibu'] = date('Y-m-d', strtotime("01-01-1970"));
+            $input['pekerjaan_ibu'] = "-";
+        }elseif($request->yatim_piatu == "Yatim"){
+            $request->validate([
+                'nama_ayah' => 'required',
+                'nama_ibu' => 'required',
+                'nik_ibu' => 'required',
+                'tmp_ibu' => 'required',
+                'tgl_ibu' => 'required',
+                'pekerjaan_ibu' => 'required',
+            ]);
+
+            // input
+            $input['nama_ayah'] = \strtoupper($request->nama_ayah);
+            $input['nik_ayah'] = "-";
+            $input['tmp_ayah'] = "-";
+            $input['tgl_ayah'] = date('Y-m-d', strtotime("01-01-1970"));
+            $input['pekerjaan_ayah'] = "-";
+            $input['nama_ibu'] = \strtoupper($request->nama_ibu);
+            $input['nik_ibu'] = $request->nik_ibu;
+            $input['tmp_ibu'] = $request->tmp_ibu;
+            $input['tgl_ibu'] = date('Y-m-d', strtotime($request->tgl_ibu));
+            $input['pekerjaan_ibu'] = $request->pekerjaan_ibu;
+        }elseif($request->yatim_piatu == "Piatu"){
+            $request->validate([
+                'nama_ayah' => 'required',
+                'nik_ayah' => 'required',
+                'tmp_ayah' => 'required',
+                'tgl_ayah' => 'required',
+                'pekerjaan_ayah' => 'required',
+                'nama_ibu' => 'required',
+            ]);
+
+            // input
+            $input['nama_ayah'] = \strtoupper($request->nama_ayah);
+            $input['nik_ayah'] = $request->nik_ayah;
+            $input['tmp_ayah'] = $request->tmp_ayah;
+            $input['tgl_ayah'] = date('Y-m-d', strtotime($request->tgl_ayah));
+            $input['pekerjaan_ayah'] = $request->pekerjaan_ayah;
+            $input['nama_ibu'] = \strtoupper($request->nama_ibu);
+            $input['nik_ibu'] = "-";
+            $input['tmp_ibu'] = "-";
+            $input['tgl_ibu'] = date('Y-m-d', strtotime("01-01-1970"));
+            $input['pekerjaan_ibu'] = "-";
+        }
 
         // Cek Jika Email Ganti
         if ($request->email != $peserta->email) {

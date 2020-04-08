@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
-use App\User;
 
 class AuthController extends Controller
 {
@@ -27,26 +27,30 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
         $credentials = request(['username', 'password']);
-        if(!Auth::attempt($credentials))
+        if (!Auth::attempt($credentials)) {
             return response()->json([
-                'status'  => false,
-                'message' => 'Unauthorized'
+                'status' => false,
+                'message' => 'Unauthorized',
             ], 401);
+        }
+
         $user = $request->user();
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
-        if ($request->remember_me)
+        if ($request->remember_me) {
             $token->expires_at = Carbon::now()->addWeeks(1);
+        }
+
         $token->save();
         return response()->json([
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse(
                 $tokenResult->token->expires_at
-            )->toDateTimeString()
+            )->toDateTimeString(),
         ]);
     }
-  
+
     /**
      * Logout user (Revoke the token)
      *
@@ -56,16 +60,16 @@ class AuthController extends Controller
     {
         $request->user()->token()->revoke();
         return response()->json([
-            'message' => 'Successfully logged out'
+            'message' => 'Successfully logged out',
         ]);
     }
 
     public function user(Request $request)
     {
-        $uuid   = $request->user()->uuid_login;
-        $user   = User::with('peserta')
-                        ->whereUuidLogin($uuid)
-                        ->first();
-        return \Dits::sendResponse('Success' , $user , 200 , 'user');
+        $uuid = $request->user()->uuid_login;
+        $user = User::with('peserta')
+            ->whereUuidLogin($uuid)
+            ->first();
+        return \Dits::sendResponse('Success', $user, 200, 'user');
     }
 }

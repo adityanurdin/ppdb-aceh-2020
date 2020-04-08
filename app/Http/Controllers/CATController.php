@@ -17,11 +17,9 @@ use Cookie;
 use DataTables;
 use Dits;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Storage;
 use Str;
 use Validator;
-use Session;
 
 class CATController extends Controller
 {
@@ -44,21 +42,76 @@ class CATController extends Controller
     {
         // return $kode_soal." | CAT :". session('cat_ujian')." | KS :".session('kode_soal');
         $kode_soal = Dits::decodeDits($kode_soal);
-        $bank_soal = BankSoal::where('kode_soal', $kode_soal)->first();
+        // $bank_soal = BankSoal::where('kode_soal', $kode_soal)->first();
+        // $uuid_peserta = Auth::user()->uuid_login;
+        // $soal = Soal::where('kode_soal', $kode_soal)
+        //     ->orderBy('nomor_soal', 'ASC')
+        //     ->get();
+        // $madrasah = Madrasah::where('uuid', $bank_soal->uuid_madrasah)->first();
+        // $pembukaan = Pembukaan::where('uuid_madrasah', $madrasah->uuid)
+        //     ->where('status_pembukaan', 'Dibuka')
+        //     ->first();
+        // $pendaftaran = Pendaftaran::where('uuid_peserta', $uuid_peserta)
+        //     ->where('uuid_pembukaan', $pembukaan->uuid)
+        //     ->first();
+        // $jawaban = Jawaban::where('kode_soal' , $kode_soal)
+        //     ->where('kode_pendaftaran' , $pendaftaran->kode_pendaftaran)
+        //     ->get();
+
         $uuid_peserta = Auth::user()->uuid_login;
-        $soal = Soal::where('kode_soal', $kode_soal)
-            ->orderBy('nomor_soal', 'ASC')
-            ->get();
+        // Cek Bank Soal
+        $bank_soal = BankSoal::where('kode_soal', $kode_soal)->first();
+        if ($bank_soal === null) {
+            toast('Akses Ditolak, Kode Soal Tidak Valid!', 'error');
+            return redirect()->route('cat.index');
+        }
+        if ($bank_soal->status_bank_soal == 'Tidak Aktif') {
+            toast('Gagal memasuki halaman ujian, Status soal tidak aktif', 'error');
+            return redirect()->route('cat.index');
+        }
+
+        // Cek Kebenaran Pendaftaran
         $madrasah = Madrasah::where('uuid', $bank_soal->uuid_madrasah)->first();
-        $pembukaan = Pembukaan::where('uuid_madrasah', $madrasah->uuid)
-            ->where('status_pembukaan', 'Dibuka')
-            ->first();
+        if ($madrasah === null) {
+            toast('Akses Ditolak, Madrasah Tidak Ditemukan!', 'error');
+            return redirect()->route('cat.index');
+        }
+
+        $pembukaan = Pembukaan::where('uuid_madrasah', $madrasah->uuid)->first();
+        if ($pembukaan === null) {
+            toast('Akses Ditolak, Pembukaan PPDB Tidak Ditemukan!', 'error');
+            return redirect()->route('cat.index');
+        }
+
         $pendaftaran = Pendaftaran::where('uuid_peserta', $uuid_peserta)
             ->where('uuid_pembukaan', $pembukaan->uuid)
             ->first();
-        $jawaban = Jawaban::where('kode_soal' , $kode_soal)
-            ->where('kode_pendaftaran' , $pendaftaran->kode_pendaftaran)
+        if ($pendaftaran === null) {
+            toast('Akses Ditolak, Anda Tidak Terdaftar Pada Kode Soal Tersebut!', 'error');
+            return redirect()->route('cat.index');
+        }
+
+        // Cek Lolos Tahap Dokumen
+        if ($pendaftaran->status_pendaftaran != 'Lolos Tahap Dokumen') {
+            toast('Gagal memasuki halaman ujian, Status Pendaftaran Anda ' . $pendaftaran->status_pendaftaran, 'error');
+            return redirect()->route('cat.index');
+        }
+
+        // Cek Soal
+        $soal = Soal::where('kode_soal', $kode_soal)->get();
+        if ($soal === null) {
+            toast('Akses Ditolak, Soal Tidak Valid!', 'error');
+            return redirect()->route('cat.index');
+        }
+
+        $jawaban = Jawaban::where('kode_soal', $kode_soal)
+            ->where('kode_pendaftaran', $pendaftaran->kode_pendaftaran)
             ->get();
+
+        if ($bank_soal->crash_session == 'No') {
+            toast('Gagal memasuki halaman ujian, Kamu sudah mengikuti ujian ini', 'error');
+            return redirect()->route('cat.index');
+        }
 
         return view('pages.CAT.ujian.ikut_ujian', compact('soal', 'pendaftaran', 'bank_soal', 'jawaban'));
     }
@@ -92,7 +145,7 @@ class CATController extends Controller
             ->where('kode_pendaftaran', $kode_pendaftaran)
             ->where('nomor_soal', $nomor_soal)
             ->first();
-        if ($checkJawaban===NULL) {
+        if ($checkJawaban === null) {
             $store = Jawaban::create([
                 'uuid' => Str::uuid(),
                 'kode_soal' => $kode_soal,
@@ -114,7 +167,7 @@ class CATController extends Controller
                 "updated_at" => Carbon::now(),
             ]);
         }
-        if ($update||$store) {
+        if ($update || $store) {
             return response()->json([
                 'status' => true,
             ], 200);
@@ -143,9 +196,17 @@ class CATController extends Controller
 
         // Cek Kebenaran Pendaftaran
         $madrasah = Madrasah::where('uuid', $bank_soal->uuid_madrasah)->first();
-        $pembukaan = Pembukaan::where('uuid_madrasah', $madrasah->uuid)
-            ->where('status_pembukaan', 'Dibuka')
-            ->first();
+        if ($madrasah === null) {
+            toast('Akses Ditolak, Madrasah Tidak Ditemukan!', 'error');
+            return redirect()->route('cat.index');
+        }
+
+        $pembukaan = Pembukaan::where('uuid_madrasah', $madrasah->uuid)->first();
+        if ($pembukaan === null) {
+            toast('Akses Ditolak, Pembukaan PPDB Tidak Ditemukan!', 'error');
+            return redirect()->route('cat.index');
+        }
+
         $pendaftaran = Pendaftaran::where('uuid_peserta', $uuid_peserta)
             ->where('uuid_pembukaan', $pembukaan->uuid)
             ->first();
@@ -172,14 +233,12 @@ class CATController extends Controller
             ->get();
 
         if ($bank_soal->crash_session == 'No') {
-            if ($jawaban->count() >= $soal->count()) {
-                toast('Gagal memasuki halaman ujian, Kamu sudah mengikuti ujian ini', 'error');
-                return redirect()->route('cat.index');
-            }
+            toast('Gagal memasuki halaman ujian, Kamu sudah mengikuti ujian ini', 'error');
+            return redirect()->route('cat.index');
         }
 
-        if(\count($jawaban)==0){
-            foreach($soal as $data){
+        if (\count($jawaban) == 0) {
+            foreach ($soal as $data) {
                 Jawaban::create(
                     [
                         "uuid" => \Str::uuid(),
@@ -452,13 +511,13 @@ class CATController extends Controller
             $jawaban = Jawaban::whereKodeSoal($data->kode_soal)->first();
             if ($jawaban === null) {
                 // Hapus Gambar Soal
-                $soal = Soal::whereKodeSoal($data->kode_soal)->where('gambar','!=','')->first();
+                $soal = Soal::whereKodeSoal($data->kode_soal)->where('gambar', '!=', '')->first();
                 // Hapus Folder File Soal
-                if($soal->gambar!=""){
-                    $exp = \explode('/',$soal->gambar);
-                    $dir = storage_path('app/public/').$exp[0].'/'.$exp[1].'/'.$exp[2];
-                    if(is_dir($dir)){
-                        Storage::disk('public')->deleteDirectory($exp[0].'/'.$exp[1].'/'.$exp[2]);
+                if ($soal->gambar != "") {
+                    $exp = \explode('/', $soal->gambar);
+                    $dir = storage_path('app/public/') . $exp[0] . '/' . $exp[1] . '/' . $exp[2];
+                    if (is_dir($dir)) {
+                        Storage::disk('public')->deleteDirectory($exp[0] . '/' . $exp[1] . '/' . $exp[2]);
                     }
                 }
                 // Hapus Soal
@@ -483,7 +542,7 @@ class CATController extends Controller
             ->whereUuid($uuid)
             ->first();
         $soal = Soal::whereKodeSoal($data->kode_soal)->get();
-        return view('pages.CAT.operator.detail', compact('data','soal'));
+        return view('pages.CAT.operator.detail', compact('data', 'soal'));
     }
 
     public function tulisSoal($id)
@@ -522,17 +581,17 @@ class CATController extends Controller
         if ($request->hasFile('gambar')) {
             // Upload File
             $ext = strtolower($request->file('gambar')->extension());
-            $ext_array = Array('jpg','jpeg','png');
-            if (in_array($ext, $ext_array)){
+            $ext_array = array('jpg', 'jpeg', 'png');
+            if (in_array($ext, $ext_array)) {
                 $file = $request->file('gambar');
-                $path_soal = 'soal/'.date('Y').'/'.$kode_soal.'/';
-                $file_name = $kode_soal."-".$request->jenis_soal."-".$request->nomor_soal."-".rand(1000,9999999999).".jpg";
+                $path_soal = 'soal/' . date('Y') . '/' . $kode_soal . '/';
+                $file_name = $kode_soal . "-" . $request->jenis_soal . "-" . $request->nomor_soal . "-" . rand(1000, 9999999999) . ".jpg";
                 $file_name = strtolower($file_name);
-                $file_save = $path_soal.$file_name;
-                if(!is_dir(storage_path('app/public/'.$path_soal))){
+                $file_save = $path_soal . $file_name;
+                if (!is_dir(storage_path('app/public/' . $path_soal))) {
                     Storage::disk('public')->makeDirectory($path_soal);
                 }
-                Storage::disk('public')->putFileAs($path_soal,$file,$file_name);
+                Storage::disk('public')->putFileAs($path_soal, $file, $file_name);
             } else {
                 toast('Gagal Upload Foto, Format File Tidak Diizinkan!', 'success');
                 return back();
@@ -585,8 +644,8 @@ class CATController extends Controller
         $madrasah = Operator::whereUuid($uuid_operator)->first();
         if (Auth::user()->role == 'Operator Madrasah') {
             $data = BankSoal::with('madrasah')
-            ->where('uuid_madrasah', $madrasah->uuid_madrasah)
-            ->get();
+                ->where('uuid_madrasah', $madrasah->uuid_madrasah)
+                ->get();
         } else {
             $data = BankSoal::with('madrasah')->get();
         }
@@ -688,25 +747,25 @@ class CATController extends Controller
         }
 
         if ($request->hasFile('gambar')) {
-            if($soal->gambar!=""){
-                if(Storage::disk('public')->exists($soal->gambar)){
+            if ($soal->gambar != "") {
+                if (Storage::disk('public')->exists($soal->gambar)) {
                     // Hapus gambar
                     Storage::disk('public')->delete($soal->gambar);
                 }
             }
             // Upload File
             $ext = strtolower($request->file('gambar')->extension());
-            $ext_array = Array('jpg','jpeg','png');
-            if (in_array($ext, $ext_array)){
+            $ext_array = array('jpg', 'jpeg', 'png');
+            if (in_array($ext, $ext_array)) {
                 $file = $request->file('gambar');
-                $path_soal = 'soal/'.date('Y').'/'.$kode_soal.'/';
-                $file_name = $kode_soal."-".$request->jenis_soal."-".$request->nomor_soal."-".rand(1000,9999999999).".jpg";
+                $path_soal = 'soal/' . date('Y') . '/' . $kode_soal . '/';
+                $file_name = $kode_soal . "-" . $request->jenis_soal . "-" . $request->nomor_soal . "-" . rand(1000, 9999999999) . ".jpg";
                 $file_name = strtolower($file_name);
-                $file_save = $path_soal.$file_name;
-                if(!is_dir(storage_path('app/public/'.$path_soal))){
+                $file_save = $path_soal . $file_name;
+                if (!is_dir(storage_path('app/public/' . $path_soal))) {
                     Storage::disk('public')->makeDirectory($path_soal);
                 }
-                Storage::disk('public')->putFileAs($path_soal,$file,$file_name);
+                Storage::disk('public')->putFileAs($path_soal, $file, $file_name);
             } else {
                 toast('Gagal Upload Foto, Format File Tidak Diizinkan!', 'success');
                 return back();
@@ -733,8 +792,8 @@ class CATController extends Controller
         $uuid = Dits::decodeDits($id);
         $soal = Soal::whereUuid($uuid)->first();
         if ($soal) {
-            if($soal->gambar!=""){
-                if(Storage::disk('public')->exists($soal->gambar)){
+            if ($soal->gambar != "") {
+                if (Storage::disk('public')->exists($soal->gambar)) {
                     // Hapus gambar
                     Storage::disk('public')->delete($soal->gambar);
                 }
@@ -756,6 +815,6 @@ class CATController extends Controller
         $kode_soal = Dits::decodeDits($id);
         $soal = Soal::whereKodeSoal($kode_soal)->get();
         $data = Soal::whereKodeSoal($kode_soal)->first();
-        return view('pages.CAT.operator.preview-soal', compact('soal','data'));
+        return view('pages.CAT.operator.preview-soal', compact('soal', 'data'));
     }
 }

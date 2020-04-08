@@ -85,7 +85,7 @@
                     </div>
                     <div class="form-group">
                         <label for="inputNik">No. KTP/NIK Siswa<i class="text-danger"><small>*</small></i></label>
-                        <input type="number" class="form-control" readonly name="NIK"
+                        <input type="text" class="form-control" readonly name="NIK"
                             value="{{Dits::DataPeserta()->NIK ? Dits::DataPeserta()->NIK : ''}}" id="inputNik"
                             placeholder="123213432132" autocomplete="off" maxlength="16" required>
                         <i class="text-danger"><small>Untuk Yang Belum Memiliki KTP, Maka Ambil NIK Anak Dari Kartu
@@ -115,8 +115,8 @@
                         <div class='input-group date' id='inputTTL'>
                             <input type="text" name="tgl"
                                 value="{{Dits::DataPeserta()->tgl ? date('d-m-Y',strtotime(Dits::DataPeserta()->tgl)) : ''}}"
-                                placeholder="tgl-bln-thn" class="form-control"
-                                maxlength="10" autocomplete="off" required>
+                                placeholder="tgl-bln-thn" class="form-control" maxlength="10" autocomplete="off"
+                                required>
                             <span class="input-group-addon">
                                 <button class="btn btn-default" type="button"><i class="fa fa-calendar-alt"></i>
                                     CARI</button>
@@ -129,7 +129,8 @@
                             <option value="" selected disabled>Pilih Jenis Kelamin</option>
                             <option {{Dits::selected(Dits::DataPeserta()->jkl , 'Laki-laki')}} value="Laki-laki">
                                 Laki-laki</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->jkl , 'Perempuan')}} value="Perempuan">Perempuan</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->jkl , 'Perempuan')}} value="Perempuan">
+                                Perempuan</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -162,8 +163,8 @@
                             </option>
                             <option {{Dits::selected(Dits::DataPeserta()->hobi , 'Menulis')}} value="Menulis">Menulis
                             </option>
-                            <option {{Dits::selected(Dits::DataPeserta()->hobi , 'Travelling')}}
-                                value="Travelling">Travelling</option>
+                            <option {{Dits::selected(Dits::DataPeserta()->hobi , 'Travelling')}} value="Travelling">
+                                Travelling</option>
                             <option {{Dits::selected(Dits::DataPeserta()->hobi , 'Lainnya')}} value="Lainnya">Lainnya
                             </option>
                         </select>
@@ -285,8 +286,16 @@
                             Dengan Koma (,)</small>
                     </div>
                     <div class="form-group">
+                        <label for="kp">Kartu Program</label>
+                        <input type="text" class="form-control"
+                            value="{{Dits::DataPeserta()->kartu_program ? Dits::DataPeserta()->kartu_program : ''}}"
+                            name="kartu_program" id="kp" placeholder="Contoh : KIP" autocomplete="off" maxlength="100">
+                        <small class="text-danger">Diisi Jika Memiliki Kartu Program, Jika Lebih Dari 1, Pisahkan Dengan
+                            Koma (,)</small>
+                    </div>
+                    <div class="form-group">
                         <label for="stts_yp">Status Yatim Piatu<i class="text-danger"><small>*</small></i></label>
-                        <select class="form-control" name="yatim_piatu" id="stts_yp" required>
+                        <select class="form-control" name="yatim_piatu" id="stts_yp" required onchange="StatusOrtu();">
                             <option value="" disabled selected>-Pilih Status Yatim Piatu</option>
                             <option {{Dits::selected(Dits::DataPeserta()->yatim_piatu , 'Tidak')}} value="Tidak">Tidak
                             </option>
@@ -299,127 +308,127 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="kp">Kartu Program</label>
-                        <input type="text" class="form-control"
-                            value="{{Dits::DataPeserta()->kartu_program ? Dits::DataPeserta()->kartu_program : ''}}"
-                            name="kartu_program" id="kp" placeholder="Contoh : KIP" autocomplete="off" maxlength="100">
-                        <small class="text-danger">Diisi Jika Memiliki Kartu Program, Jika Lebih Dari 1, Pisahkan Dengan
-                            Koma (,)</small>
-                    </div>
-                    <div class="form-group">
                         <label for="nm_ayah">Nama Ayah<i class="text-danger"><small>*</small></i></label>
                         <input type="text" class="form-control"
                             value="{{Dits::DataPeserta()->nama_ayah ? Dits::DataPeserta()->nama_ayah : ''}}"
                             id="nm_ayah" name="nama_ayah" placeholder="Nama Ayah" autocomplete="off" maxlength="100"
                             required>
                     </div>
-                    <div class="form-group">
-                        <label for="ktp_ayah">No. KTP/NIK Ayah<i class="text-danger"><small>*</small></i></label>
-                        <input type="number" class="form-control"
-                            value="{{Dits::DataPeserta()->nik_ayah ? Dits::DataPeserta()->nik_ayah : ''}}" id="ktp_ayah"
-                            name="nik_ayah" placeholder="Contoh : 3222206209020000" autocomplete="off" maxlength="16"
-                            required>
-                    </div>
-                    <div class="form-group">
-                        <label for="lhr_ayah">Tempat Lahir Ayah<i class="text-danger"><small>*</small></i></label>
-                        <input type="text" class="form-control"
-                            value="{{Dits::DataPeserta()->tmp_ayah ? Dits::DataPeserta()->tmp_ayah : ''}}" id="lhr_ayah"
-                            name="tmp_ayah" placeholder="Contoh : Kota Banca Aceh" autocomplete="off" maxlength="100"
-                            required>
-                    </div>
-                    <div class="form-group">
-                        <label for="">Tanggal Lahir Ayah<i class="text-danger"><small>*</small></i></label>
-                        <div class='input-group date' id='tgl_ayah'>
-                            <input type="text" name="tgl_ayah"
-                                value="{{Dits::DataPeserta()->tgl_ayah ? date('d-m-Y',strtotime(Dits::DataPeserta()->tgl_ayah)) : ''}}"
-                                placeholder="tgl-bln-thn" class="form-control"
-                                maxlength="10" autocomplete="off" required>
-                            <span class="input-group-addon">
-                                <button class="btn btn-default" type="button"><i class="fa fa-calendar-alt"></i>
-                                    CARI</button>
-                            </span>
+                    {{-- Untuk Yatim --}}
+                    <div id="status_yatim">
+                        <div class="form-group">
+                            <label for="ktp_ayah">No. KTP/NIK Ayah<i class="text-danger"><small>*</small></i></label>
+                            <input type="text" class="form-control"
+                                value="{{Dits::DataPeserta()->nik_ayah ? Dits::DataPeserta()->nik_ayah : ''}}" id="ktp_ayah"
+                                name="nik_ayah" placeholder="Contoh : 3222206209020000" autocomplete="off" maxlength="16"
+                                >
+                        </div>
+                        <div class="form-group">
+                            <label for="lhr_ayah">Tempat Lahir Ayah<i class="text-danger"><small>*</small></i></label>
+                            <input type="text" class="form-control"
+                                value="{{Dits::DataPeserta()->tmp_ayah ? Dits::DataPeserta()->tmp_ayah : ''}}" id="lhr_ayah"
+                                name="tmp_ayah" placeholder="Contoh : Kota Banca Aceh" autocomplete="off" maxlength="100"
+                                >
+                        </div>
+                        <div class="form-group">
+                            <label for="">Tanggal Lahir Ayah<i class="text-danger"><small>*</small></i></label>
+                            <div class='input-group date' id='tgl_ayah'>
+                                <input type="text" name="tgl_ayah"
+                                    value="{{Dits::DataPeserta()->tgl_ayah ? date('d-m-Y',strtotime(Dits::DataPeserta()->tgl_ayah)) : ''}}"
+                                    placeholder="tgl-bln-thn" class="form-control" maxlength="10" autocomplete="off"
+                                    >
+                                <span class="input-group-addon">
+                                    <button class="btn btn-default" type="button"><i class="fa fa-calendar-alt"></i>
+                                        CARI</button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pkrj_ayah">Pekerjaan Ayah<i class="text-danger"><small>*</small></i></label>
+                            <select class="form-control" id="stts_yp" name="pekerjaan_ayah" >
+                                <option value="" selected disabled>Pilih Pekerjaan Ayah</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'PNS')}} value="PNS">PNS
+                                </option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'TNI/Polri')}}
+                                    value="TNI/Polri">TNI/Polri</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Guru/Dosen')}}
+                                    value="Guru/Dosen">Guru/Dosen</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Dokter')}} value="Dokter">
+                                    Dokter</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Politikus')}}
+                                    value="Politikus">Politikus</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Wiraswasta')}}
+                                    value="Wiraswasta">Wiraswasta</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Ilmuan')}} value="Ilmuan">
+                                    Ilmuan</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Agamawan')}}
+                                    value="Agamawan">Agamawan</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Lainnya')}} value="Lainnya">
+                                    Lainnya</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="pkrj_ayah">Pekerjaan Ayah<i class="text-danger"><small>*</small></i></label>
-                        <select class="form-control" id="stts_yp" name="pekerjaan_ayah" required>
-                            <option value="" selected disabled>Pilih Pekerjaan Ayah</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'PNS')}} value="PNS">PNS
-                            </option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'TNI/Polri')}}
-                                value="TNI/Polri">TNI/Polri</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Guru/Dosen')}}
-                                value="Guru/Dosen">Guru/Dosen</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Dokter')}} value="Dokter">
-                                Dokter</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Politikus')}}
-                                value="Politikus">Politikus</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Wiraswasta')}}
-                                value="Wiraswasta">Wiraswasta</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Ilmuan')}} value="Ilmuan">
-                                Ilmuan</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Agamawan')}}
-                                value="Agamawan">Agamawan</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ayah , 'Lainnya')}} value="Lainnya">
-                                Lainnya</option>
-                        </select>
-                    </div>
+                    {{-- Untuk Yatim --}}
                     <div class="form-group">
                         <label for="nm_ibu">Nama Ibu<i class="text-danger"><small>*</small></i></label>
                         <input type="text" class="form-control"
                             value="{{Dits::DataPeserta()->nama_ibu ? Dits::DataPeserta()->nama_ibu : ''}}" id="nm_ibu"
                             name="nama_ibu" placeholder="Nama Ibu" autocomplete="off" maxlength="100" required>
                     </div>
-                    <div class="form-group">
-                        <label for="ktp_ibu">No. KTP/NIK Ibu<i class="text-danger"><small>*</small></i></label>
-                        <input type="number" class="form-control"
-                            value="{{Dits::DataPeserta()->nik_ibu ? Dits::DataPeserta()->nik_ibu : ''}}" id="ktp_ibu"
-                            name="nik_ibu" placeholder="Contoh : 3222206209020000" autocomplete="off" maxlength="16"
-                            required>
-                    </div>
-                    <div class="form-group">
-                        <label for="lhr_ibu">Tempat Lahir Ibu<i class="text-danger"><small>*</small></i></label>
-                        <input type="text" class="form-control" id="lhr_ibu"
-                            value="{{Dits::DataPeserta()->tmp_ibu ? Dits::DataPeserta()->tmp_ibu : ''}}" name="tmp_ibu"
-                            placeholder="Contoh : Kota Banca Aceh" autocomplete="off" maxlength="100" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="">Tanggal Lahir Ibu<i class="text-danger"><small>*</small></i></label>
-                        <div class='input-group date' id='tgl_ibu'>
-                            <input type="text" name="tgl_ibu"
-                                value="{{Dits::DataPeserta()->tgl_ibu ? date('d-m-Y',strtotime(Dits::DataPeserta()->tgl_ibu)) : ''}}"
-                                placeholder="tgl-bln-thn" class="form-control"
-                                maxlength="10" autocomplete="off" required>
-                            <span class="input-group-addon">
-                                <button class="btn btn-default" type="button"><i class="fa fa-calendar-alt"></i>
-                                    CARI</button>
-                            </span>
+                    {{-- Untuk Piatu --}}
+                    <div id="status_piatu">
+                        <div class="form-group">
+                            <label for="ktp_ibu">No. KTP/NIK Ibu<i class="text-danger"><small>*</small></i></label>
+                            <input type="text" class="form-control"
+                                value="{{Dits::DataPeserta()->nik_ibu ? Dits::DataPeserta()->nik_ibu : ''}}" id="ktp_ibu"
+                                name="nik_ibu" placeholder="Contoh : 3222206209020000" autocomplete="off" maxlength="16"
+                                >
+                        </div>
+                        <div class="form-group">
+                            <label for="lhr_ibu">Tempat Lahir Ibu<i class="text-danger"><small>*</small></i></label>
+                            <input type="text" class="form-control" id="lhr_ibu"
+                                value="{{Dits::DataPeserta()->tmp_ibu ? Dits::DataPeserta()->tmp_ibu : ''}}" name="tmp_ibu"
+                                placeholder="Contoh : Kota Banca Aceh" autocomplete="off" maxlength="100" >
+                        </div>
+                        <div class="form-group">
+                            <label for="">Tanggal Lahir Ibu<i class="text-danger"><small>*</small></i></label>
+                            <div class='input-group date' id='tgl_ibu'>
+                                <input type="text" name="tgl_ibu"
+                                    value="{{Dits::DataPeserta()->tgl_ibu ? date('d-m-Y',strtotime(Dits::DataPeserta()->tgl_ibu)) : ''}}"
+                                    placeholder="tgl-bln-thn" class="form-control" maxlength="10" autocomplete="off"
+                                    >
+                                <span class="input-group-addon">
+                                    <button class="btn btn-default" type="button"><i class="fa fa-calendar-alt"></i>
+                                        CARI</button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pkrj_ibu">Pekerjaan Ibu<i class="text-danger"><small>*</small></i></label>
+                            <select class="form-control" id="pkrj_ibu" name="pekerjaan_ibu" >
+                                <option value="" selected disabled>Pilih Pekerjaan Ibu</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'PNS')}} value="PNS">PNS
+                                </option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'TNI/Polri')}}
+                                    value="TNI/Polri">TNI/Polri</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Guru/Dosen')}}
+                                    value="Guru/Dosen">Guru/Dosen</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Dokter')}} value="Dokter">
+                                    Dokter</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Politikus')}}
+                                    value="Politikus">Politikus</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Wiraswasta')}}
+                                    value="Wiraswasta">Wiraswasta</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Ilmuan')}} value="Ilmuan">
+                                    Ilmuan</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Agamawan')}}
+                                    value="Agamawan">Agamawan</option>
+                                <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Lainnya')}} value="Lainnya">
+                                    Lainnya</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="pkrj_ibu">Pekerjaan Ibu<i class="text-danger"><small>*</small></i></label>
-                        <select class="form-control" id="pkrj_ibu" name="pekerjaan_ibu" required>
-                            <option value="" selected disabled>Pilih Pekerjaan Ibu</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'PNS')}} value="PNS">PNS
-                            </option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'TNI/Polri')}}
-                                value="TNI/Polri">TNI/Polri</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Guru/Dosen')}}
-                                value="Guru/Dosen">Guru/Dosen</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Dokter')}} value="Dokter">
-                                Dokter</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Politikus')}}
-                                value="Politikus">Politikus</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Wiraswasta')}}
-                                value="Wiraswasta">Wiraswasta</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Ilmuan')}} value="Ilmuan">
-                                Ilmuan</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Agamawan')}}
-                                value="Agamawan">Agamawan</option>
-                            <option {{Dits::selected(Dits::DataPeserta()->pekerjaan_ibu , 'Lainnya')}} value="Lainnya">
-                                Lainnya</option>
-                        </select>
-                    </div>
+                    {{-- Untuk Piatu --}}
                     <div class="form-group">
                         <label for="kontak">Kontak Peserta<i class="text-danger"><small>*</small></i></label>
                         <input type="number" class="form-control"
@@ -746,5 +755,37 @@ $isUpdate = Dits::checkJenjang();
             previous: 'fa fa-chevron-circle-left'
         }
     });
+    $(document).ready(function() {
+        var yatim_piatu = "{!! Dits::DataPeserta()->yatim_piatu !!}";
+        if(yatim_piatu == "Yatim Piatu"){
+            $('#status_yatim').hide();
+            $('#status_piatu').hide();
+        }else if(yatim_piatu == "Yatim"){
+            $('#status_yatim').hide();
+            $('#status_piatu').show();
+        }else if(yatim_piatu == "Piatu"){
+            $('#status_yatim').show();
+            $('#status_piatu').hide();
+        }else{
+            $('#status_yatim').show();
+            $('#status_piatu').show();
+        }
+    });
+    function StatusOrtu() {
+        var yatim_piatu = document.getElementById("stts_yp").value;
+        if(yatim_piatu == "Yatim Piatu"){
+            $('#status_yatim').hide();
+            $('#status_piatu').hide();
+        }else if(yatim_piatu == "Yatim"){
+            $('#status_yatim').hide();
+            $('#status_piatu').show();
+        }else if(yatim_piatu == "Piatu"){
+            $('#status_yatim').show();
+            $('#status_piatu').hide();
+        }else{
+            $('#status_yatim').show();
+            $('#status_piatu').show();
+        }
+    }
 </script>
 @endpush
